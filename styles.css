@@ -199,6 +199,18 @@ background:#388e3c;
 color:white;
 cursor:pointer;
 border-radius:6px;
+display:flex;
+align-items:center;
+gap:8px;
+justify-content:flex-start;
+text-align:left;
+}
+.sidebar button i{
+font-size:14px;
+line-height:1;
+display:inline-flex;
+align-items:center;
+justify-content:center;
 }
 .main{
 margin-left:230px;
@@ -789,35 +801,37 @@ font-size:13px;
 
 /* TOPO ADMIN */
 
-.topoAdmin{
-display:flex;
-justify-content:flex-end;
-align-items:center;
-margin-bottom:20px;
-position:sticky;
-top:0;
-z-index:30;
-background:#f5f6f7;
-padding:8px 0;
-}
-
-.ladoDireito{
-display:flex;
-align-items:center;
-gap:20px;
-position:relative;
-background:#fff;
-padding:8px 12px;
-border-radius:14px;
-box-shadow:0 4px 16px rgba(0,0,0,.08);
-justify-content:space-between;
-min-width:min(100%,420px);
-}
+.topoAdmin {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: #f5f6f7;
+    padding: 8px 0;
+  }
+  
+  .ladoDireito {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    background: #ffffff;
+    padding: 8px 12px;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.08);
+    justify-content: space-between;
+    width: fit-content;
+    max-width: 100%;
+  }
 
 /* NOTIFICAÇÃO */
 
 .notificacao{
-font-size:20px;
+font-size:18px;
 position:relative;
 cursor:pointer;
 display:flex;
@@ -827,6 +841,13 @@ width:42px;
 height:42px;
 border-radius:50%;
 background:#f3f7f4;
+}
+
+.notificacao i{
+display:flex;
+align-items:center;
+justify-content:center;
+line-height:1;
 }
 
 .badge{
@@ -910,6 +931,9 @@ padding:12px;
 cursor:pointer;
 border-bottom:1px solid #eee;
 font-size:14px;
+display:flex;
+align-items:center;
+gap:8px;
 }
 
 .dropdownUsuario div:hover{
@@ -1366,11 +1390,6 @@ max-width:100%;
 height:auto;
 }
 
-.main{
-width:100%;
-max-width:100%;
-}
-
 .aba{
 max-width:100%;
 overflow-x:hidden;
@@ -1488,7 +1507,7 @@ height:100dvh;
 overflow-y:auto;
 display:flex;
 flex-direction:column;
-align-items:center;
+align-items:stretch;
 }
 
 .aba{
@@ -1543,15 +1562,10 @@ display:none;
 }
 }
 
-.main{
-display:flex;
-flex-direction:column;
-align-items:center;
-}
-
 #dashboard,
 #registros,
-#relatorios{
+#relatorios,
+#usuarios{
 width:min(100%,1100px);
 margin:0 auto 18px;
 }
@@ -1580,3 +1594,15 @@ padding:16px;
 height:100dvh;
 overflow-y:auto;
 }
+
+/* AJUSTE DESKTOP: evita corte do topo/menu na direita */
+@media (min-width: 769px){
+.main{
+width:calc(100% - 230px);
+margin-left:230px;
+display:flex;
+flex-direction:column;
+align-items:stretch;
+}
+}
+
