@@ -1105,164 +1105,167 @@ subtitulo.innerText = user.nivel ? "Nível: " + user.nivel : "Usuário logado"
     relatorios.forEach(r=> renderLinhaRelatorio(tabela, r));
     }
 
-    function relatorioIndividual(protocolo){
+function relatorioIndividual(protocolo){
 
-    let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-    let r = relatorios.find(x => x.protocolo == protocolo);
+let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
+let r = relatorios.find(x => x.protocolo == protocolo);
 
-    if(!r){
-    alert("Registro não encontrado");
-    return;
-    }
+if(!r){
+alert("Registro não encontrado");
+return;
+}
 
-    const { jsPDF } = window.jspdf;
+const { jsPDF } = window.jspdf;
+let doc = new jsPDF();
 
-    let doc = new jsPDF();
+let y = 20;
 
-    let y = 20;
+let logo = new Image();
+logo.src = "prefeitura.png";
 
-    /* TITULO */
+logo.onload = function(){
 
-    doc.setFontSize(14);
-    doc.text("REGISTRO DE NOTIFICAÇÕES PREVINE",105,20,null,null,"center");
+/* ===== LOGO MAIOR ===== */
+doc.addImage(logo, "PNG", 1, 2, 75, 40);
 
-    y=30;
+/* ===== CABEÇALHO ===== */
+doc.setFont("helvetica","bold");
+doc.setFontSize(16);
+doc.text("PREFEITURA MUNICIPAL", 105, 18, null, null, "center");
 
-    /* ===== DADOS DA VÍTIMA ===== */
+doc.setFontSize(12);
+doc.text("SISTEMA DE NOTIFICAÇÃO PREVINE", 105, 26, null, null, "center");
 
-    doc.rect(10,y,190,8);
-    doc.text("DADOS DA VÍTIMA",105,y+6,null,null,"center");
+doc.setFontSize(10);
+doc.setFont("helvetica","normal");
+doc.text("RELATÓRIO INDIVIDUAL DE OCORRÊNCIA", 105, 34, null, null, "center");
 
-    y+=8;
+/* ===== LINHA VERDE ===== */
+doc.setDrawColor(46,125,50);
+doc.setLineWidth(0.2);
+doc.line(10, 42, 200, 42);
 
-    doc.rect(10,y,95,8);
-    doc.rect(105,y,95,8);
+y = 52;
 
-    doc.text("Nome: "+(r.vitima||""),12,y+6);
-    doc.text("Idade: "+(r.idade||""),107,y+6);
+/* ===== DADOS ===== */
+doc.setFont("helvetica","bold");
+doc.setFontSize(11);
+doc.text("DADOS DA OCORRÊNCIA", 105, y, null, null, "center");
 
-    y+=8;
+y += 6;
 
-    doc.rect(10,y,95,8);
-    doc.rect(105,y,95,8);
+doc.setFont("helvetica","normal");
+doc.setFontSize(10);
 
-    doc.text("Sexo: ",12,y+6);
-    doc.text("CPF: ",107,y+6);
+doc.setDrawColor(46,125,50);
 
-    y+=12;
+doc.rect(10,y,190,8);
+doc.text("Protocolo: " + (r.protocolo || ""), 12, y+6);
 
-    /* ===== RESPONSÁVEL ===== */
+y += 10;
 
-    doc.rect(10,y,190,8);
-    doc.text("DADOS DO RESPONSÁVEL",105,y+6,null,null,"center");
+doc.rect(10,y,190,8);
+doc.text("Data: " + (r.data || ""), 12, y+6);
 
-    y+=8;
+y += 14;
 
-    doc.rect(10,y,95,8);
-    doc.rect(105,y,95,8);
+/* ===== VÍTIMA ===== */
+doc.setFont("helvetica","bold");
+doc.text("DADOS DA VÍTIMA", 105, y, null, null, "center");
 
-    doc.text("Nome: "+(r.responsavel||""),12,y+6);
-    doc.text("Telefone: ",107,y+6);
+y += 6;
 
-    y+=8;
+doc.setFont("helvetica","normal");
 
-    doc.rect(10,y,95,8);
-    doc.rect(105,y,95,8);
+doc.setDrawColor(46,125,50);
 
-    doc.text("Parentesco: ",12,y+6);
-    doc.text("Autor: "+(r.autor||""),107,y+6);
+doc.rect(10,y,95,8);
+doc.rect(105,y,95,8);
+doc.text("Nome: " + (r.vitima || ""), 12, y+6);
+doc.text("Idade: " + (r.idade || ""), 107, y+6);
 
-    y+=12;
+y += 10;
 
-    /* ===== RESIDÊNCIA ===== */
+doc.rect(10,y,95,8);
+doc.rect(105,y,95,8);
+doc.text("Sexo: " + (r.sexo || ""), 12, y+6);
+doc.text("CPF: " + (r.cpf || ""), 107, y+6);
 
-    doc.rect(10,y,190,8);
-    doc.text("DADOS DA RESIDÊNCIA DO RESPONSÁVEL",105,y+6,null,null,"center");
+y += 14;
 
-    y+=8;
+/* ===== LOCAL ===== */
+doc.setFont("helvetica","bold");
+doc.text("LOCAL DA OCORRÊNCIA", 105, y, null, null, "center");
 
-    doc.rect(10,y,95,8);
-    doc.rect(105,y,95,8);
+y += 6;
 
-    doc.text("Endereço: ",12,y+6);
-    doc.text("Município: ",107,y+6);
+doc.setFont("helvetica","normal");
 
-    y+=12;
+doc.setDrawColor(46,125,50);
 
-    /* ===== REGISTRO DA VIOLÊNCIA ===== */
+doc.rect(10,y,95,8);
+doc.rect(105,y,95,8);
+doc.text("Município: " + (r.municipio || ""), 12, y+6);
+doc.text("Estado: " + (r.estado || ""), 107, y+6);
 
-    doc.rect(10,y,190,8);
-    doc.text("REGISTRO DA VIOLÊNCIA",105,y+6,null,null,"center");
+y += 14;
 
-    y+=8;
+/* ===== TIPOS ===== */
+doc.setFont("helvetica","bold");
+doc.text("TIPIFICAÇÃO DA VIOLÊNCIA", 105, y, null, null, "center");
 
-    doc.rect(10,y,190,8);
-    doc.text("Data do fato: "+(r.data||""),12,y+6);
+y += 6;
 
-    y+=8;
+doc.setFont("helvetica","normal");
 
-    doc.rect(10,y,190,8);
-    doc.text("Tipo de Violência: "+(r.tipo||""),12,y+6);
+let tipos = doc.splitTextToSize(r.tipo || "Não informado", 180);
 
-    y += 8;
+doc.setDrawColor(46,125,50);
+doc.rect(10,y,190,18);
+doc.text(tipos, 12, y+6);
 
-    doc.rect(10,y,190,8);
-    doc.text("Raça/Cor: "+(r.raca || ""),12,y+6);
+y += 22;
 
-    y += 8;
+/* ===== RESUMO ===== */
+doc.setFont("helvetica","bold");
+doc.text("RESUMO DA OCORRÊNCIA", 105, y, null, null, "center");
 
-    doc.rect(10,y,190,8);
-    doc.text("Identidade de Gênero: "+(r.genero || ""),12,y+6);
+y += 6;
 
-    y += 8;
+doc.setFont("helvetica","normal");
 
-    doc.rect(10,y,190,8);
-    doc.text("Orientação Sexual: "+(r.orientacao || ""),12,y+6);
+let resumo = doc.splitTextToSize(r.resumo || "Sem resumo", 180);
 
-    y += 8;
+doc.setDrawColor(46,125,50);
+doc.rect(10,y,190,40);
+doc.text(resumo, 12, y+6);
 
-    doc.rect(10,y,190,8);
-    doc.text("Escolaridade: "+(r.escolaridade || ""),12,y+6);
+y += 46;
 
-    doc.rect(10,y,190,8);
-    doc.text("Encaminhamento: "+(r.encaminhamento||""),12,y+6);
+/* ===== ENCAMINHAMENTO ===== */
+doc.setFont("helvetica","bold");
+doc.text("ENCAMINHAMENTO", 105, y, null, null, "center");
 
-    /* ===== NOVA PÁGINA ===== */
+y += 6;
 
-    doc.addPage();
+doc.setFont("helvetica","normal");
 
-    doc.setFontSize(14);
-    doc.text("RESUMO DA VIOLÊNCIA",105,20,null,null,"center");
+let enc = doc.splitTextToSize(r.encaminhamento || "Sem encaminhamento", 180);
 
-    /* CAIXA GRANDE */
+doc.setDrawColor(46,125,50);
+doc.rect(10,y,190,35);
+doc.text(enc, 12, y+6);
 
-    doc.rect(10,30,190,240);
+/* ===== RODAPÉ ===== */
+doc.setFontSize(8);
+doc.setTextColor(0);
+doc.text("Sistema PREVINE • Documento oficial gerado automaticamente", 105, 285, null, null, "center");
 
-    let resumo = doc.splitTextToSize(r.resumo || "",180);
+doc.save("PREVINE_" + r.protocolo + ".pdf");
 
-    doc.setFontSize(11);
-    doc.text(resumo,15,40);
+};
 
-    /* RODAPÉ */
-
-    doc.setFontSize(8);
-    doc.text("Dados gerados pelo Sistema PREVINE",105,285,null,null,"center");
-
-    doc.save("Relatorio_PREVINE_"+r.protocolo+".pdf");
-    }
-    function relatorioGeral(){
-
-    let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-
-    let tabela = document.querySelector("#tabelaRelatorios tbody");
-
-    tabela.innerHTML="";
-
-    relatorios.forEach(r=>{
-    renderLinhaRelatorio(tabela, r);
-    });
-
-    }
+}
     function renderLinhaRelatorio(tabela, r){
     let linha = tabela.insertRow();
     let protocolo = String(r.protocolo || "");
