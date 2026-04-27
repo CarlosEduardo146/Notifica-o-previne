@@ -1157,10 +1157,7 @@ relatorios.forEach(r=> renderLinhaRelatorio(tabela, r));
 }
 
 function relatorioIndividual(protocolo){
-function relatorioIndividual(protocolo){
 
-let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-let r = relatorios.find(x => x.protocolo == protocolo);
 let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
 let r = relatorios.find(x => x.protocolo == protocolo);
 
@@ -1168,62 +1165,12 @@ if(!r){
 alert("Registro não encontrado");
 return;
 }
-if(!r){
-alert("Registro não encontrado");
-return;
-}
 
-const { jsPDF } = window.jspdf;
-let doc = new jsPDF();
 const { jsPDF } = window.jspdf;
 let doc = new jsPDF();
 
 let y = 20;
-let y = 20;
 
-let logo = new Image();
-logo.src = "prefeitura.png";
-
-logo.onload = function(){
-
-/* ===== LOGO MAIOR ===== */
-doc.addImage(logo, "PNG", 1, 2, 75, 40);
-
-/* ===== CABEÇALHO ===== */
-doc.setFont("helvetica","bold");
-doc.setFontSize(16);
-doc.text("PREFEITURA MUNICIPAL", 105, 18, null, null, "center");
-
-doc.setFontSize(12);
-doc.text("SISTEMA DE NOTIFICAÇÃO PREVINE", 105, 26, null, null, "center");
-
-doc.setFontSize(10);
-doc.setFont("helvetica","normal");
-doc.text("RELATÓRIO INDIVIDUAL DE OCORRÊNCIA", 105, 34, null, null, "center");
-
-/* ===== LINHA VERDE ===== */
-doc.setDrawColor(46,125,50);
-doc.setLineWidth(0.2);
-doc.line(10, 42, 200, 42);
-
-y = 52;
-
-/* ===== DADOS ===== */
-doc.setFont("helvetica","bold");
-doc.setFontSize(11);
-doc.text("DADOS DA OCORRÊNCIA", 105, y, null, null, "center");
-
-y += 6;
-
-doc.setFont("helvetica","normal");
-doc.setFontSize(10);
-
-doc.setDrawColor(46,125,50);
-
-doc.rect(10,y,190,8);
-doc.text("Protocolo: " + (r.protocolo || ""), 12, y+6);
-
-y += 10;
 let logo = new Image();
 logo.src = "prefeitura.png";
 
@@ -1270,25 +1217,15 @@ y += 10;
 
 doc.rect(10,y,190,8);
 doc.text("Data: " + (r.data || ""), 12, y+6);
-doc.rect(10,y,190,8);
-doc.text("Data: " + (r.data || ""), 12, y+6);
 
-y += 14;
 y += 14;
 
 /* ===== VÍTIMA ===== */
 doc.setFont("helvetica","bold");
 doc.text("DADOS DA VÍTIMA", 105, y, null, null, "center");
-/* ===== VÍTIMA ===== */
-doc.setFont("helvetica","bold");
-doc.text("DADOS DA VÍTIMA", 105, y, null, null, "center");
 
 y += 6;
-y += 6;
 
-doc.setFont("helvetica","normal");
-
-doc.setDrawColor(46,125,50);
 doc.setFont("helvetica","normal");
 
 doc.setDrawColor(46,125,50);
@@ -1297,39 +1234,22 @@ doc.rect(10,y,95,8);
 doc.rect(105,y,95,8);
 doc.text("Nome: " + (r.vitima || ""), 12, y+6);
 doc.text("Idade: " + (r.idade || ""), 107, y+6);
-doc.rect(10,y,95,8);
-doc.rect(105,y,95,8);
-doc.text("Nome: " + (r.vitima || ""), 12, y+6);
-doc.text("Idade: " + (r.idade || ""), 107, y+6);
 
-y += 10;
 y += 10;
 
 doc.rect(10,y,95,8);
 doc.rect(105,y,95,8);
 doc.text("Sexo: " + (r.sexo || ""), 12, y+6);
 doc.text("CPF: " + (r.cpf || ""), 107, y+6);
-doc.rect(10,y,95,8);
-doc.rect(105,y,95,8);
-doc.text("Sexo: " + (r.sexo || ""), 12, y+6);
-doc.text("CPF: " + (r.cpf || ""), 107, y+6);
 
-y += 14;
 y += 14;
 
 /* ===== LOCAL ===== */
 doc.setFont("helvetica","bold");
 doc.text("LOCAL DA OCORRÊNCIA", 105, y, null, null, "center");
-/* ===== LOCAL ===== */
-doc.setFont("helvetica","bold");
-doc.text("LOCAL DA OCORRÊNCIA", 105, y, null, null, "center");
 
 y += 6;
-y += 6;
 
-doc.setFont("helvetica","normal");
-
-doc.setDrawColor(46,125,50);
 doc.setFont("helvetica","normal");
 
 doc.setDrawColor(46,125,50);
@@ -1382,58 +1302,7 @@ y += 6;
 doc.setFont("helvetica","normal");
 
 let enc = doc.splitTextToSize(r.encaminhamento || "Sem encaminhamento", 180);
-doc.rect(10,y,95,8);
-doc.rect(105,y,95,8);
-doc.text("Município: " + (r.municipio || ""), 12, y+6);
-doc.text("Estado: " + (r.estado || ""), 107, y+6);
 
-y += 14;
-
-/* ===== TIPOS ===== */
-doc.setFont("helvetica","bold");
-doc.text("TIPIFICAÇÃO DA VIOLÊNCIA", 105, y, null, null, "center");
-
-y += 6;
-
-doc.setFont("helvetica","normal");
-
-let tipos = doc.splitTextToSize(r.tipo || "Não informado", 180);
-
-doc.setDrawColor(46,125,50);
-doc.rect(10,y,190,18);
-doc.text(tipos, 12, y+6);
-
-y += 22;
-
-/* ===== RESUMO ===== */
-doc.setFont("helvetica","bold");
-doc.text("RESUMO DA OCORRÊNCIA", 105, y, null, null, "center");
-
-y += 6;
-
-doc.setFont("helvetica","normal");
-
-let resumo = doc.splitTextToSize(r.resumo || "Sem resumo", 180);
-
-doc.setDrawColor(46,125,50);
-doc.rect(10,y,190,40);
-doc.text(resumo, 12, y+6);
-
-y += 46;
-
-/* ===== ENCAMINHAMENTO ===== */
-doc.setFont("helvetica","bold");
-doc.text("ENCAMINHAMENTO", 105, y, null, null, "center");
-
-y += 6;
-
-doc.setFont("helvetica","normal");
-
-let enc = doc.splitTextToSize(r.encaminhamento || "Sem encaminhamento", 180);
-
-doc.setDrawColor(46,125,50);
-doc.rect(10,y,190,35);
-doc.text(enc, 12, y+6);
 doc.setDrawColor(46,125,50);
 doc.rect(10,y,190,35);
 doc.text(enc, 12, y+6);
@@ -1442,14 +1311,7 @@ doc.text(enc, 12, y+6);
 doc.setFontSize(8);
 doc.setTextColor(0);
 doc.text("Sistema PREVINE • Documento oficial gerado automaticamente", 105, 285, null, null, "center");
-/* ===== RODAPÉ ===== */
-doc.setFontSize(8);
-doc.setTextColor(0);
-doc.text("Sistema PREVINE • Documento oficial gerado automaticamente", 105, 285, null, null, "center");
 
-doc.save("PREVINE_" + r.protocolo + ".pdf");
-
-};
 doc.save("PREVINE_" + r.protocolo + ".pdf");
 
 };
@@ -1458,10 +1320,6 @@ doc.save("PREVINE_" + r.protocolo + ".pdf");
 function renderLinhaRelatorio(tabela, r){
 let linha = tabela.insertRow();
 let protocolo = String(r.protocolo || "");
-}
-    function renderLinhaRelatorio(tabela, r){
-    let linha = tabela.insertRow();
-    let protocolo = String(r.protocolo || "");
 
 linha.insertCell(0).innerHTML = protocolo;
 linha.insertCell(1).innerHTML = r.data || "";
@@ -2083,7 +1941,7 @@ div.innerHTML += `
 <div class="acoesConsulta">
 <button onclick="relatorioIndividual('${resultado.protocolo}')">📄 PDF</button>
 <button onclick="alterarStatusConsulta('${resultado.protocolo}')">🔄 Status</button>
-</div> 
+</div>
 
 </div>
 `;
