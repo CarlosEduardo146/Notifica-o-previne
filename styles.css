@@ -1520,11 +1520,24 @@ body{
   display:none !important;
   }
 
-  .painel.modoPublicoRegistro .main{
-  margin-left:0;
-  padding:16px;
-  height:100dvh;
-  overflow-y:auto;
+  .painel.modoPublicoRegistro .main {
+    margin-left: 0;
+    padding: 32px 16px;
+    height: 100dvh;
+    overflow-y: auto;
+    background: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  
+  .painel.modoPublicoRegistro #registros {
+    width: 100%;
+    max-width: 800px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    padding: 40px;
   }
 
   /* AJUSTE DESKTOP: evita corte do topo/menu na direita */
@@ -1537,6 +1550,8 @@ body{
   align-items:stretch;
   }
   }
+
+
 .btn-consulta {
   margin-top: 10px;
 }
