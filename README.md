@@ -116,9 +116,9 @@ Cada registro recebe um **protocolo único** no formato `PREV-0001`.
 
 ## 👤 Autores   
 
-Desenvolvido por **[]**
-📧 ...
-🔗 [...](...)
+Desenvolvido por **[Carlos Eduardo Ferreira de Souza]**
+📧 carllseduardoferreiradesousa@gmail.com
+🔗 [github.com/CarlosEduardo146](https://github.com/CarlosEduardo146)
 
 Desenvolvido por **[Denilton Silva Oliveira]**
 📧 deniltonsilvarmk@gmail.com
