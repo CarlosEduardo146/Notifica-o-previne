@@ -3,120 +3,120 @@
 
 <head>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Notificação PREVINE</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<!-- Rounded Regular (mais comum) -->
-<link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Notificação PREVINE</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- Rounded Regular (mais comum) -->
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css">
 
-<!-- Rounded Bold -->
-<link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css">
+  <!-- Rounded Bold -->
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css">
 
-<!-- Rounded Solid -->
-<link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css">
-<link rel="stylesheet" href="./styles.css">
+  <!-- Rounded Solid -->
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css">
+  <link rel="stylesheet" href="./styles.css">
 
 
 </head>
 
 <body>
-<!-- PAGINA INICIAL -->
+  <!-- PAGINA INICIAL -->
 
-<div id="inicio">
+  <div id="inicio">
 
-<div class="topo">
+    <div class="topo">
 
-<img src="previne.png">
-<span>SISTEMA DE NOTIFICAÇÃO PREVINE</span>
-
-</div>
-
-<div class="container">
-
-<div class="titulo1">Bem-Vindo ao</div>
-<div class="titulo2">Sistema PREVINE</div>
-
-<div class="cards">
-
-<div class="card">
-<h3>Painel Administrativo</h3>
-<button class="botao verde" onclick="abrirLogin()">Entrar no Sistema</button>
-</div>
-
-<div class="card verde">
-<h2>Registrar Notificação </h2>
-<button class="botao branco" onclick="abrirRegistroPublico()">Acessar Registro</button>
-</div>
-
-</div>
-
-<div class="rodape">
-
-<span>Desenvolvimento e Apoio</span>
-
-<div class="logos">
-<img src="prefeitura.png">
-<img src="mpce.png">
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-
-<!-- LOGIN MODAL -->
-<div id="loginModal" class="overlay" style="display:none;">
-    <div class="modal">
-
-        <span class="fechar" onclick="fecharLogin()">✖</span>
-
-        <h2>ENTRAR COM E-MAIL E SENHA</h2>
-
-        <input id="usuario" type="email" placeholder="E-mail" class="input">
-                <input id="senha" type="password" placeholder="Senha" class="input">
-
-
-        <button class="btn" onclick="entrar()">Entrar</button>
-
-        <div class="link">
-            <p>Não lembra sua senha? <a href="#">Recuperar senha</a></p>
-        </div>
+      <img src="previne.png">
+      <span>SISTEMA DE NOTIFICAÇÃO PREVINE</span>
 
     </div>
 
-</div>
-<!-- PAINEL -->
+    <div class="container">
 
-<div class="painel" id="painel">
+      <div class="titulo1">Bem-Vindo ao</div>
+      <div class="titulo2">Sistema PREVINE</div>
 
-<div class="sidebar">
+      <div class="cards">
 
-<h3>PREVINE</h3>
+        <div class="card">
+          <h3>Painel Administrativo</h3>
+          <button class="botao verde" onclick="abrirLogin()">Entrar no Sistema</button>
+        </div>
 
-<button onclick="abrirAba('dashboard')"><i class="fi fi-sr-apps"></i> Dashboard</button>
-<button onclick="abrirAba('registros')"><i class="fi fi-sr-document"></i> Registros</button>
-<button onclick="abrirAba('relatorios')"><i class="fi fi-sr-chart-histogram"></i> Relatórios</button>
-<button onclick="abrirAba('consulta')">
-<i class="fi fi-sr-search"></i> Consultar Registro
-</button>
-<button id="menuUsuarios" onclick="abrirAba('usuarios')"><i class="fi fi-sr-users"></i> Usuários</button>
-<button onclick="sair()"><i class="fi fi-sr-sign-out-alt"></i> Sair</button>
+        <div class="card verde">
+          <h2>Registrar Notificação </h2>
+          <button class="botao branco" onclick="abrirRegistroPublico()">Acessar Registro</button>
+        </div>
 
-</div>
+      </div>
 
-<div class="main">
+      <div class="rodape">
 
-    <div class="topoAdmin">
+        <span>Desenvolvimento e Apoio</span>
 
-<div class="ladoDireito">
+        <div class="logos">
+          <img src="prefeitura.png">
+          <img src="mpce.png">
+        </div>
 
-<div class="notificacao" onclick="verNotificacoes()">
-<i class="fi fi-rr-bell-ring"></i> <span class="badge" id="badgeNotif">0</span>
+      </div>
 
-<div id="listaNotificacoes" style="
+    </div>
+  </div>
+
+  </div>
+
+  <!-- LOGIN MODAL -->
+  <div id="loginModal" class="overlay" style="display:none;">
+    <div class="modal">
+
+      <span class="fechar" onclick="fecharLogin()">✖</span>
+
+      <h2>ENTRAR COM E-MAIL E SENHA</h2>
+
+      <input id="usuario" type="email" placeholder="E-mail" class="input">
+      <input id="senha" type="password" placeholder="Senha" class="input">
+
+
+      <button class="btn" onclick="entrar()">Entrar</button>
+
+      <div class="link">
+        <p>Não lembra sua senha? <a href="#">Recuperar senha</a></p>
+      </div>
+
+    </div>
+
+  </div>
+  <!-- PAINEL -->
+
+  <div class="painel" id="painel">
+
+    <div class="sidebar">
+
+      <h3>PREVINE</h3>
+
+      <button onclick="abrirAba('dashboard')"><i class="fi fi-br-stats"></i> Dashboard</button>
+      <button onclick="abrirAba('registros')"><i class="fi fi-sr-document"></i> Registros</button>
+      <button onclick="abrirAba('relatorios')"><i class="fi fi-sr-chart-histogram"></i> Relatórios</button>
+      <button onclick="abrirAba('consulta')">
+        <i class="fi fi-br-search"></i> Consultar Registro
+      </button>
+      <button id="menuUsuarios" onclick="abrirAba('usuarios')"><i class="fi fi-sr-users"></i> Usuários</button>
+      <button onclick="sair()"><i class="fi fi-sr-sign-out-alt"></i> Sair</button>
+
+    </div>
+
+    <div class="main">
+
+      <div class="topoAdmin">
+
+        <div class="ladoDireito">
+
+          <div class="notificacao" onclick="verNotificacoes()">
+            <i class="fi fi-rr-bell-ring"></i> <span class="badge" id="badgeNotif">0</span>
+
+            <div id="listaNotificacoes" style="
 display:none;
 position:absolute;
 top:30px;
@@ -132,1784 +132,1789 @@ z-index:999;
 font-size:13px;
 "></div>
 
-</div>
-<div id="perfilModal" class="overlay" style="display:none;">
+          </div>
+          <div id="perfilModal" class="overlay" style="display:none;">
 
-    <div class="modal">
+            <div class="modal">
 
-        <span class="fechar" onclick="fecharPerfil()">✖</span>
+              <span class="fechar" onclick="fecharPerfil()">✖</span>
 
-        <h2>Meu Perfil</h2>
+              <h2>Meu Perfil</h2>
 
-        <div class="formUsuario">
+              <div class="formUsuario">
 
-            <div class="linha">
-                <div class="campo">
+                <div class="linha">
+                  <div class="campo">
                     <label>Nome</label>
                     <input id="perfilNome">
-                </div>
+                  </div>
 
-                <div class="campo">
+                  <div class="campo">
                     <label>Email</label>
                     <input id="perfilEmail" disabled>
+                  </div>
                 </div>
-            </div>
 
-            <div class="linha">
-                <div class="campo">
+                <div class="linha">
+                  <div class="campo">
                     <label>CPF</label>
                     <input id="perfilCpf">
+                  </div>
+
+                  <div class="campo">
+                    <label>Nível</label>
+                    <input id="perfilNivel" disabled>
+                  </div>
+                </div>
+
+                <button class="botaoSalvar" onclick="salvarPerfil()">Salvar Alterações</button>
+
+              </div>
+
+            </div>
+
+          </div>
+          <div id="senhaModal" class="overlay" style="display:none;">
+
+            <div class="modal">
+
+              <span class="fechar" onclick="fecharSenha()">✖</span>
+
+              <h2>Alterar Senha</h2>
+
+              <div class="formUsuario">
+
+                <div class="campo">
+                  <label>Senha Atual</label>
+                  <input type="password" id="senhaAtual">
                 </div>
 
                 <div class="campo">
-                    <label>Nível</label>
-                    <input id="perfilNivel" disabled>
+                  <label>Nova Senha</label>
+                  <input type="password" id="novaSenha">
                 </div>
+
+                <div class="campo">
+                  <label>Confirmar Nova Senha</label>
+                  <input type="password" id="confirmarSenha">
+                </div>
+
+                <button class="botaoSalvar" onclick="salvarSenha()">Salvar Nova Senha</button>
+
+              </div>
+
             </div>
 
-            <button class="botaoSalvar" onclick="salvarPerfil()">Salvar Alterações</button>
+          </div>
+          <div id="senha" class="aba">
 
-        </div>
+            <h2>Alterar Senha</h2>
 
-    </div>
+            <div class="formUsuario">
 
-</div>
-<div id="senhaModal" class="overlay" style="display:none;">
-
-    <div class="modal">
-
-        <span class="fechar" onclick="fecharSenha()">✖</span>
-
-        <h2>Alterar Senha</h2>
-
-        <div class="formUsuario">
-
-            <div class="campo">
+              <div class="campo">
                 <label>Senha Atual</label>
                 <input type="password" id="senhaAtual">
-            </div>
+              </div>
 
-            <div class="campo">
+              <div class="campo">
                 <label>Nova Senha</label>
                 <input type="password" id="novaSenha">
-            </div>
+              </div>
 
-            <div class="campo">
+              <div class="campo">
                 <label>Confirmar Nova Senha</label>
                 <input type="password" id="confirmarSenha">
+              </div>
+
+              <button class="botaoSalvar" onclick="salvarSenha()">Alterar Senha</button>
+
             </div>
 
-            <button class="botaoSalvar" onclick="salvarSenha()">Salvar Nova Senha</button>
+          </div>
+          <div class="usuarioMenu" onclick="toggleMenuUsuario()">
+
+            <div class="avatar">C</div>
+
+            <div class="infoUsuario">
+              <strong id="nomeUsuario">Administrador</strong>
+              <small id="perfilSubtitulo">Usuário logado</small>
+            </div>
+
+          </div>
+
+          <div id="dropdownUsuario" class="dropdownUsuario">
+
+            <div onclick="abrirPerfil()"><i class="fi fi-sr-user"></i> Perfil</div>
+            <div onclick="alterarSenha()"><i class="fi fi-sr-key"></i> Alterar senha</div>
+            <div onclick="sair()"><i class="fi fi-sr-sign-out-alt"></i> Sair</div>
+
+          </div>
 
         </div>
 
-    </div>
+      </div>
 
-</div>
-<div id="senha" class="aba">
+      <div id="dashboard" class="aba">
 
-<h2>Alterar Senha</h2>
+        <h2>Dashboard</h2>
+        <div style="margin-bottom:20px; display:flex; gap:10px; flex-wrap:wrap;">
 
-<div class="formUsuario">
+          <select id="filtroMes">
+            <option value="">Todos os meses</option>
+            <option value="0">Jan</option>
+            <option value="1">Fev</option>
+            <option value="2">Mar</option>
+            <option value="3">Abr</option>
+            <option value="4">Mai</option>
+            <option value="5">Jun</option>
+            <option value="6">Jul</option>
+            <option value="7">Ago</option>
+            <option value="8">Set</option>
+            <option value="9">Out</option>
+            <option value="10">Nov</option>
+            <option value="11">Dez</option>
+          </select>
 
-<div class="campo">
-<label>Senha Atual</label>
-<input type="password" id="senhaAtual">
-</div>
+          <input type="number" id="filtroAno" placeholder="Ano">
 
-<div class="campo">
-<label>Nova Senha</label>
-<input type="password" id="novaSenha">
-</div>
+          <input type="text" id="filtroTipo" placeholder="Tipo de violência">
 
-<div class="campo">
-<label>Confirmar Nova Senha</label>
-<input type="password" id="confirmarSenha">
-</div>
+          <button onclick="carregarGraficos()">Filtrar</button>
 
-<button class="botaoSalvar" onclick="salvarSenha()">Alterar Senha</button>
+        </div>
+        <div class="cardsDashboard">
 
-</div>
+          <div class="cardDash">
+            <h3 id="totalRegistros">0</h3>
+            <p>Notificações Registradas</p>
+          </div>
 
-</div>
-<div class="usuarioMenu" onclick="toggleMenuUsuario()">
+          <div class="cardDash">
+            <h3 id="casosAndamento">0</h3>
+            <p>Casos em Andamento</p>
+          </div>
 
-<div class="avatar">C</div>
+          <div class="cardDash">
+            <h3 id="casosConcluidos">0</h3>
+            <p>Casos Concluídos</p>
+          </div>
 
-<div class="infoUsuario">
-<strong id="nomeUsuario">Administrador</strong>
-<small id="perfilSubtitulo">Usuário logado</small>
-</div>
+        </div>
 
-</div>
+        <div class="graficos">
 
-<div id="dropdownUsuario" class="dropdownUsuario">
+          <div class="grafico">
+            <h3>Notificações por Mês</h3>
+            <canvas id="graficoMes"></canvas>
+          </div>
 
-<div onclick="abrirPerfil()"><i class="fi fi-sr-user"></i> Perfil</div>
-<div onclick="alterarSenha()"><i class="fi fi-sr-key"></i> Alterar senha</div>
-<div onclick="sair()"><i class="fi fi-sr-sign-out-alt"></i> Sair</div>
+          <div class="grafico">
+            <h3>Distribuição por Sexo</h3>
+            <canvas id="graficoSexo"></canvas>
+          </div>
 
-</div>
+          <div class="grafico">
+            <h3>Distribuição por Idade</h3>
+            <canvas id="graficoIdade"></canvas>
+          </div>
 
-</div>
+          <div class="grafico">
+            <h3>Status dos Casos</h3>
+            <canvas id="graficoStatus"></canvas>
+          </div>
 
-</div>
+        </div>
+      </div><!-- REGISTROS -->
+      <div id="registros" class="aba">
 
-<div id="dashboard" class="aba">
+        <h2>Registro de Notificação</h2>
 
-<h2>Dashboard</h2>
-<div style="margin-bottom:20px; display:flex; gap:10px; flex-wrap:wrap;">
+        <div class="abasTopo">
 
-<select id="filtroMes">
-<option value="">Todos os meses</option>
-<option value="0">Jan</option>
-<option value="1">Fev</option>
-<option value="2">Mar</option>
-<option value="3">Abr</option>
-<option value="4">Mai</option>
-<option value="5">Jun</option>
-<option value="6">Jul</option>
-<option value="7">Ago</option>
-<option value="8">Set</option>
-<option value="9">Out</option>
-<option value="10">Nov</option>
-<option value="11">Dez</option>
-</select>
+          <div class="abaItem ativa">1 Ocorrência</div>
+          <div class="abaItem">2 Vítima</div>
+          <div class="abaItem">3 Responsável</div>
+          <div class="abaItem">4 Autor</div>
+          <div class="abaItem">5 Tipificação</div>
+          <div class="abaItem">6 Resumo</div>
+          <div class="abaItem">7 Encaminhamento</div>
+
+        </div>
+
+        <!-- ETAPA 1 -->
+
+        <div class="etapa ativa">
+
+          <h3>Dados da Ocorrência</h3>
+
+          <div class="linha">
+
+            <div class="campo">
+              Data da ocorrência
+              <input type="date" id="dataOcorrencia">
+            </div>
+
+            <div class="campo">
+              Local da ocorrência
+              <input type="text" id="localOcorrencia">
+            </div>
+
+          </div>
+
+
+          <div class="linha">
+
+            <div class="campo">
+              Município
+              <input type="text" id="municipio">
+            </div>
+
+            <div class="campo">
+              Estado
+              <input type="text" id="estado">
+            </div>
+          </div>
+          <button class="botaoProximo" onclick="proximo()">Próximo</button>
+
+        </div>
+
+        <!-- ETAPA 2 -->
+
+        <div class="etapa">
+
+          <h3>Dados da Vítima</h3>
+
+          <div class="linha">
+
+            <div class="campo">
+              Nome da vítima
+              <input type="text" id="nomeVitima">
+            </div>
+
+            <div class="campo">
+              Idade
+              <input type="number" id="idadeVitima">
+            </div>
+
+          </div>
+
+          <div class="linha">
 
-<input type="number" id="filtroAno" placeholder="Ano">
+            <div class="campo">
+              Sexo
+              <select id="sexoVitima">
+                <option>Feminino</option>
+                <option>Masculino</option>
+                <option>Outro</option>
+              </select>
+            </div>
+
+            <div class="campo">
+              CPF
+              <input type="text" id="cpfVitima">
+            </div>
+            <h4>Raça / Cor</h4>
+            <label><input type="radio" name="raca" value="Branca"> Branca</label>
+            <label><input type="radio" name="raca" value="Preta"> Preta</label>
+            <label><input type="radio" name="raca" value="Parda"> Parda</label>
+            <label><input type="radio" name="raca" value="Indígena"> Indígena</label>
+            <label><input type="radio" name="raca" value="Amarela"> Amarela</label>
+
+            <h4>Identidade de Gênero</h4>
+            <label><input type="radio" name="genero" value="Homem Cisgênero"> Homem Cisgênero</label>
+            <label><input type="radio" name="genero" value="Mulher Cisgênero"> Mulher Cisgênero</label>
+            <label><input type="radio" name="genero" value="Homem Trans"> Homem Trans</label>
+            <label><input type="radio" name="genero" value="Mulher Trans"> Mulher Trans</label>
+            <label><input type="radio" name="genero" value="Travesti"> Travesti</label>
 
-<input type="text" id="filtroTipo" placeholder="Tipo de violência">
+            <h4>Orientação Sexual</h4>
+            <label><input type="radio" name="orientacao" value="Heterossexual"> Heterossexual</label>
+            <label><input type="radio" name="orientacao" value="Homossexual"> Homossexual</label>
+            <label><input type="radio" name="orientacao" value="Bissexual"> Bissexual</label>
+            <label><input type="radio" name="orientacao" value="Não se aplica"> Não se aplica</label>
 
-<button onclick="carregarGraficos()">Filtrar</button>
+            <h4>Escolaridade</h4>
+            <select id="escolaridade">
+              <option>Creche</option>
+              <option>Pré-escola</option>
+              <option>1º ano</option>
+              <option>2º ano</option>
+              <option>3º ano</option>
+              <option>4º ano</option>
+              <option>5º ano</option>
+              <option>6º ano</option>
+              <option>7º ano</option>
+              <option>8º ano</option>
+              <option>9º ano</option>
+              <option>Ensino Médio</option>
+            </select>
+          </div>
 
-</div>
-<div class="cardsDashboard">
+          <button class="botaoVoltar" onclick="voltar()">Voltar</button>
+          <button class="botaoProximo" onclick="proximo()">Próximo</button>
 
-<div class="cardDash">
-<h3 id="totalRegistros">0</h3>
-<p>Notificações Registradas</p>
-</div>
+        </div>
 
-<div class="cardDash">
-<h3 id="casosAndamento">0</h3>
-<p>Casos em Andamento</p>
-</div>
+        <!-- ETAPA 3 -->
 
-<div class="cardDash">
-<h3 id="casosConcluidos">0</h3>
-<p>Casos Concluídos</p>
-</div>
+        <div class="etapa">
 
-</div>
+          <h3>Responsável</h3>
 
-<div class="graficos">
+          <div class="linha">
 
-<div class="grafico">
-<h3>Notificações por Mês</h3>
-<canvas id="graficoMes"></canvas>
-</div>
+            <div class="campo">
+              Nome do responsável
+              <input type="text" id="responsavel">
+            </div>
 
-<div class="grafico">
-<h3>Distribuição por Sexo</h3>
-<canvas id="graficoSexo"></canvas>
-</div>
+            <div class="campo">
+              Parentesco
+              <input type="text" id="parentesco">
+            </div>
+          </div>
+          <div class="linha">
 
-<div class="grafico">
-<h3>Distribuição por Idade</h3>
-<canvas id="graficoIdade"></canvas>
-</div>
+            <div class="campo">
+              Telefone
+              <input type="text" id="telefoneResponsavel">
+            </div>
 
-<div class="grafico">
-<h3>Status dos Casos</h3>
-<canvas id="graficoStatus"></canvas>
-</div>
+            <div class="campo">
+              Endereço
+              <input type="text" id="enderecoResponsavel">
+            </div>
+          </div>
 
-</div></div><!-- REGISTROS --><div id="registros" class="aba">
+          <button class="botaoVoltar" onclick="voltar()">Voltar</button>
+          <button class="botaoProximo" onclick="proximo()">Próximo</button>
 
-<h2>Registro de Notificação</h2>
+        </div>
 
-<div class="abasTopo">
+        <!-- ETAPA 4 -->
 
-<div class="abaItem ativa">1 Ocorrência</div>
-<div class="abaItem">2 Vítima</div>
-<div class="abaItem">3 Responsável</div>
-<div class="abaItem">4 Autor</div>
-<div class="abaItem">5 Tipificação</div>
-<div class="abaItem">6 Resumo</div>
-<div class="abaItem">7 Encaminhamento</div>
+        <div class="etapa">
 
-</div>
+          <h3>Autor</h3>
 
-<!-- ETAPA 1 -->
-
-<div class="etapa ativa">
-
-<h3>Dados da Ocorrência</h3>
-
-<div class="linha">
-
-<div class="campo">
-Data da ocorrência
-<input type="date" id="dataOcorrencia">
-    </div>
-
-<div class="campo">
-Local da ocorrência
-<input type="text" id="localOcorrencia">
-</div>
-
-</div>
+          <div class="linha">
 
+            <div class="campo">
+              Nome do autor
+              <input type="text" id="autor">
+            </div>
 
-<div class="linha">
+            <div class="campo">
+              Idade
+              <input type="number" id="idadeAutor">
+            </div>
+          </div>
+          <div class="linha">
 
-<div class="campo">
-Município
-<input type="text" id="municipio">
-</div>
+            <div class="campo">
+              Relação com a vítima
+              <input type="text" id="relacaoAutor">
+            </div>
 
-<div class="campo">
-Estado
-<input type="text" id="estado">
-</div>
-</div>
-<button class="botaoProximo" onclick="proximo()">Próximo</button>
+          </div>
 
-</div>
-
-<!-- ETAPA 2 -->
-
-<div class="etapa">
-
-<h3>Dados da Vítima</h3>
-
-<div class="linha">
-
-<div class="campo">
-Nome da vítima
-<input type="text" id="nomeVitima">
-</div>
-
-<div class="campo">
-Idade
-<input type="number" id="idadeVitima">
-</div>
+          <button class="botaoVoltar" onclick="voltar()">Voltar</button>
+          <button class="botaoProximo" onclick="proximo()">Próximo</button>
 
-</div>
+        </div>
 
-<div class="linha">
+        <!-- ETAPA 5 -->
 
-<div class="campo">
-Sexo
-<select id="sexoVitima">
-<option>Feminino</option>
-<option>Masculino</option>
-<option>Outro</option>
-</select>
-</div>
+        <div class="etapa">
 
-<div class="campo">
-CPF
-<input type="text" id="cpfVitima">
-</div>
-<h4>Raça / Cor</h4>
-<label><input type="radio" name="raca" value="Branca"> Branca</label>
-<label><input type="radio" name="raca" value="Preta"> Preta</label>
-<label><input type="radio" name="raca" value="Parda"> Parda</label>
-<label><input type="radio" name="raca" value="Indígena"> Indígena</label>
-<label><input type="radio" name="raca" value="Amarela"> Amarela</label>
+          <h3>Tipificação</h3>
 
-<h4>Identidade de Gênero</h4>
-<label><input type="radio" name="genero" value="Homem Cisgênero"> Homem Cisgênero</label>
-<label><input type="radio" name="genero" value="Mulher Cisgênero"> Mulher Cisgênero</label>
-<label><input type="radio" name="genero" value="Homem Trans"> Homem Trans</label>
-<label><input type="radio" name="genero" value="Mulher Trans"> Mulher Trans</label>
-<label><input type="radio" name="genero" value="Travesti"> Travesti</label>
+          <h3>Tipificação da Violência</h3>
 
-<h4>Orientação Sexual</h4>
-<label><input type="radio" name="orientacao" value="Heterossexual"> Heterossexual</label>
-<label><input type="radio" name="orientacao" value="Homossexual"> Homossexual</label>
-<label><input type="radio" name="orientacao" value="Bissexual"> Bissexual</label>
-<label><input type="radio" name="orientacao" value="Não se aplica"> Não se aplica</label>
+          <h4>Violência Física</h4>
+          <label><input type="checkbox" value="Agressão Física"> Agressão Física</label>
+          <label><input type="checkbox" value="Maus-tratos"> Maus-tratos</label>
+          <label><input type="checkbox" value="Negligência"> Negligência</label>
 
-<h4>Escolaridade</h4>
-<select id="escolaridade">
-<option>Creche</option>
-<option>Pré-escola</option>
-<option>1º ano</option>
-<option>2º ano</option>
-<option>3º ano</option>
-<option>4º ano</option>
-<option>5º ano</option>
-<option>6º ano</option>
-<option>7º ano</option>
-<option>8º ano</option>
-<option>9º ano</option>
-<option>Ensino Médio</option>
-</select>
-</div>
+          <h4>Violência Psicológica</h4>
+          <label><input type="checkbox" value="Ameaça"> Ameaça</label>
+          <label><input type="checkbox" value="Humilhação"> Humilhação</label>
+          <label><input type="checkbox" value="Bullying"> Bullying</label>
 
-<button class="botaoVoltar" onclick="voltar()">Voltar</button>
-<button class="botaoProximo" onclick="proximo()">Próximo</button>
+          <h4>Violência Sexual</h4>
+          <label><input type="checkbox" value="Abuso Sexual"> Abuso Sexual</label>
+          <label><input type="checkbox" value="Assédio Sexual"> Assédio Sexual</label>
+          <label><input type="checkbox" value="Exploração Sexual"> Exploração Sexual</label>
 
-</div>
+          <button class="botaoVoltar" onclick="voltar()">Voltar</button>
+          <button class="botaoProximo" onclick="proximo()">Próximo</button>
+        </div>
 
-<!-- ETAPA 3 -->
+        <!-- ETAPA 6 -->
 
-<div class="etapa">
+        <div class="etapa">
 
-<h3>Responsável</h3>
+          <h3>Resumo da Ocorrência</h3>
 
-<div class="linha">
+          <textarea id="resumo"></textarea>
 
-<div class="campo">
-Nome do responsável
-<input type="text" id="responsavel">
-</div>
+          <button class="botaoVoltar" onclick="voltar()">Voltar</button>
+          <button class="botaoProximo" onclick="proximo()">Próximo</button>
 
-<div class="campo">
-Parentesco
-<input type="text" id="parentesco">
-</div>
-</div>
-<div class="linha">
+        </div>
 
-<div class="campo">
-Telefone
-<input type="text" id="telefoneResponsavel">
-</div>
+        <!-- ETAPA 7 -->
 
-<div class="campo">
-Endereço
-<input type="text" id="enderecoResponsavel">
-</div>
-</div>
+        <div class="etapa">
 
-<button class="botaoVoltar" onclick="voltar()">Voltar</button>
-<button class="botaoProximo" onclick="proximo()">Próximo</button>
+          <h3>Encaminhamento</h3>
 
-</div>
+          <textarea id="encaminhamento"></textarea>
 
-<!-- ETAPA 4 -->
+          <button class="botaoVoltar" onclick="voltar()">Voltar</button>
+          <button class="botaoProximo" onclick="salvarNotificacao()">Salvar Notificação</button>
 
-<div class="etapa">
+        </div>
 
-<h3>Autor</h3>
+      </div><!-- RELATORIOS -->
+      <div id="relatorios" class="aba">
 
-<div class="linha">
+        <h2>Menu de Relatórios</h2>
 
-<div class="campo">
-Nome do autor
-<input type="text" id="autor">
-</div>
+        <div class="cardsRelatorio">
 
-<div class="campo">
-Idade
-<input type="number" id="idadeAutor">
-</div>
-</div>
-<div class="linha">
+          <div class="cardRelatorio" onclick="relatorioMensal()">
+            <h3>Relatório Mensal</h3>
+            <p>Notificações por mês</p>
+          </div>
 
-<div class="campo">
-Relação com a vítima
-<input type="text" id="relacaoAutor">
-</div>
+          <div class="cardRelatorio" onclick="relatorioVitimas()">
+            <h3>Relatório de Vítimas</h3>
+            <p>Lista de vítimas registradas</p>
+          </div>
 
-</div>
+          <div class="cardRelatorio" onclick="relatorioTipos()">
+            <h3>Relatório por Tipo</h3>
+            <p>Tipos de violência registrados</p>
+          </div>
 
-<button class="botaoVoltar" onclick="voltar()">Voltar</button>
-<button class="botaoProximo" onclick="proximo()">Próximo</button>
+          <div class="cardRelatorio" onclick="exportarTodosPDF()">
+            <h3>Exportar Relatório Geral</h3>
+            <p>Gerar relatório completo em PDF</p>
+          </div>
 
-</div>
+        </div>
 
-<!-- ETAPA 5 -->
+        <div id="resultadoRelatorio"></div>
 
-<div class="etapa">
+        <table id="tabelaRelatorios">
 
-<h3>Tipificação</h3>
+          <thead>
+            <tr>
+              <th>Protocolo</th>
+              <th>Data</th>
+              <th>Vítima</th>
+              <th>Tipo</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
 
-<h3>Tipificação da Violência</h3>
+          <tbody></tbody>
 
-<h4>Violência Física</h4>
-<label><input type="checkbox" value="Agressão Física"> Agressão Física</label>
-<label><input type="checkbox" value="Maus-tratos"> Maus-tratos</label>
-<label><input type="checkbox" value="Negligência"> Negligência</label>
+        </table>
 
-<h4>Violência Psicológica</h4>
-<label><input type="checkbox" value="Ameaça"> Ameaça</label>
-<label><input type="checkbox" value="Humilhação"> Humilhação</label>
-<label><input type="checkbox" value="Bullying"> Bullying</label>
+      </div>
+      <div id="consulta" class="aba">
 
-<h4>Violência Sexual</h4>
-<label><input type="checkbox" value="Abuso Sexual"> Abuso Sexual</label>
-<label><input type="checkbox" value="Assédio Sexual"> Assédio Sexual</label>
-<label><input type="checkbox" value="Exploração Sexual"> Exploração Sexual</label>
-    
-<button class="botaoVoltar" onclick="voltar()">Voltar</button>
-<button class="botaoProximo" onclick="proximo()">Próximo</button>
-</div>
+        <h2 class="tituloConsulta">Consultar Registro</h2>
 
-<!-- ETAPA 6 -->
+        <div class="boxConsulta">
 
-<div class="etapa">
+          <div class="campoBusca">
+            <i class="fi fi-sr-search"></i>
+            <input type="text" id="buscaProtocolo" placeholder="Digite o protocolo (ex: PREV-0001)"
+              onkeyup="buscarRegistro()">
+            <button onclick="buscarRegistro()">Buscar</button>
+          </div>
 
-<h3>Resumo da Ocorrência</h3>
+        </div>
 
-<textarea id="resumo"></textarea>
+        <div id="resultadoConsulta" class="resultadoConsulta"></div>
 
-<button class="botaoVoltar" onclick="voltar()">Voltar</button>
-<button class="botaoProximo" onclick="proximo()">Próximo</button>
+      </div>
 
-</div>
+      <div id="usuarios" class="aba">
 
-<!-- ETAPA 7 -->
+        <!-- TOPO -->
+        <div class="topoUsuarios">
+          <h2>Gerenciamento de Usuários</h2>
+        </div>
 
-<div class="etapa">
+        <!-- CARDS -->
+        <div class="cardsUsuarios">
 
-<h3>Encaminhamento</h3>
+          <div class="cardUsuario">
+            <h3 id="totalUsuarios">0</h3>
+            <p>Total de Usuários</p>
+          </div>
 
-<textarea id="encaminhamento"></textarea>
+          <div class="cardUsuario">
+            <h3 id="usuariosAtivos">0</h3>
+            <p>Usuários Ativos</p>
+          </div>
 
-<button class="botaoVoltar" onclick="voltar()">Voltar</button>
-<button class="botaoProximo" onclick="salvarNotificacao()">Salvar Notificação</button>
+          <div class="cardUsuario">
+            <h3 id="usuariosInativos">0</h3>
+            <p>Usuários Inativos</p>
+          </div>
 
-</div>
+          <div class="cardUsuario">
+            <h3 id="admins">0</h3>
+            <p>Administradores</p>
+          </div>
 
-</div><!-- RELATORIOS -->
-<div id="relatorios" class="aba">
+        </div>
 
-<h2>Menu de Relatórios</h2>
+        <!-- PESQUISA -->
+        <input id="pesquisaUsuario" placeholder="🔍 Pesquisar usuário..." onkeyup="pesquisarUsuario()">
 
-<div class="cardsRelatorio">
+        <!-- FORMULÁRIO -->
+        <div class="formUsuario">
 
-<div class="cardRelatorio" onclick="relatorioMensal()">
-<h3>Relatório Mensal</h3>
-<p>Notificações por mês</p>
-</div>
+          <div class="linha">
+            <div class="campo">
+              <label>Nome</label>
+              <input id="nome">
+            </div>
 
-<div class="cardRelatorio" onclick="relatorioVitimas()">
-<h3>Relatório de Vítimas</h3>
-<p>Lista de vítimas registradas</p>
-</div>
+            <div class="campo">
+              <label>CPF</label>
+              <input id="cpf">
+            </div>
+          </div>
 
-<div class="cardRelatorio" onclick="relatorioTipos()">
-<h3>Relatório por Tipo</h3>
-<p>Tipos de violência registrados</p>
-</div>
+          <div class="linha">
+            <div class="campo">
+              <label>Email</label>
+              <input id="email">
+            </div>
 
-<div class="cardRelatorio" onclick="exportarTodosPDF()">
-<h3>Exportar Relatório Geral</h3>
-<p>Gerar relatório completo em PDF</p>
-</div>
+            <div class="campo">
+              <label>Nível</label>
+              <select id="nivel">
+                <option value="usuario">Usuário</option>
+                <option value="admin">Administrador</option>
+              </select>
+            </div>
+          </div>
 
-</div>
+          <button class="botaoSalvar" onclick="cadastrarUsuario()">Cadastrar Usuário</button>
 
-<div id="resultadoRelatorio"></div>
+        </div>
 
-<table id="tabelaRelatorios">
+        <!-- TABELA -->
+        <table id="tabelaUsuarios">
 
-<thead>
-<tr>
-<th>Protocolo</th>
-<th>Data</th>
-<th>Vítima</th>
-<th>Tipo</th>
-<th>Status</th>
-<th>Ações</th></tr>
-</thead>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>CPF</th>
+              <th>Email</th>
+              <th>Senha</th>
+              <th>Nível</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
 
-<tbody></tbody>
+          <tbody></tbody>
 
-</table>
+        </table>
 
-</div>
-<div id="consulta" class="aba">
+      </div>
+      <script>
+        // GARANTE QUE O ADMIN SEMPRE EXISTE
 
-<h2 class="tituloConsulta">Consultar Registro</h2>
+        let usuarios = JSON.parse(localStorage.getItem("usuarios"));
 
-<div class="boxConsulta">
+        if (!usuarios) {
+          usuarios = [];
+        }
 
-<div class="campoBusca">
-    <i class="fi fi-sr-search"></i>
-    <input type="text" id="buscaProtocolo" placeholder="Digite o protocolo (ex: PREV-0001)" onkeyup="buscarRegistro()">
-    <button onclick="buscarRegistro()">Buscar</button>
-</div>
+        let existeAdmin = usuarios.find(u => u.email === "admin");
 
-</div>
+        if (!existeAdmin) {
+          usuarios.push({
+            nome: "Administrador",
+            email: "admin",
+            senha: "1234",
+            nivel: "admin",
+            status: "Ativo"
+          });
+          localStorage.setItem("usuarios", JSON.stringify(usuarios));
+        }
 
-<div id="resultadoConsulta" class="resultadoConsulta"></div>
+        function gerarProtocolo(numero) {
+          return "PREV-" + String(numero).padStart(4, '0');
+        }
+        let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
+        let protocolo = relatorios.length + 1;
 
-</div>
+        function abrirLogin() {
+          document.getElementById("loginModal").style.display = "flex"
+        }
+        function fecharLogin() {
+          document.getElementById("loginModal").style.display = "none"
+        }
+        function entrar() {
 
-<div id="usuarios" class="aba">
+          let user = document.getElementById("usuario").value.trim();
+          let senha = document.getElementById("senha").value.trim();
 
-<!-- TOPO -->
-<div class="topoUsuarios">
-<h2>Gerenciamento de Usuários</h2>
-</div>
+          let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
-<!-- CARDS -->
-<div class="cardsUsuarios">
+          let encontrado = usuarios.find(u => u.email === user && u.senha === senha);
 
-<div class="cardUsuario">
-  <h3 id="totalUsuarios">0</h3>
-  <p>Total de Usuários</p>
-</div>
+          if (encontrado) {
 
-<div class="cardUsuario">
-  <h3 id="usuariosAtivos">0</h3>
-  <p>Usuários Ativos</p>
-</div>
+            if (encontrado.status === "Inativo") {
+              alert("Usuário inativo! Procure o administrador.");
+              return;
+            }
 
-<div class="cardUsuario">
-  <h3 id="usuariosInativos">0</h3>
-  <p>Usuários Inativos</p>
-</div>
+            localStorage.setItem("tipo", encontrado.nivel);
+            localStorage.setItem("usuarioLogado", JSON.stringify(encontrado));
 
-<div class="cardUsuario">
-  <h3 id="admins">0</h3>
-  <p>Administradores</p>
-</div>
+            alert("Login realizado!");
 
-</div>
+            abrirPainel();
 
-<!-- PESQUISA -->
-<input id="pesquisaUsuario" placeholder="🔍 Pesquisar usuário..." onkeyup="pesquisarUsuario()">
+          } else {
 
-<!-- FORMULÁRIO -->
-<div class="formUsuario">
+            alert("Usuário ou senha inválidos!");
+          }
+        }
 
-<div class="linha">
-  <div class="campo">
-    <label>Nome</label>
-    <input id="nome">
-  </div>
+        function abrirPainel() {
 
-  <div class="campo">
-    <label>CPF</label>
-    <input id="cpf">
-  </div>
-</div>
+          let painel = document.getElementById("painel");
+          let modoPublico = painel.classList.contains("modoPubli coRegistro");
 
-<div class="linha">
-  <div class="campo">
-    <label>Email</label>
-    <input id="email">
-  </div>
+          if (!modoPublico) {
 
-  <div class="campo">
-    <label>Nível</label>
-    <select id="nivel">
-      <option value="usuario">Usuário</option>
-      <option value="admin">Administrador</option>
-    </select>
-  </div>
-</div>
+            let userString = localStorage.getItem("usuarioLogado");
 
-<button class="botaoSalvar" onclick="cadastrarUsuario()">Cadastrar Usuário</button>
+            if (!userString) {
+              alert("Acesso não autorizado!");
+              location.reload();
+              return;
+            }
 
-</div>
+            let user = JSON.parse(userString);
 
-<!-- TABELA -->
-<table id="tabelaUsuarios">
+            if (!user || user.status === "Inativo") {
+              alert("Usuário inativo! Acesso bloqueado.");
+              localStorage.removeItem("usuarioLogado");
+              location.reload();
+              return;
+            }
 
-<thead>
-  <tr>
-    <th>Nome</th>
-    <th>CPF</th>
-    <th>Email</th>
-    <th>Senha</th>
-    <th>Nível</th>
-    <th>Status</th>
-    <th>Ações</th>
-  </tr>
-</thead>
+          }
 
-<tbody></tbody>
+          document.getElementById("loginModal").style.display = "none"
+          document.getElementById("inicio").style.display = "none"
+          document.getElementById("painel").style.display = "block"
+          document.getElementById("painel").classList.remove("modoPublicoRegistro")
 
-</table>
+          let sidebar = document.querySelector(".sidebar")
+          if (sidebar) sidebar.style.display = ""
 
-</div>
-<script>
-// GARANTE QUE O ADMIN SEMPRE EXISTE
+          let topo = document.querySelector(".topoAdmin")
+          if (topo) topo.style.display = ""
 
-let usuarios = JSON.parse(localStorage.getItem("usuarios"));
+          let usuarioMenu = document.querySelector(".usuarioMenu")
+          if (usuarioMenu) usuarioMenu.style.display = "flex"
 
-if(!usuarios){
-usuarios = [];
-}
+          let tipo = localStorage.getItem("tipo")
 
-let existeAdmin = usuarios.find(u => u.email === "admin");
+          // MOSTRA MENU USUÁRIO SOMENTE NO ADMIN
+          let menuUsuarios = document.getElementById("menuUsuarios")
+          if (tipo !== "admin") {
+            if (menuUsuarios) menuUsuarios.style.display = "none"
+          } else {
+            if (menuUsuarios) menuUsuarios.style.display = "block"
+          }
 
-if(!existeAdmin){
-usuarios.push({
-nome:"Administrador",
-email:"admin",
-senha:"1234",
-nivel:"admin",
-status:"Ativo"
-});
-localStorage.setItem("usuarios", JSON.stringify(usuarios));
-}
+          setTimeout(() => abrirAba("dashboard"), 100)
 
-function gerarProtocolo(numero){
-return "PREV-" + String(numero).padStart(4,'0');
-}
-let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-let protocolo = relatorios.length + 1;
+          atualizarBadge()
 
-function abrirLogin(){
-document.getElementById("loginModal").style.display="flex"
-}
-function fecharLogin(){
-document.getElementById("loginModal").style.display="none"
-}
-function entrar(){
+          let user = JSON.parse(localStorage.getItem("usuarioLogado"))
 
-let user = document.getElementById("usuario").value.trim();
-let senha = document.getElementById("senha").value.trim();
+          if (user) {
+            document.getElementById("nomeUsuario").innerText = user.nome
+            document.querySelector(".avatar").innerText = user.nome.charAt(0)
 
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+            let subtitulo = document.getElementById("perfilSubtitulo")
+            if (subtitulo) {
+              subtitulo.innerText = user.nivel ? "Nível: " + user.nivel : "Usuário logado"
+            }
+          }
 
-let encontrado = usuarios.find(u => u.email === user && u.senha === senha);
 
-if(encontrado){
+        }
+        atualizarBotaoFlutuante()
 
-if(encontrado.status === "Inativo"){
-alert("Usuário inativo! Procure o administrador.");
-return;
-}
 
-localStorage.setItem("tipo", encontrado.nivel);
-localStorage.setItem("usuarioLogado", JSON.stringify(encontrado));
+        function abrirAba(nome) {
 
-alert("Login realizado!");
+          let tipo = localStorage.getItem("tipo")
 
-abrirPainel();
+          if (nome === "usuarios" && tipo !== "admin") {
+            alert("Acesso permitido apenas para administrador")
+            return
+          }
 
-}else{
+          let abas = document.querySelectorAll(".aba")
 
-alert("Usuário ou senha inválidos!");
-}}
+          abas.forEach(aba => {
+            aba.style.display = "none"
+          })
 
-function abrirPainel(){
+          let ativa = document.getElementById(nome)
+          if (!ativa) return
 
-let painel = document.getElementById("painel");
-let modoPublico = painel.classList.contains("modoPubli coRegistro");
+          ativa.style.display = "block"
 
-if(!modoPublico){
+          ativa.style.animation = "none"
+          setTimeout(() => {
+            ativa.style.animation = "fadeSlide 0.4s"
+          }, 10)
 
-let userString = localStorage.getItem("usuarioLogado");
+          // gráficos
+          if (nome === "dashboard") {
+            setTimeout(() => carregarGraficos(), 100)
+          } else {
+            destruirGraficos && destruirGraficos()
+          }
 
-if(!userString){
-alert("Acesso não autorizado!");
-location.reload();
-return;
-}
+          if (nome === "relatorios") {
+            carregarRelatorios && carregarRelatorios()
+          }
 
-let user = JSON.parse(userString);
+          /* 🔥 NOVO: controle do histórico */
+          let historico = document.getElementById("historicoBusca")
 
-if(!user || user.status === "Inativo"){
-alert("Usuário inativo! Acesso bloqueado.");
-localStorage.removeItem("usuarioLogado");
-location.reload();
-return;
-}
+          if (historico) {
+            historico.style.display = (nome === "consulta") ? "block" : "none"
+          }
 
-}
+          atualizarBotaoFlutuante()
 
-document.getElementById("loginModal").style.display="none"
-document.getElementById("inicio").style.display="none"
-document.getElementById("painel").style.display="block"
-document.getElementById("painel").classList.remove("modoPublicoRegistro")
+        }
+        function sair() {
+          location.reload()
+        } function gerarSenha(tamanho = 8) {
 
-let sidebar = document.querySelector(".sidebar")
-if(sidebar) sidebar.style.display = ""
+          let caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-let topo = document.querySelector(".topoAdmin")
-if(topo) topo.style.display = ""
+          let senha = "";
 
-let usuarioMenu = document.querySelector(".usuarioMenu")
-if(usuarioMenu) usuarioMenu.style.display = "flex"
+          for (let i = 0; i < tamanho; i++) {
 
-let tipo = localStorage.getItem("tipo")
+            senha += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
 
-// MOSTRA MENU USUÁRIO SOMENTE NO ADMIN
-let menuUsuarios = document.getElementById("menuUsuarios")
-if(tipo !== "admin"){
-if(menuUsuarios) menuUsuarios.style.display = "none"
-}else{
-if(menuUsuarios) menuUsuarios.style.display = "block"
-}
+          }
 
-setTimeout(()=>abrirAba("dashboard"),100)
+          return senha;
 
-atualizarBadge()
+        }
+        function cadastrarUsuario() {
 
-let user = JSON.parse(localStorage.getItem("usuarioLogado"))
+          let nome = document.getElementById("nome").value
+          let cpf = document.getElementById("cpf").value
+          let email = document.getElementById("email").value
+          let nivel = document.getElementById("nivel").value
 
-if(user){
-document.getElementById("nomeUsuario").innerText = user.nome
-document.querySelector(".avatar").innerText = user.nome.charAt(0)
+          let senha = gerarSenha()
 
-let subtitulo = document.getElementById("perfilSubtitulo")
-if(subtitulo){
-subtitulo.innerText = user.nivel ? "Nível: " + user.nivel : "Usuário logado"
-}
-}
+          let usuarios = JSON.parse(localStorage.getItem("usuarios")) || []
 
+          usuarios.push({
+            nome: nome,
+            cpf: cpf,
+            email: email,
+            senha: senha,
+            nivel: nivel,
+            status: "Ativo"
+          })
 
-}
-atualizarBotaoFlutuante()
+          localStorage.setItem("usuarios", JSON.stringify(usuarios))
 
+          alert("Usuário cadastrado!\nSenha: " + senha)
 
-function abrirAba(nome){
+          carregarUsuarios()
+          atualizarCardsUsuarios();
+        } let etapaAtual = 0;
+        function mostrarEtapa() {
 
-let tipo = localStorage.getItem("tipo")
+          let etapas = document.querySelectorAll(".etapa")
+          let abas = document.querySelectorAll(".abaItem")
 
-if(nome === "usuarios" && tipo !== "admin"){
-alert("Acesso permitido apenas para administrador")
-return
-}
+          etapas.forEach((etapa, index) => {
+            etapa.style.display = index === etapaAtual ? "block" : "none"
+          })
 
-let abas = document.querySelectorAll(".aba")
+          abas.forEach((aba, index) => {
+            aba.classList.toggle("ativa", index === etapaAtual)
+          })
 
-abas.forEach(aba=>{
-aba.style.display="none"
-})
+        }
 
-let ativa = document.getElementById(nome)
-if(!ativa) return
+        function proximo() {
 
-ativa.style.display="block"
+          let etapas = document.querySelectorAll(".etapa");
 
-ativa.style.animation = "none"
-setTimeout(()=>{
-ativa.style.animation = "fadeSlide 0.4s"
-},10)
+          if (etapaAtual < etapas.length - 1) {
+            etapaAtual++;
+            mostrarEtapa();
+          }
+        }
 
-// gráficos
-if(nome === "dashboard"){
-setTimeout(()=> carregarGraficos(),100)
-}else{
-destruirGraficos && destruirGraficos()
-}
+        function voltar() {
 
-if(nome === "relatorios"){
-carregarRelatorios && carregarRelatorios()
-}
+          if (etapaAtual > 0) {
+            etapaAtual--;
+            mostrarEtapa();
+          }
 
-/* 🔥 NOVO: controle do histórico */
-let historico = document.getElementById("historicoBusca")
+        }
 
-if(historico){
-historico.style.display = (nome === "consulta") ? "block" : "none"
-}
+        function salvarNotificacao() {
 
-atualizarBotaoFlutuante()
+          document.body.innerHTML += '<div class="loader" id="load"></div>'
 
-}
-function sair(){
-location.reload()
-}function gerarSenha(tamanho = 8){
+          setTimeout(() => {
+            document.getElementById("load").remove()
 
-let caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            // resto do código continua normal...
+          }, 800)
 
-let senha = "";
+          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
 
-for(let i=0;i<tamanho;i++){
+          let raca = document.querySelector('input[name="raca"]:checked')?.value || ""
+          let genero = document.querySelector('input[name="genero"]:checked')?.value || ""
+          let orientacao = document.querySelector('input[name="orientacao"]:checked')?.value || ""
 
-senha += caracteres.charAt(Math.floor(Math.random()*caracteres.length));
+          let tipos = []
 
-}
+          document.querySelectorAll('.etapa input[type="checkbox"]:checked').forEach(c => {
+            tipos.push(c.value)
+          })
 
-return senha;
+          let novo = {
 
-}
-function cadastrarUsuario(){
+            protocolo: gerarProtocolo(relatorios.length + 1),
 
-let nome = document.getElementById("nome").value
-let cpf = document.getElementById("cpf").value
-let email = document.getElementById("email").value
-let nivel = document.getElementById("nivel").value
+            data: document.getElementById("dataOcorrencia").value,
 
-let senha = gerarSenha()
+            local: document.getElementById("localOcorrencia").value,
+            municipio: document.getElementById("municipio").value,
+            estado: document.getElementById("estado").value,
 
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || []
+            vitima: document.getElementById("nomeVitima").value,
+            idade: document.getElementById("idadeVitima").value,
+            sexo: document.getElementById("sexoVitima").value,
+            cpf: document.getElementById("cpfVitima").value,
 
-usuarios.push({
-nome: nome,
-cpf: cpf,
-email: email,
-senha: senha,
-nivel: nivel,
-status: "Ativo"
-})
+            raca: raca,
+            genero: genero,
+            orientacao: orientacao,
+            escolaridade: document.getElementById("escolaridade").value,
 
-localStorage.setItem("usuarios", JSON.stringify(usuarios))
+            responsavel: document.getElementById("responsavel").value,
+            telefone: document.getElementById("telefoneResponsavel").value,
+            parentesco: document.getElementById("parentesco").value,
+            endereco: document.getElementById("enderecoResponsavel").value,
+            autor: document.getElementById("autor").value,
+            idadeAutor: document.getElementById("idadeAutor").value,
+            relacaoAutor: document.getElementById("relacaoAutor").value,
+            tipo: tipos.join(", "),
 
-alert("Usuário cadastrado!\nSenha: " + senha)
+            resumo: document.getElementById("resumo").value,
+            encaminhamento: document.getElementById("encaminhamento").value,
 
-carregarUsuarios()
-atualizarCardsUsuarios();
-}let etapaAtual = 0;
-function mostrarEtapa(){
+            status: "Em andamento"
+          };
 
-let etapas = document.querySelectorAll(".etapa")
-let abas = document.querySelectorAll(".abaItem")
+          relatorios.push(novo)
 
-etapas.forEach((etapa,index)=>{
-etapa.style.display = index === etapaAtual ? "block" : "none"
-})
+          localStorage.setItem("relatorios", JSON.stringify(relatorios))
+          adicionarNotificacao("Nova notificação: " + novo.vitima)
+          alert("Notificação registrada!\nProtocolo: " + novo.protocolo)
 
-abas.forEach((aba,index)=>{
-aba.classList.toggle("ativa", index === etapaAtual)
-})
+          etapaAtual = 0
+          mostrarEtapa()
 
-}
+        } function filtrarRelatorios() {
 
-function proximo(){
+          let vitima = document.getElementById("filtroVitima").value.toLowerCase();
+          let mes = document.getElementById("filtroMes").value;
+          let ano = document.getElementById("filtroAno").value;
 
-let etapas = document.querySelectorAll(".etapa");
+          let tabela = document.querySelector("#tabelaRelatorios tbody");
+          tabela.innerHTML = "";
 
-if(etapaAtual < etapas.length - 1){
-etapaAtual++;
-mostrarEtapa();
-}   
-}
+          relatorios.forEach(r => {
 
-function voltar(){
+            let data = new Date(r.data);
+            let mesRegistro = ("0" + (data.getMonth() + 1)).slice(-2);
+            let anoRegistro = data.getFullYear();
 
-if(etapaAtual > 0){
-etapaAtual--;
-mostrarEtapa();
-}
+            if (
+              (r.vitima.toLowerCase().includes(vitima) || vitima == "") &&
+              (mesRegistro == mes || mes == "") &&
+              (anoRegistro == ano || ano == "")
+            ) {
 
-}
+              let linha = tabela.insertRow();
 
-function salvarNotificacao(){
+              linha.insertCell(0).innerHTML = r.protocolo;
+              linha.insertCell(1).innerHTML = r.data;
+              linha.insertCell(2).innerHTML = r.vitima;
+              linha.insertCell(3).innerHTML = r.tipo;
 
-document.body.innerHTML += '<div class="loader" id="load"></div>'
+            }
 
-setTimeout(()=>{
-document.getElementById("load").remove()
+          });
 
-// resto do código continua normal...
-},800)
+        }
+        function exportarPDF() {
 
-let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
+          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
 
-let raca = document.querySelector('input[name="raca"]:checked')?.value || ""
-let genero = document.querySelector('input[name="genero"]:checked')?.value || ""
-let orientacao = document.querySelector('input[name="orientacao"]:checked')?.value || ""
+          if (relatorios.length == 0) {
+            alert("Nenhum registro encontrado");
+            return;
+          }
 
-let tipos = []
+          const { jsPDF } = window.jspdf;
 
-document.querySelectorAll('.etapa input[type="checkbox"]:checked').forEach(c=>{
-tipos.push(c.value)
-})
+          let doc = new jsPDF();
 
-let novo = {
+          doc.setFontSize(16);
+          doc.text("RELATÓRIO GERAL - SISTEMA PREVINE", 105, 20, null, null, "center");
 
-protocolo: gerarProtocolo(relatorios.length + 1),
+          let y = 40;
 
-data: document.getElementById("dataOcorrencia").value,
+          doc.setFontSize(11);
 
-local: document.getElementById("localOcorrencia").value,
-municipio: document.getElementById("municipio").value,
-estado: document.getElementById("estado").value,
+          relatorios.forEach(r => {
 
-vitima: document.getElementById("nomeVitima").value,
-idade: document.getElementById("idadeVitima").value,
-sexo: document.getElementById("sexoVitima").value,
-cpf: document.getElementById("cpfVitima").value,
+            doc.text(
+              "Protocolo: " + r.protocolo +
+              " | Data: " + (r.data || "") +
+              " | Vítima: " + (r.vitima || "") +
+              " | Tipo: " + (r.tipo || ""),
+              10,
+              y
+            );
 
-raca: raca,
-genero: genero,
-orientacao: orientacao,
-escolaridade: document.getElementById("escolaridade").value,
+            y += 10;
 
-responsavel: document.getElementById("responsavel").value,
-telefone: document.getElementById("telefoneResponsavel").value,
-parentesco: document.getElementById("parentesco").value,
-endereco: document.getElementById("enderecoResponsavel").value,
-autor: document.getElementById("autor").value,
-idadeAutor: document.getElementById("idadeAutor").value,
-relacaoAutor: document.getElementById("relacaoAutor").value,
-tipo: tipos.join(", "),
+            if (y > 270) {
+              doc.addPage();
+              y = 20;
+            }
 
-resumo: document.getElementById("resumo").value,
-encaminhamento: document.getElementById("encaminhamento").value,
+          });
 
-status:"Em andamento"
-};
+          doc.save("Relatorio_Geral_PREVINE.pdf");
 
-relatorios.push(novo)
+        } function relatorioMensal() {
+          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
+          let tabela = document.querySelector("#tabelaRelatorios tbody");
+          let mesAtual = new Date().getMonth() + 1;
 
-localStorage.setItem("relatorios", JSON.stringify(relatorios))
-adicionarNotificacao("Nova notificação: " + novo.vitima)
-alert("Notificação registrada!\nProtocolo: " + novo.protocolo)
+          tabela.innerHTML = "";
+          relatorios.forEach(r => {
+            let data = new Date(r.data);
+            if ((data.getMonth() + 1) === mesAtual) {
+              renderLinhaRelatorio(tabela, r);
+            }
+          });
+        }
+        function relatorioVitimas() {
+          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
+          let tabela = document.querySelector("#tabelaRelatorios tbody");
 
-etapaAtual = 0
-mostrarEtapa()
+          tabela.innerHTML = "";
+          relatorios.forEach(r => renderLinhaRelatorio(tabela, r));
+        }
+        function relatorioTipos() {
+          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
+          let tabela = document.querySelector("#tabelaRelatorios tbody");
 
-}function filtrarRelatorios(){
+          tabela.innerHTML = "";
+          relatorios.forEach(r => renderLinhaRelatorio(tabela, r));
+        }
 
-let vitima = document.getElementById("filtroVitima").value.toLowerCase();
-let mes = document.getElementById("filtroMes").value;
-let ano = document.getElementById("filtroAno").value;
+        function relatorioIndividual(protocolo) {
 
-let tabela = document.querySelector("#tabelaRelatorios tbody");
-tabela. innerHTML = "";
+          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
+          let r = relatorios.find(x => x.protocolo == protocolo);
 
-relatorios.forEach(r=>{
+          if (!r) {
+            alert("Registro não encontrado");
+            return;
+          }
 
-let data = new Date(r.data);
-let mesRegistro = ("0"+(data.getMonth()+1)).slice(-2);
-let anoRegistro = data.getFullYear();
+          const { jsPDF } = window.jspdf;
+          let doc = new jsPDF();
 
-if(
-(r.vitima.toLowerCase().includes(vitima) || vitima=="") &&
-(mesRegistro==mes || mes=="") &&
-(anoRegistro==ano || ano=="")
-){
+          let y = 20;
 
-let linha = tabela.insertRow();
+          let logo = new Image();
+          logo.src = "prefeitura.png";
 
-linha.insertCell(0).innerHTML = r.protocolo;
-linha.insertCell(1).innerHTML = r.data;
-linha.insertCell(2).innerHTML = r.vitima;
-linha.insertCell(3).innerHTML = r.tipo;
+          logo.onload = function () {
 
-}
+            /* ===== LOGO MAIOR ===== */
+            doc.addImage(logo, "PNG", 1, 2, 75, 40);
 
-});
+            /* ===== CABEÇALHO ===== */
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(16);
+            doc.text("PREFEITURA MUNICIPAL", 105, 18, null, null, "center");
 
-}
-function exportarPDF(){
+            doc.setFontSize(12);
+            doc.text("SISTEMA DE NOTIFICAÇÃO PREVINE", 105, 26, null, null, "center");
 
-let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text("RELATÓRIO INDIVIDUAL DE OCORRÊNCIA", 105, 34, null, null, "center");
 
-if(relatorios.length == 0){
-alert("Nenhum registro encontrado");
-return;
-}
+            /* ===== LINHA VERDE ===== */
+            doc.setDrawColor(46, 125, 50);
+            doc.setLineWidth(0.2);
+            doc.line(10, 42, 200, 42);
 
-const { jsPDF } = window.jspdf;
+            y = 52;
 
-let doc = new jsPDF();
+            /* ===== DADOS ===== */
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(11);
+            doc.text("DADOS DA OCORRÊNCIA", 105, y, null, null, "center");
 
-doc.setFontSize(16);
-doc.text("RELATÓRIO GERAL - SISTEMA PREVINE",105,20,null,null,"center");
+            y += 6;
 
-let y = 40;
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
 
-doc.setFontSize(11);
+            doc.setDrawColor(46, 125, 50);
 
-relatorios.forEach(r=>{
+            doc.rect(10, y, 190, 8);
+            doc.text("Protocolo: " + (r.protocolo || ""), 12, y + 6);
 
-doc.text(
-"Protocolo: "+r.protocolo+
-" | Data: "+(r.data || "")+
-" | Vítima: "+(r.vitima || "")+
-" | Tipo: "+(r.tipo || ""),
-10,
-y
-);
+            y += 10;
 
-y += 10;
+            doc.rect(10, y, 190, 8);
+            doc.text("Data: " + (r.data || ""), 12, y + 6);
 
-if(y > 270){
-doc.addPage();
-y = 20;
-}
+            y += 14;
 
-});
+            /* ===== VÍTIMA ===== */
+            doc.setFont("helvetica", "bold");
+            doc.text("DADOS DA VÍTIMA", 105, y, null, null, "center");
 
-doc.save("Relatorio_Geral_PREVINE.pdf");
+            y += 6;
 
-}function relatorioMensal(){
-let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-let tabela = document.querySelector("#tabelaRelatorios tbody");
-let mesAtual = new Date().getMonth() + 1;
+            doc.setFont("helvetica", "normal");
 
-tabela.innerHTML = "";
-relatorios.forEach(r=>{
-let data = new Date(r.data);
-if((data.getMonth() + 1) === mesAtual){
-renderLinhaRelatorio(tabela, r);
-}
-});
-}
-function relatorioVitimas(){
-let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-let tabela = document.querySelector("#tabelaRelatorios tbody");
+            doc.setDrawColor(46, 125, 50);
 
-tabela.innerHTML = "";
-relatorios.forEach(r=> renderLinhaRelatorio(tabela, r));
-}
-function relatorioTipos(){
-let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-let tabela = document.querySelector("#tabelaRelatorios tbody");
+            doc.rect(10, y, 95, 8);
+            doc.rect(105, y, 95, 8);
+            doc.text("Nome: " + (r.vitima || ""), 12, y + 6);
+            doc.text("Idade: " + (r.idade || ""), 107, y + 6);
 
-tabela.innerHTML = "";
-relatorios.forEach(r=> renderLinhaRelatorio(tabela, r));
-}
+            y += 10;
 
-function relatorioIndividual(protocolo){
+            doc.rect(10, y, 95, 8);
+            doc.rect(105, y, 95, 8);
+            doc.text("Sexo: " + (r.sexo || ""), 12, y + 6);
+            doc.text("CPF: " + (r.cpf || ""), 107, y + 6);
 
-let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-let r = relatorios.find(x => x.protocolo == protocolo);
+            y += 14;
 
-if(!r){
-alert("Registro não encontrado");
-return;
-}
+            /* ===== LOCAL ===== */
+            doc.setFont("helvetica", "bold");
+            doc.text("LOCAL DA OCORRÊNCIA", 105, y, null, null, "center");
 
-const { jsPDF } = window.jspdf;
-let doc = new jsPDF();
+            y += 6;
 
-let y = 20;
+            doc.setFont("helvetica", "normal");
 
-let logo = new Image();
-logo.src = "prefeitura.png";
+            doc.setDrawColor(46, 125, 50);
 
-logo.onload = function(){
+            doc.rect(10, y, 95, 8);
+            doc.rect(105, y, 95, 8);
+            doc.text("Município: " + (r.municipio || ""), 12, y + 6);
+            doc.text("Estado: " + (r.estado || ""), 107, y + 6);
 
-/* ===== LOGO MAIOR ===== */
-doc.addImage(logo, "PNG", 1, 2, 75, 40);
+            y += 14;
 
-/* ===== CABEÇALHO ===== */
-doc.setFont("helvetica","bold");
-doc.setFontSize(16);
-doc.text("PREFEITURA MUNICIPAL", 105, 18, null, null, "center");
+            /* ===== TIPOS ===== */
+            doc.setFont("helvetica", "bold");
+            doc.text("TIPIFICAÇÃO DA VIOLÊNCIA", 105, y, null, null, "center");
 
-doc.setFontSize(12);
-doc.text("SISTEMA DE NOTIFICAÇÃO PREVINE", 105, 26, null, null, "center");
+            y += 6;
 
-doc.setFontSize(10);
-doc.setFont("helvetica","normal");
-doc.text("RELATÓRIO INDIVIDUAL DE OCORRÊNCIA", 105, 34, null, null, "center");
+            doc.setFont("helvetica", "normal");
 
-/* ===== LINHA VERDE ===== */
-doc.setDrawColor(46,125,50);
-doc.setLineWidth(0.2);
-doc.line(10, 42, 200, 42);
+            let tipos = doc.splitTextToSize(r.tipo || "Não informado", 180);
 
-y = 52;
+            doc.setDrawColor(46, 125, 50);
+            doc.rect(10, y, 190, 18);
+            doc.text(tipos, 12, y + 6);
 
-/* ===== DADOS ===== */
-doc.setFont("helvetica","bold");
-doc.setFontSize(11);
-doc.text("DADOS DA OCORRÊNCIA", 105, y, null, null, "center");
+            y += 22;
 
-y += 6;
+            /* ===== RESUMO ===== */
+            doc.setFont("helvetica", "bold");
+            doc.text("RESUMO DA OCORRÊNCIA", 105, y, null, null, "center");
 
-doc.setFont("helvetica","normal");
-doc.setFontSize(10);
+            y += 6;
 
-doc.setDrawColor(46,125,50);
+            doc.setFont("helvetica", "normal");
 
-doc.rect(10,y,190,8);
-doc.text("Protocolo: " + (r.protocolo || ""), 12, y+6);
+            let resumo = doc.splitTextToSize(r.resumo || "Sem resumo", 180);
 
-y += 10;
+            doc.setDrawColor(46, 125, 50);
+            doc.rect(10, y, 190, 40);
+            doc.text(resumo, 12, y + 6);
 
-doc.rect(10,y,190,8);
-doc.text("Data: " + (r.data || ""), 12, y+6);
+            y += 46;
 
-y += 14;
+            /* ===== ENCAMINHAMENTO ===== */
+            doc.setFont("helvetica", "bold");
+            doc.text("ENCAMINHAMENTO", 105, y, null, null, "center");
 
-/* ===== VÍTIMA ===== */
-doc.setFont("helvetica","bold");
-doc.text("DADOS DA VÍTIMA", 105, y, null, null, "center");
+            y += 6;
 
-y += 6;
+            doc.setFont("helvetica", "normal");
 
-doc.setFont("helvetica","normal");
+            let enc = doc.splitTextToSize(r.encaminhamento || "Sem encaminhamento", 180);
 
-doc.setDrawColor(46,125,50);
+            doc.setDrawColor(46, 125, 50);
+            doc.rect(10, y, 190, 35);
+            doc.text(enc, 12, y + 6);
 
-doc.rect(10,y,95,8);
-doc.rect(105,y,95,8);
-doc.text("Nome: " + (r.vitima || ""), 12, y+6);
-doc.text("Idade: " + (r.idade || ""), 107, y+6);
+            /* ===== RODAPÉ ===== */
+            doc.setFontSize(8);
+            doc.setTextColor(0);
+            doc.text("Sistema PREVINE • Documento oficial gerado automaticamente", 105, 285, null, null, "center");
 
-y += 10;
+            doc.save("PREVINE_" + r.protocolo + ".pdf");
 
-doc.rect(10,y,95,8);
-doc.rect(105,y,95,8);
-doc.text("Sexo: " + (r.sexo || ""), 12, y+6);
-doc.text("CPF: " + (r.cpf || ""), 107, y+6);
+          };
 
-y += 14;
+        }
+        function renderLinhaRelatorio(tabela, r) {
+          let linha = tabela.insertRow();
+          let protocolo = String(r.protocolo || "");
 
-/* ===== LOCAL ===== */
-doc.setFont("helvetica","bold");
-doc.text("LOCAL DA OCORRÊNCIA", 105, y, null, null, "center");
+          linha.insertCell(0).innerHTML = protocolo;
+          linha.insertCell(1).innerHTML = r.data || "";
+          linha.insertCell(2).innerHTML = r.vitima || "";
+          linha.insertCell(3).innerHTML = r.tipo || "";
+          linha.insertCell(4).innerHTML = `<button onclick="alterarStatus('${protocolo}')">${r.status || "Em andamento"}</button>`;
+          linha.insertCell(5).innerHTML = `<button onclick="relatorioIndividual('${protocolo}')">PDF</button> <button onclick="deletarRegistro('${protocolo}')" style="background:#c62828;color:white;">Excluir</button>`;
+        }
+        function carregarRelatorios() {
+          relatorioGeral();
+        }
+        function exportarTodosPDF() {
 
-y += 6;
+          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
 
-doc.setFont("helvetica","normal");
+          if (relatorios.length === 0) {
+            alert("Nenhum registro encontrado!");
+            return;
+          }
 
-doc.setDrawColor(46,125,50);
+          const { jsPDF } = window.jspdf;
 
-doc.rect(10,y,95,8);
-doc.rect(105,y,95,8);
-doc.text("Município: " + (r.municipio || ""), 12, y+6);
-doc.text("Estado: " + (r.estado || ""), 107, y+6);
+          let doc = new jsPDF();
 
-y += 14;
+          let y = 20;
 
-/* ===== TIPOS ===== */
-doc.setFont("helvetica","bold");
-doc.text("TIPIFICAÇÃO DA VIOLÊNCIA", 105, y, null, null, "center");
+          /* TITULO */
 
-y += 6;
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(18);
+          doc.text("RELATÓRIO GERAL", 105, 20, null, null, "center");
 
-doc.setFont("helvetica","normal");
+          doc.setFontSize(12);
+          doc.text("Sistema de Notificação PREVINE", 105, 28, null, null, "center");
 
-let tipos = doc.splitTextToSize(r.tipo || "Não informado", 180);
+          /* LINHA */
 
-doc.setDrawColor(46,125,50);
-doc.rect(10,y,190,18);
-doc.text(tipos, 12, y+6);
+          doc.setDrawColor(46, 125, 50);
+          doc.line(10, 32, 200, 32);
 
-y += 22;
+          y = 45;
 
-/* ===== RESUMO ===== */
-doc.setFont("helvetica","bold");
-doc.text("RESUMO DA OCORRÊNCIA", 105, y, null, null, "center");
+          /* DATA */
 
-y += 6;
+          doc.setFontSize(10);
+          doc.text("Data de geração: " + new Date().toLocaleDateString(), 10, y);
 
-doc.setFont("helvetica","normal");
+          y += 15;
 
-let resumo = doc.splitTextToSize(r.resumo || "Sem resumo", 180);
+          /* CABEÇALHO */
 
-doc.setDrawColor(46,125,50);
-doc.rect(10,y,190,40);
-doc.text(resumo, 12, y+6);
+          doc.setFont("helvetica", "bold");
 
-y += 46;
+          doc.text("PROTOCOLO", 10, y);
+          doc.text("DATA", 40, y);
+          doc.text("VÍTIMA", 70, y);
+          doc.text("TIPO", 140, y);
 
-/* ===== ENCAMINHAMENTO ===== */
-doc.setFont("helvetica","bold");
-doc.text("ENCAMINHAMENTO", 105, y, null, null, "center");
+          y += 5;
 
-y += 6;
+          doc.line(10, y, 200, y);
 
-doc.setFont("helvetica","normal");
+          y += 8;
 
-let enc = doc.splitTextToSize(r.encaminhamento || "Sem encaminhamento", 180);
+          /* REGISTROS */
 
-doc.setDrawColor(46,125,50);
-doc.rect(10,y,190,35);
-doc.text(enc, 12, y+6);
+          doc.setFont("helvetica", "normal");
 
-/* ===== RODAPÉ ===== */
-doc.setFontSize(8);
-doc.setTextColor(0);
-doc.text("Sistema PREVINE • Documento oficial gerado automaticamente", 105, 285, null, null, "center");
+          relatorios.forEach(r => {
 
-doc.save("PREVINE_" + r.protocolo + ".pdf");
+            if (y > 270) {
+              doc.addPage();
+              y = 20;
+            }
 
-};
+            doc.text(String(r.protocolo || ""), 10, y);
+            doc.text(String(r.data || ""), 40, y);
+            doc.text(String(r.vitima || ""), 70, y);
+            doc.text(String(r.tipo || ""), 140, y);
 
-}
-function renderLinhaRelatorio(tabela, r){
-let linha = tabela.insertRow();
-let protocolo = String(r.protocolo || "");
+            y += 8;
 
-linha.insertCell(0).innerHTML = protocolo;
-linha.insertCell(1).innerHTML = r.data || "";
-linha.insertCell(2).innerHTML = r.vitima || "";
-linha.insertCell(3).innerHTML = r.tipo || "";
-linha.insertCell(4).innerHTML = `<button onclick="alterarStatus('${protocolo}')">${r.status || "Em andamento"}</button>`;
-linha.insertCell(5).innerHTML = `<button onclick="relatorioIndividual('${protocolo}')">PDF</button> <button onclick="deletarRegistro('${protocolo}')" style="background:#c62828;color:white;">Excluir</button>`;
-}
-function carregarRelatorios(){
-relatorioGeral();
-}
-function exportarTodosPDF(){
+          });
 
-let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
+          /* RODAPÉ */
 
-if(relatorios.length === 0){
-alert("Nenhum registro encontrado!");
-return;
-}
+          doc.setFontSize(9);
+          doc.text("Sistema PREVINE • Relatório automático", 105, 290, null, null, "center");
 
-const { jsPDF } = window.jspdf;
+          doc.save("Relatorio_Geral_PREVINE.pdf");
 
-let doc = new jsPDF();
+        } function deletarRegistro(protocolo) {
 
-let y = 20;
+          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
 
-/* TITULO */
+          if (!confirm("Deseja realmente excluir este registro?")) {
+            return;
+          }
 
-doc.setFont("helvetica","bold");
-doc.setFontSize(18);
-doc.text("RELATÓRIO GERAL",105,20,null,null,"center");
+          relatorios = relatorios.filter(r => r.protocolo != protocolo);
 
-doc.setFontSize(12);
-doc.text("Sistema de Notificação PREVINE",105,28,null,null,"center");
+          localStorage.setItem("relatorios", JSON.stringify(relatorios));
 
-/* LINHA */
+          carregarRelatorios();
 
-doc.setDrawColor(46,125,50);
-doc.line(10,32,200,32);
+        }
 
-y = 45;
+        function alterarStatus(protocolo) {
 
-/* DATA */
+          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
 
-doc.setFontSize(10);
-doc.text("Data de geração: "+new Date().toLocaleDateString(),10,y);
+          let r = relatorios.find(x => x.protocolo == protocolo);
 
-y += 15;
+          if (!r) return;
 
-/* CABEÇALHO */
+          if (!r.status) {
+            r.status = "Em andamento";
+          }
 
-doc.setFont("helvetica","bold");
+          if (r.status == "Em andamento") {
+            r.status = "Concluído";
+          } else {
+            r.status = "Em andamento";
+          }
 
-doc.text("PROTOCOLO",10,y);
-doc.text("DATA",40,y);
-doc.text("VÍTIMA",70,y);
-doc.text("TIPO",140,y);
+          localStorage.setItem("relatorios", JSON.stringify(relatorios));
 
-y += 5;
+          alert("Status agora é: " + r.status);
 
-doc.line(10,y,200,y);
+          carregarRelatorios();
 
-y += 8;
+        }
+        function excluirUsuario(email) {
 
-/* REGISTROS */
+          if (!confirm("Deseja excluir este usuário?")) return
 
-doc.setFont("helvetica","normal");
+          let usuarios = JSON.parse(localStorage.getItem("usuarios")) || []
 
-relatorios.forEach(r=>{
+          usuarios = usuarios.filter(u => u.email !== email)
 
-if(y > 270){
-doc.addPage();
-y = 20;
-}
+          localStorage.setItem("usuarios", JSON.stringify(usuarios))
 
-doc.text(String(r.protocolo || ""),10,y);
-doc.text(String(r.data || ""),40,y);
-doc.text(String(r.vitima || ""),70,y);
-doc.text(String(r.tipo || ""),140,y);
+          carregarUsuarios()
 
-y += 8;
+        } function mudarStatus(btn) {
 
-});
+          let linha = btn.parentElement.parentElement
+          let email = linha.children[2].innerText
+          let statusCell = linha.children[5]
 
-/* RODAPÉ */
+          let usuarios = JSON.parse(localStorage.getItem("usuarios")) || []
 
-doc.setFontSize(9);
-doc.text("Sistema PREVINE • Relatório automático",105,290,null,null,"center");
+          usuarios = usuarios.map(u => {
+            if (u.email === email) {
+              u.status = (u.status === "Ativo") ? "Inativo" : "Ativo"
+            }
+            return u
+          })
 
-doc.save("Relatorio_Geral_PREVINE.pdf");
+          localStorage.setItem("usuarios", JSON.stringify(usuarios))
 
-}function deletarRegistro(protocolo){
+          carregarUsuarios() // PARA PODER RECARREGAR A TABELA BONEQUINHA
+        }
 
-let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
+        function editarUsuario(btn) {
 
-if(!confirm("Deseja realmente excluir este registro?")){
-return;
-}
+          let linha = btn.parentElement.parentElement
 
-relatorios = relatorios.filter(r => r.protocolo != protocolo);
+          document.getElementById("nome").value = linha.children[0].innerText
+          document.getElementById("cpf").value = linha.children[1].innerText
+          document.getElementById("email").value = linha.children[2].innerText
 
-localStorage.setItem("relatorios", JSON.stringify(relatorios));
+          linha.remove()
 
-carregarRelatorios();
+        }
+        function criarGrafico(id, config) {
+          let canvas = document.getElementById(id)
 
-}
+          if (!canvas) return
 
-function alterarStatus(protocolo){
+          if (canvas.chart) {
+            canvas.chart.destroy()
+          }
 
-let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
+          canvas.chart = new Chart(canvas, config)
 
-let r = relatorios.find(x => x.protocolo == protocolo);
+        }
+        function carregarUsuarios() {
+          let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+          let tbody = document.querySelector("#tabelaUsuarios tbody");
+          if (!tbody) return;
 
-if(!r) return;
+          tbody.innerHTML = "";
+          usuarios.forEach(u => {
+            let linha = tbody.insertRow();
+            linha.insertCell(0).innerText = u.nome || "";
+            linha.insertCell(1).innerText = u.cpf || "";
+            linha.insertCell(2).innerText = u.email || "";
+            linha.insertCell(3).innerText = u.senha || "";
+            linha.insertCell(4).innerText = u.nivel || "";
+            linha.insertCell(5).innerHTML = `<span class="${u.status === "Ativo" ? "statusAtivo" : "statusInativo"}">${u.status || "Ativo"}</span>`;
+            linha.insertCell(6).innerHTML = `<button class="botaoAcao botaoEditar" onclick="editarUsuario(this)">Editar</button> <button class="botaoAcao botaoStatus" onclick="mudarStatus(this)">Status</button> <button class="botaoAcao botaoExcluir" onclick="excluirUsuario('${u.email}')">Excluir</button>`;
+          });
+        }
+        function pesquisarUsuario() {
+          let termo = document.getElementById("pesquisaUsuario")?.value.toLowerCase().trim() || "";
+          let linhas = document.querySelectorAll("#tabelaUsuarios tbody tr");
+          linhas.forEach(linha => {
+            linha.style.display = linha.innerText.toLowerCase().includes(termo) ? "" : "none";
+          });
+        }
+        function carregarGraficos() {
 
-if(!r.status){
-r.status = "Em andamento";
-}
+          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
 
-if(r.status == "Em andamento"){
-r.status = "Concluído";
-}else{
-r.status = "Em andamento";
-}
+          /* ===== CONTADORES ===== */
 
-localStorage.setItem("relatorios", JSON.stringify(relatorios));
+          let masculino = 0;
+          let feminino = 0;
+          let outros = 0;
 
-alert("Status agora é: "+r.status);
+          let crianca = 0;
+          let adolescente = 0;
+          let adulto = 0;
 
-carregarRelatorios();
+          let meses = Array(12).fill(0);
 
-}
-function excluirUsuario(email){
+          let andamento = 0;
+          let concluido = 0;
 
-if(!confirm("Deseja excluir este usuário?")) return
+          /* ===== PROCESSAMENTO ===== */
 
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || []
+          relatorios.forEach(r => {
 
-usuarios = usuarios.filter(u => u.email !== email)
+            // SEXO
+            if (r.sexo === "Masculino") masculino++;
+            else if (r.sexo === "Feminino") feminino++;
+            else outros++;
 
-localStorage.setItem("usuarios", JSON.stringify(usuarios))
+            // IDADE
+            let idade = parseInt(r.idade);
+            if (idade <= 12) crianca++;
+            else if (idade <= 17) adolescente++;
+            else adulto++;
 
-carregarUsuarios()
+            // MÊS
+            if (r.data) {
+              let data = new Date(r.data);
+              let mes = data.getMonth();
+              meses[mes]++;
+            }
 
-}function mudarStatus(btn){
+            // STATUS
+            if (r.status === "Concluído") concluido++;
+            else andamento++;
 
-let linha = btn.parentElement.parentElement
-let email = linha.children[2].innerText
-let statusCell = linha.children[5]
+          });
 
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || []
+          /* ===== CARDS ===== */
 
-usuarios = usuarios.map(u=>{
-if(u.email === email){
-u.status = (u.status === "Ativo") ? "Inativo" : "Ativo"
-}
-return u
-})
+          document.getElementById("totalRegistros").innerText = relatorios.length;
+          document.getElementById("casosAndamento").innerText = andamento;
+          document.getElementById("casosConcluidos").innerText = concluido;
 
-localStorage.setItem("usuarios", JSON.stringify(usuarios))
+          /* ===== GRÁFICO MÊS ===== */
 
-carregarUsuarios() // PARA PODER RECARREGAR A TABELA BONEQUINHA
-}
+          criarGrafico("graficoMes", {
+            type: "line",
+            data: {
+              labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+              datasets: [{
+                label: "Notificações",
+                data: meses,
+                borderColor: "#2e7d32",
+                backgroundColor: "rgba(46,125,50,0.1)",
+                tension: 0.4,
+                fill: true
+              }]
+            },
+            options: {
+              plugins: {
+                legend: { display: false }
+              }
+            }
+          });
 
-function editarUsuario(btn){
+          /* ===== SEXO ===== */
 
-let linha = btn.parentElement.parentElement
+          criarGrafico("graficoSexo", {
+            type: "doughnut",
+            data: {
+              labels: ["Masculino", "Feminino", "Outros"],
+              datasets: [{
+                data: [masculino, feminino, outros],
+                backgroundColor: ["#42a5f5", "#ec407a", "#9e9e9e"]
+              }]
+            },
+            options: {
+              plugins: {
+                legend: { position: "bottom" }
+              },
+              cutout: "60%"
+            }
+          });
 
-document.getElementById("nome").value = linha.children[0].innerText
-document.getElementById("cpf").value = linha.children[1].innerText
-document.getElementById("email").value = linha.children[2].innerText
+          /* ===== IDADE ===== */
 
-linha.remove()
+          criarGrafico("graficoIdade", {
+            type: "bar",
+            data: {
+              labels: ["Crianças", "Adolescentes", "Adultos"],
+              datasets: [{
+                data: [crianca, adolescente, adulto],
+                backgroundColor: ["#66bb6a", "#ffa726", "#ef5350"]
+              }]
+            },
+            options: {
+              plugins: { legend: { display: false } },
+              scales: { y: { beginAtZero: true } }
+            }
+          });
 
-}
-function criarGrafico(id, config){
-let canvas = document.getElementById(id)
+          /* ===== STATUS ===== */
 
-if(!canvas) return
+          criarGrafico("graficoStatus", {
+            type: "doughnut",
+            data: {
+              labels: ["Em andamento", "Concluído"],
+              datasets: [{
+                data: [andamento, concluido],
+                backgroundColor: ["#ffa726", "#66bb6a"]
+              }]
+            },
+            options: {
+              plugins: {
+                legend: { position: "bottom" }
+              },
+              cutout: "60%"
+            }
+          });
 
-if(canvas.chart){
-canvas.chart.destroy()
-}
+        }
+        carregarUsuarios()
+        function toggleMenuUsuario() {
+          let menu = document.getElementById("dropdownUsuario")
+          menu.style.display = menu.style.display === "block" ? "none" : "block"
+        }
 
-canvas.chart = new Chart(canvas, config)
+        /* FECHAR AO CLICAR FORA */
 
-}
-function carregarUsuarios(){
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-let tbody = document.querySelector("#tabelaUsuarios tbody");
-if(!tbody) return;
+        window.addEventListener("click", function (e) {
+          let menu = document.getElementById("dropdownUsuario")
+          let usuario = document.querySelector(".usuarioMenu")
 
-tbody.innerHTML = "";
-usuarios.forEach(u=>{
-let linha = tbody.insertRow();
-linha.insertCell(0).innerText = u.nome || "";
-linha.insertCell(1).innerText = u.cpf || "";
-linha.insertCell(2).innerText = u.email || "";
-linha.insertCell(3).innerText = u.senha || "";
-linha.insertCell(4).innerText = u.nivel || "";
-linha.insertCell(5).innerHTML = `<span class="${u.status === "Ativo" ? "statusAtivo" : "statusInativo"}">${u.status || "Ativo"}</span>`;
-linha.insertCell(6).innerHTML = `<button class="botaoAcao botaoEditar" onclick="editarUsuario(this)">Editar</button> <button class="botaoAcao botaoStatus" onclick="mudarStatus(this)">Status</button> <button class="botaoAcao botaoExcluir" onclick="excluirUsuario('${u.email}')">Excluir</button>`;
-});
-}
-function pesquisarUsuario(){
-let termo = document.getElementById("pesquisaUsuario")?.value.toLowerCase().trim() || "";
-let linhas = document.querySelectorAll("#tabelaUsuarios tbody tr");
-linhas.forEach(linha=>{
-linha.style.display = linha.innerText.toLowerCase().includes(termo) ? "" : "none";
-});
-}
-function carregarGraficos(){
+          if (!usuario.contains(e.target)) {
+            menu.style.display = "none"
+          }
+        })
 
-let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
+        function abrirPerfil() {
 
-/* ===== CONTADORES ===== */
+          let user = JSON.parse(localStorage.getItem("usuarioLogado"))
 
-let masculino = 0;
-let feminino = 0;
-let outros = 0;
+          document.getElementById("perfilNome").value = user.nome
+          document.getElementById("perfilEmail").value = user.email
+          document.getElementById("perfilCpf").value = user.cpf || ""
+          document.getElementById("perfilNivel").value = user.nivel
 
-let crianca = 0;
-let adolescente = 0;
-let adulto = 0;
+          document.getElementById("perfilModal").style.display = "flex"
+        }
+        function fecharPerfil() {
+          document.getElementById("perfilModal").style.display = "none"
+        }
+        function salvarSenha() {
 
-let meses = Array(12).fill(0);
+          let atual = document.getElementById("senhaAtual").value
+          let nova = document.getElementById("novaSenha").value
+          let confirmar = document.getElementById("confirmarSenha").value
 
-let andamento = 0;
-let concluido = 0;
+          let usuarios = JSON.parse(localStorage.getItem("usuarios")) || []
+          let user = JSON.parse(localStorage.getItem("usuarioLogado"))
 
-/* ===== PROCESSAMENTO ===== */
+          if (atual !== user.senha) {
+            alert("Senha atual incorreta!")
+            return
+          }
 
-relatorios.forEach(r=>{
+          if (nova !== confirmar) {
+            alert("As senhas não coincidem!")
+            return
+          }
 
-// SEXO
-if(r.sexo === "Masculino") masculino++;
-else if(r.sexo === "Feminino") feminino++;
-else outros++;
+          usuarios = usuarios.map(u => {
+            if (u.email === user.email) {
+              u.senha = nova
+            }
+            return u
+          })
 
-// IDADE
-let idade = parseInt(r.idade);
-if(idade <= 12) crianca++;
-else if(idade <= 17) adolescente++;
-else adulto++;
+          localStorage.setItem("usuarios", JSON.stringify(usuarios))
 
-// MÊS
-if(r.data){
-let data = new Date(r.data);
-let mes = data.getMonth();
-meses[mes]++;
-}
+          user.senha = nova
+          localStorage.setItem("usuarioLogado", JSON.stringify(user))
 
-// STATUS
-if(r.status === "Concluído") concluido++;
-else andamento++;
+          alert("Senha alterada com sucesso!")
 
-});
+          fecharSenha()
+        }
+        function adicionarNotificacao(texto) {
 
-/* ===== CARDS ===== */
+          let notificacoes = JSON.parse(localStorage.getItem("notificacoes")) || []
 
-document.getElementById("totalRegistros").innerText = relatorios.length;
-document.getElementById("casosAndamento").innerText = andamento;
-document.getElementById("casosConcluidos").innerText = concluido;
+          notificacoes.unshift({
+            texto: texto,
+            data: new Date().toLocaleString()
+          })
 
-/* ===== GRÁFICO MÊS ===== */
+          localStorage.setItem("notificacoes", JSON.stringify(notificacoes))
 
-criarGrafico("graficoMes", {
-type: "line",
-data: {
-labels: ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
-datasets: [{
-label: "Notificações",
-data: meses,
-borderColor: "#2e7d32",
-backgroundColor: "rgba(46,125,50,0.1)",
-tension: 0.4,
-fill: true
-}]
-},
-options: {
-plugins:{
-legend:{display:false}
-}
-}
-});
+          atualizarBadge()
+        }
+        function atualizarBadge() {
 
-/* ===== SEXO ===== */
+          let notificacoes = JSON.parse(localStorage.getItem("notificacoes")) || []
 
-criarGrafico("graficoSexo", {
-type: "doughnut",
-data: {
-labels: ["Masculino","Feminino","Outros"],
-datasets: [{
-data: [masculino,feminino,outros],
-backgroundColor: ["#42a5f5","#ec407a","#9e9e9e"]
-}]
-},
-options:{
-plugins:{
-legend:{position:"bottom"}
-},
-cutout:"60%"
-}
-});
+          document.getElementById("badgeNotif").innerText = notificacoes.length
 
-/* ===== IDADE ===== */
+        }
+        function verNotificacoes() {
 
-criarGrafico("graficoIdade", {
-type: "bar",
-data: {
-labels: ["Crianças","Adolescentes","Adultos"],
-datasets: [{
-data: [crianca,adolescente,adulto],
-backgroundColor: ["#66bb6a","#ffa726","#ef5350"]
-}]
-},
-options:{
-plugins:{legend:{display:false}},
-scales:{y:{beginAtZero:true}}
-}
-});
+          let lista = document.getElementById("listaNotificacoes")
 
-/* ===== STATUS ===== */
+          if (lista.style.display === "block") {
+            lista.style.display = "none"
+            return
+          }
 
-criarGrafico("graficoStatus", {
-type: "doughnut",
-data: {
-labels: ["Em andamento","Concluído"],
-datasets: [{
-data: [andamento,concluido],
-backgroundColor: ["#ffa726","#66bb6a"]
-}]
-},
-options:{
-plugins:{
-legend:{position:"bottom"}
-},
-cutout:"60%"
-}
-});
+          let notificacoes = JSON.parse(localStorage.getItem("notificacoes")) || []
 
-}
-carregarUsuarios()
-function toggleMenuUsuario(){
-let menu = document.getElementById("dropdownUsuario")
-menu.style.display = menu.style.display === "block" ? "none" : "block"
-}
+          lista.innerHTML = ""
 
-/* FECHAR AO CLICAR FORA */
+          if (notificacoes.length === 0) {
+            lista.innerHTML = "<p>Nenhuma notificação</p>"
+          } else {
 
-window.addEventListener("click", function(e){
-let menu = document.getElementById("dropdownUsuario")
-let usuario = document.querySelector(".usuarioMenu")
-
-if(!usuario.contains(e.target)){
-menu.style.display = "none"
-}
-})
-
-function abrirPerfil(){
-
-let user = JSON.parse(localStorage.getItem("usuarioLogado"))
-
-document.getElementById("perfilNome").value = user.nome
-document.getElementById("perfilEmail").value = user.email
-document.getElementById("perfilCpf").value = user.cpf || ""
-document.getElementById("perfilNivel").value = user.nivel
-
-document.getElementById("perfilModal").style.display = "flex"
-}
-function fecharPerfil(){
-document.getElementById("perfilModal").style.display = "none"
-}
-function salvarSenha(){
-
-let atual = document.getElementById("senhaAtual").value
-let nova = document.getElementById("novaSenha").value
-let confirmar = document.getElementById("confirmarSenha").value
-
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || []
-let user = JSON.parse(localStorage.getItem("usuarioLogado"))
-
-if(atual !== user.senha){
-alert("Senha atual incorreta!")
-return
-}
-
-if(nova !== confirmar){
-alert("As senhas não coincidem!")
-return
-}
-
-usuarios = usuarios.map(u=>{
-if(u.email === user.email){
-u.senha = nova
-}
-return u
-})
-
-localStorage.setItem("usuarios", JSON.stringify(usuarios))
-
-user.senha = nova
-localStorage.setItem("usuarioLogado", JSON.stringify(user))
-
-alert("Senha alterada com sucesso!")
-
-fecharSenha()
-}
-function adicionarNotificacao(texto){
-
-let notificacoes = JSON.parse(localStorage.getItem("notificacoes")) || []
-
-notificacoes.unshift({
-texto: texto,
-data: new Date().toLocaleString()
-})
-
-localStorage.setItem("notificacoes", JSON.stringify(notificacoes))
-
-atualizarBadge()
-}
-function atualizarBadge(){
-
-let notificacoes = JSON.parse(localStorage.getItem("notificacoes")) || []
-
-document.getElementById("badgeNotif").innerText = notificacoes.length
-
-}
-function verNotificacoes(){
-
-let lista = document.getElementById("listaNotificacoes")
-
-if(lista.style.display === "block"){
-lista.style.display = "none"
-return
-}
-
-let notificacoes = JSON.parse(localStorage.getItem("notificacoes")) || []
-
-lista.innerHTML = ""
-
-if(notificacoes.length === 0){
-lista.innerHTML = "<p>Nenhuma notificação</p>"
-}else{
-
-notificacoes.forEach(n=>{
-lista.innerHTML += `
+            notificacoes.forEach(n => {
+              lista.innerHTML += `
 <div style="border-bottom:1px solid #eee;padding:6px;">
 <strong>${n.texto}</strong><br>
 <small>${n.data}</small>
 </div>
 `
-})
+            })
 
-}
+          }
 
-lista.style.display = "block"
+          lista.style.display = "block"
 
-}
-function salvarPerfil(){
+        }
+        function salvarPerfil() {
 
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || []
-let user = JSON.parse(localStorage.getItem("usuarioLogado"))
+          let usuarios = JSON.parse(localStorage.getItem("usuarios")) || []
+          let user = JSON.parse(localStorage.getItem("usuarioLogado"))
 
-let novoNome = document.getElementById("perfilNome").value
-let novoCpf = document.getElementById("perfilCpf").value
+          let novoNome = document.getElementById("perfilNome").value
+          let novoCpf = document.getElementById("perfilCpf").value
 
-usuarios = usuarios.map(u => {
-if(u.email === user.email){
-u.nome = novoNome
-u.cpf = novoCpf
-}
-return u
-})
+          usuarios = usuarios.map(u => {
+            if (u.email === user.email) {
+              u.nome = novoNome
+              u.cpf = novoCpf
+            }
+            return u
+          })
 
-localStorage.setItem("usuarios", JSON.stringify(usuarios))
+          localStorage.setItem("usuarios", JSON.stringify(usuarios))
 
-user.nome = novoNome
-user.cpf = novoCpf
+          user.nome = novoNome
+          user.cpf = novoCpf
 
-localStorage.setItem("usuarioLogado", JSON.stringify(user))
+          localStorage.setItem("usuarioLogado", JSON.stringify(user))
 
-alert("Perfil atualizado!")
+          alert("Perfil atualizado!")
 
-fecharPerfil()
-}
-function alterarSenha(){
+          fecharPerfil()
+        }
+        function alterarSenha() {
 
-document.getElementById("senhaModal").style.display = "flex"
+          document.getElementById("senhaModal").style.display = "flex"
 
-}
-function fecharSenha(){
-document.getElementById("senhaModal").style.display = "none"
-}
-function atualizarBotaoFlutuante(){
-let botao = document.querySelector(".botaoFlutuante");
-if(!botao) return;
+        }
+        function fecharSenha() {
+          document.getElementById("senhaModal").style.display = "none"
+        }
+        function atualizarBotaoFlutuante() {
+          let botao = document.querySelector(".botaoFlutuante");
+          if (!botao) return;
 
-let painelVisivel = document.getElementById("painel")?.style.display === "block";
-let logado = !!JSON.parse(localStorage.getItem("usuarioLogado") || "null");
-botao.style.display = painelVisivel && logado ? "flex" : "none";
-}
-function abrirNovoRegistroAtalho(){
-abrirAba("registros");
-etapaAtual = 0;
-mostrarEtapa();
-window.scrollTo({top:0, behavior:"smooth"});
-atualizarBotaoFlutuante();
-}
+          let painelVisivel = document.getElementById("painel")?.style.display === "block";
+          let logado = !!JSON.parse(localStorage.getItem("usuarioLogado") || "null");
+          botao.style.display = painelVisivel && logado ? "flex" : "none";
+        }
+        function abrirNovoRegistroAtalho() {
+          abrirAba("registros");
+          etapaAtual = 0;
+          mostrarEtapa();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          atualizarBotaoFlutuante();
+        }
 
-function abrirRegistroPublico(){
+        function abrirRegistroPublico() {
 
-document.getElementById("inicio").style.display = "none"
-document.getElementById("painel").style.display = "block"
-document.getElementById("painel").classList.add("modoPublicoRegistro")
+          document.getElementById("inicio").style.display = "none"
+          document.getElementById("painel").style.display = "block"
+          document.getElementById("painel").classList.add("modoPublicoRegistro")
 
-// esconder tudo de admin
-let sidebar = document.querySelector(".sidebar")
-if(sidebar) sidebar.style.display = "none"
+          // esconder tudo de admin
+          let sidebar = document.querySelector(".sidebar")
+          if (sidebar) sidebar.style.display = "none"
 
-let topo = document.querySelector(".topoAdmin")
-if(topo) topo.style.display = "none"
+          let topo = document.querySelector(".topoAdmin")
+          if (topo) topo.style.display = "none"
 
-let usuarioMenu = document.querySelector(".usuarioMenu")
-if(usuarioMenu) usuarioMenu.style.display = "none"
+          let usuarioMenu = document.querySelector(".usuarioMenu")
+          if (usuarioMenu) usuarioMenu.style.display = "none"
 
-let dropdown = document.getElementById("dropdownUsuario")
-if(dropdown) dropdown.style.display = "none"
+          let dropdown = document.getElementById("dropdownUsuario")
+          if (dropdown) dropdown.style.display = "none"
 
-// mostrar registro
-abrirAba("registros")
-atualizarBotaoFlutuante()
+          // mostrar registro
+          abrirAba("registros")
+          atualizarBotaoFlutuante()
 
-// melhorar layout no PC
-if(window.innerWidth > 768){
-document.getElementById("registros").scrollIntoView({behavior:"smooth"})
-}
+          // melhorar layout no PC
+          if (window.innerWidth > 768) {
+            document.getElementById("registros").scrollIntoView({ behavior: "smooth" })
+          }
 
-limparFormulario()
+          limparFormulario()
 
-etapaAtual = 0
-mostrarEtapa()
+          etapaAtual = 0
+          mostrarEtapa()
 
-}
-function limparFormulario(){
+        }
+        function limparFormulario() {
 
-document.querySelectorAll("#registros input, #registros textarea, #registros select")
-.forEach(el => {
-el.value = ""
-})
+          document.querySelectorAll("#registros input, #registros textarea, #registros select")
+            .forEach(el => {
+              el.value = ""
+            })
 
-// limpar radios e checkboxes
-document.querySelectorAll("#registros input[type='radio'], #registros input[type='checkbox']")
-.forEach(el => el.checked = false)
+          // limpar radios e checkboxes
+          document.querySelectorAll("#registros input[type='radio'], #registros input[type='checkbox']")
+            .forEach(el => el.checked = false)
 
-}
-limparFormulario()
-etapaAtual = 0
-mostrarEtapa()
-window.addEventListener("resize", atualizarBotaoFlutuante)
-window.addEventListener("load", atualizarBotaoFlutuante)
+        }
+        limparFormulario()
+        etapaAtual = 0
+        mostrarEtapa()
+        window.addEventListener("resize", atualizarBotaoFlutuante)
+        window.addEventListener("load", atualizarBotaoFlutuante)
 
-function buscarRegistro(){
+        function buscarRegistro() {
 
-let termo = document.getElementById("buscaProtocolo").value.trim().toLowerCase();
-let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
+          let termo = document.getElementById("buscaProtocolo").value.trim().toLowerCase();
+          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
 
-let resultados = relatorios.filter(r => 
-r.protocolo.toLowerCase().includes(termo) ||
-r.vitima.toLowerCase().includes(termo)
-);
+          let resultados = relatorios.filter(r =>
+            r.protocolo.toLowerCase().includes(termo) ||
+            r.vitima.toLowerCase().includes(termo)
+          );
 
-let div = document.getElementById("resultadoConsulta");
+          let div = document.getElementById("resultadoConsulta");
 
-if(resultados.length === 0){
-div.innerHTML = "<div class='erroConsulta'>❌ Nenhum registro encontrado.</div>";
-return;
-}
+          if (resultados.length === 0) {
+            div.innerHTML = "<div class='erroConsulta'>❌ Nenhum registro encontrado.</div>";
+            return;
+          }
 
-/* salvar histórico */
-let historico = JSON.parse(localStorage.getItem("historicoBusca")) || [];
-historico.unshift(termo);
-historico = [...new Set(historico)].slice(0,5);
-localStorage.setItem("historicoBusca", JSON.stringify(historico));
+          /* salvar histórico */
+          let historico = JSON.parse(localStorage.getItem("historicoBusca")) || [];
+          historico.unshift(termo);
+          historico = [...new Set(historico)].slice(0, 5);
+          localStorage.setItem("historicoBusca", JSON.stringify(historico));
 
-div.innerHTML = "";
+          div.innerHTML = "";
 
-resultados.forEach(resultado => {
+          resultados.forEach(resultado => {
 
-div.innerHTML += `
+            div.innerHTML += `
 <div class="cardResultado">
 
 <h3>📄 ${resultado.protocolo}</h3>
@@ -1945,120 +1950,120 @@ div.innerHTML += `
 
 </div>
 `;
-});
+          });
 
-carregarHistorico();
-}
-function alterarStatusConsulta(protocolo){
+          carregarHistorico();
+        }
+        function alterarStatusConsulta(protocolo) {
 
-let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
+          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
 
-let r = relatorios.find(x => x.protocolo == protocolo);
+          let r = relatorios.find(x => x.protocolo == protocolo);
 
-if(!r) return;
+          if (!r) return;
 
-r.status = (r.status === "Concluído") ? "Em andamento" : "Concluído";
+          r.status = (r.status === "Concluído") ? "Em andamento" : "Concluído";
 
-localStorage.setItem("relatorios", JSON.stringify(relatorios));
+          localStorage.setItem("relatorios", JSON.stringify(relatorios));
 
-alert("Status atualizado para: " + r.status);
+          alert("Status atualizado para: " + r.status);
 
-buscarRegistro(); // atualiza tela
-}
-function carregarHistorico(){
+          buscarRegistro(); // atualiza tela
+        }
+        function carregarHistorico() {
 
-let historico = JSON.parse(localStorage.getItem("historicoBusca")) || [];
-let div = document.getElementById("historicoBusca");
+          let historico = JSON.parse(localStorage.getItem("historicoBusca")) || [];
+          let div = document.getElementById("historicoBusca");
 
-if(!div) return;
+          if (!div) return;
 
-if(historico.length === 0){
-div.innerHTML = "";
-return;
-}
+          if (historico.length === 0) {
+            div.innerHTML = "";
+            return;
+          }
 
-div.innerHTML = "<h4>🕘 Buscas recentes:</h4>";
+          div.innerHTML = "<h4>🕘 Buscas recentes:</h4>";
 
-historico.forEach(item=>{
-div.innerHTML += `<span onclick="usarHistorico('${item}')">${item}</span>`;
-});
-}
+          historico.forEach(item => {
+            div.innerHTML += `<span onclick="usarHistorico('${item}')">${item}</span>`;
+          });
+        }
 
-function usarHistorico(valor){
-document.getElementById("buscaProtocolo").value = valor;
-buscarRegistro();
-}
-function buscarTempoReal(){
+        function usarHistorico(valor) {
+          document.getElementById("buscaProtocolo").value = valor;
+          buscarRegistro();
+        }
+        function buscarTempoReal() {
 
-let termo = document.getElementById("buscaProtocolo").value.toLowerCase();
-let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
+          let termo = document.getElementById("buscaProtocolo").value.toLowerCase();
+          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
 
-let sugestoesDiv = document.getElementById("sugestoes");
+          let sugestoesDiv = document.getElementById("sugestoes");
 
-if(termo.length < 2){
-sugestoesDiv.innerHTML = "";
-return;
-}
+          if (termo.length < 2) {
+            sugestoesDiv.innerHTML = "";
+            return;
+          }
 
-let sugestoes = relatorios.filter(r =>
-r.protocolo.toLowerCase().includes(termo) ||
-r.vitima.toLowerCase().includes(termo)
-).slice(0,5);
+          let sugestoes = relatorios.filter(r =>
+            r.protocolo.toLowerCase().includes(termo) ||
+            r.vitima.toLowerCase().includes(termo)
+          ).slice(0, 5);
 
-sugestoesDiv.innerHTML = "";
+          sugestoesDiv.innerHTML = "";
 
-sugestoes.forEach(s => {
-sugestoesDiv.innerHTML += `
+          sugestoes.forEach(s => {
+            sugestoesDiv.innerHTML += `
 <div onclick="selecionarSugestao('${s.protocolo}')">
 ${s.protocolo} - ${s.vitima}
 </div>
 `;
-});
-}
-function selecionarSugestao(valor){
-document.getElementById("buscaProtocolo").value = valor;
-document.getElementById("sugestoes").innerHTML = "";
-buscarRegistroAvancado();
-}
-function buscarRegistroAvancado(){
+          });
+        }
+        function selecionarSugestao(valor) {
+          document.getElementById("buscaProtocolo").value = valor;
+          document.getElementById("sugestoes").innerHTML = "";
+          buscarRegistroAvancado();
+        }
+        function buscarRegistroAvancado() {
 
-let termo = document.getElementById("buscaProtocolo").value.toLowerCase();
-let dataFiltro = document.getElementById("filtroData").value;
-let statusFiltro = document.getElementById("filtroStatus").value;
+          let termo = document.getElementById("buscaProtocolo").value.toLowerCase();
+          let dataFiltro = document.getElementById("filtroData").value;
+          let statusFiltro = document.getElementById("filtroStatus").value;
 
-let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
+          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
 
-let resultados = relatorios.filter(r => {
+          let resultados = relatorios.filter(r => {
 
-let matchTexto = 
-r.protocolo.toLowerCase().includes(termo) ||
-r.vitima.toLowerCase().includes(termo);
+            let matchTexto =
+              r.protocolo.toLowerCase().includes(termo) ||
+              r.vitima.toLowerCase().includes(termo);
 
-let matchData = !dataFiltro || r.data === dataFiltro;
+            let matchData = !dataFiltro || r.data === dataFiltro;
 
-let matchStatus = !statusFiltro || r.status === statusFiltro;
+            let matchStatus = !statusFiltro || r.status === statusFiltro;
 
-return matchTexto && matchData && matchStatus;
+            return matchTexto && matchData && matchStatus;
 
-});
+          });
 
-let div = document.getElementById("resultadoConsulta");
-let contador = document.getElementById("contadorResultados");
+          let div = document.getElementById("resultadoConsulta");
+          let contador = document.getElementById("contadorResultados");
 
-contador.innerText = `📊 ${resultados.length} resultado(s) encontrado(s)`;
+          contador.innerText = `📊 ${resultados.length} resultado(s) encontrado(s)`;
 
-if(resultados.length === 0){
-div.innerHTML = "<div class='erroConsulta'>Nenhum resultado encontrado</div>";
-return;
-}
+          if (resultados.length === 0) {
+            div.innerHTML = "<div class='erroConsulta'>Nenhum resultado encontrado</div>";
+            return;
+          }
 
-div.innerHTML = "";
+          div.innerHTML = "";
 
-resultados.forEach(r => {
+          resultados.forEach(r => {
 
-let statusClass = r.status === "Concluído" ? "statusConcluido" : "statusAndamento";
+            let statusClass = r.status === "Concluído" ? "statusConcluido" : "statusAndamento";
 
-div.innerHTML += `
+            div.innerHTML += `
 <div class="cardResultado">
 
 <h3>${r.protocolo}</h3>
@@ -2075,46 +2080,47 @@ div.innerHTML += `
 
 </div>
 `;
-});
+          });
 
-}
-document.getElementById("filtroData").addEventListener("change", buscarRegistroAvancado);
-document.getElementById("filtroStatus").addEventListener("change", buscarRegistroAvancado);
-document.getElementById("buscaProtocolo").addEventListener("keyup", buscarRegistroAvancado);
-function atualizarCardsUsuarios(){
+        }
+        document.getElementById("filtroData").addEventListener("change", buscarRegistroAvancado);
+        document.getElementById("filtroStatus").addEventListener("change", buscarRegistroAvancado);
+        document.getElementById("buscaProtocolo").addEventListener("keyup", buscarRegistroAvancado);
+        function atualizarCardsUsuarios() {
 
-let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+          let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
-let total = usuarios.length;
-let ativos = 0;
-let inativos = 0;
-let admins = 0;
+          let total = usuarios.length;
+          let ativos = 0;
+          let inativos = 0;
+          let admins = 0;
 
-usuarios.forEach(u=>{
+          usuarios.forEach(u => {
 
-if(u.status === "Ativo") ativos++;
-else inativos++;
+            if (u.status === "Ativo") ativos++;
+            else inativos++;
 
-if(u.nivel === "admin") admins++;
+            if (u.nivel === "admin") admins++;
 
-});
+          });
 
-// atualizar cards
-let elTotal = document.getElementById("totalUsuarios");
-let elAtivos = document.getElementById("usuariosAtivos");
-let elInativos = document.getElementById("usuariosInativos");
-let elAdmins = document.getElementById("admins");
+          // atualizar cards
+          let elTotal = document.getElementById("totalUsuarios");
+          let elAtivos = document.getElementById("usuariosAtivos");
+          let elInativos = document.getElementById("usuariosInativos");
+          let elAdmins = document.getElementById("admins");
 
-if(elTotal) elTotal.innerText = total;
-if(elAtivos) elAtivos.innerText = ativos;
-if(elInativos) elInativos.innerText = inativos;
-if(elAdmins) elAdmins.innerText = admins;
+          if (elTotal) elTotal.innerText = total;
+          if (elAtivos) elAtivos.innerText = ativos;
+          if (elInativos) elInativos.innerText = inativos;
+          if (elAdmins) elAdmins.innerText = admins;
 
-}
-</script>
-<div class="botaoFlutuante" title="Adicionar novo registro" onclick="abrirNovoRegistroAtalho()">
-    +
-    </div>
+        }
+      </script>
+      <div class="botaoFlutuante" title="Adicionar novo registro" onclick="abrirNovoRegistroAtalho()">
+        +
+      </div>
 
-</body> 
+</body>
+
 </html>
