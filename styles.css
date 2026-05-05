@@ -553,19 +553,45 @@ body{
   /* BOTAO */
 
   .botaoSalvar{
-  background:#2e7d32;
-  color:white;
-  padding:10px 20px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-  font-weight:bold;
-  margin-top:10px;
-  }
+    background:#ff9800;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    border-radius:8px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.2s;
+    }
 
   .botaoSalvar:hover{
-  background:#1b5e20;
+  background:#f57c00;
+  transform:scale(1.05);
   }
+
+  .botaoSalvar{
+    float:right;
+    }
+    
+    /* BOTÃO SALVAR NOTIFICAÇÃO */
+    .btnSalvarnotificação{
+      background:#ff9800;
+      color:white;
+      border:none;
+      padding:10px 20px;
+      border-radius:8px;
+      font-weight:bold;
+      cursor:pointer;
+      transition:0.2s;
+      }
+  
+    .btnSalvarnotificação:hover{
+    background:#f57c00;
+    transform:scale(1.05);
+    }
+  
+    .btnSalvarnotificação{
+      float:right;
+      }
 
   /* TABELA */
 

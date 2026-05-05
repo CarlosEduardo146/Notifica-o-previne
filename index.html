@@ -342,242 +342,248 @@ font-size:13px;
 
         </div>
 
-        <!-- ETAPA 1 -->
-
-        <div class="etapa ativa">
-
-          <h3>Dados da Ocorrência</h3>
-
-          <div class="linha">
-
-            <div class="campo">
-              Data da ocorrência
-              <input type="date" id="dataOcorrencia">
-            </div>
-
-            <div class="campo">
-              Local da ocorrência
-              <input type="text" id="localOcorrencia">
-            </div>
-
-          </div>
-
-
-          <div class="linha">
-
-            <div class="campo">
-              Município
-              <input type="text" id="municipio">
-            </div>
-
-            <div class="campo">
-              Estado
-              <input type="text" id="estado">
-            </div>
-          </div>
-          <button class="botaoProximo" onclick="proximo()">Próximo</button>
-
-        </div>
-
-        <!-- ETAPA 2 -->
-
-        <div class="etapa">
-
-          <h3>Dados da Vítima</h3>
-
-          <div class="linha">
-
-            <div class="campo">
-              Nome da vítima
-              <input type="text" id="nomeVitima">
-            </div>
-
-            <div class="campo">
-              Idade
-              <input type="number" id="idadeVitima">
-            </div>
-
-          </div>
-
-          <div class="linha">
-
-            <div class="campo">
-              Sexo
-              <select id="sexoVitima">
-                <option>Feminino</option>
-                <option>Masculino</option>
-                <option>Outro</option>
-              </select>
-            </div>
-
-            <div class="campo">
-              CPF
-              <input type="text" id="cpfVitima">
-            </div>
-            <h4>Raça / Cor</h4>
-            <label><input type="radio" name="raca" value="Branca"> Branca</label>
-            <label><input type="radio" name="raca" value="Preta"> Preta</label>
-            <label><input type="radio" name="raca" value="Parda"> Parda</label>
-            <label><input type="radio" name="raca" value="Indígena"> Indígena</label>
-            <label><input type="radio" name="raca" value="Amarela"> Amarela</label>
-
-            <h4>Identidade de Gênero</h4>
-            <label><input type="radio" name="genero" value="Homem Cisgênero"> Homem Cisgênero</label>
-            <label><input type="radio" name="genero" value="Mulher Cisgênero"> Mulher Cisgênero</label>
-            <label><input type="radio" name="genero" value="Homem Trans"> Homem Trans</label>
-            <label><input type="radio" name="genero" value="Mulher Trans"> Mulher Trans</label>
-            <label><input type="radio" name="genero" value="Travesti"> Travesti</label>
-
-            <h4>Orientação Sexual</h4>
-            <label><input type="radio" name="orientacao" value="Heterossexual"> Heterossexual</label>
-            <label><input type="radio" name="orientacao" value="Homossexual"> Homossexual</label>
-            <label><input type="radio" name="orientacao" value="Bissexual"> Bissexual</label>
-            <label><input type="radio" name="orientacao" value="Não se aplica"> Não se aplica</label>
-
-            <h4>Escolaridade</h4>
-            <select id="escolaridade">
-              <option>Creche</option>
-              <option>Pré-escola</option>
-              <option>1º ano</option>
-              <option>2º ano</option>
-              <option>3º ano</option>
-              <option>4º ano</option>
-              <option>5º ano</option>
-              <option>6º ano</option>
-              <option>7º ano</option>
-              <option>8º ano</option>
-              <option>9º ano</option>
-              <option>Ensino Médio</option>
-            </select>
-          </div>
-
-          <button class="botaoVoltar" onclick="voltar()">Voltar</button>
-          <button class="botaoProximo" onclick="proximo()">Próximo</button>
-
-        </div>
-
-        <!-- ETAPA 3 -->
-
-        <div class="etapa">
-
-          <h3>Responsável</h3>
-
-          <div class="linha">
-
-            <div class="campo">
-              Nome do responsável
-              <input type="text" id="responsavel">
-            </div>
-
-            <div class="campo">
-              Parentesco
-              <input type="text" id="parentesco">
-            </div>
-          </div>
-          <div class="linha">
-
-            <div class="campo">
-              Telefone
-              <input type="text" id="telefoneResponsavel">
-            </div>
-
-            <div class="campo">
-              Endereço
-              <input type="text" id="enderecoResponsavel">
-            </div>
-          </div>
-
-          <button class="botaoVoltar" onclick="voltar()">Voltar</button>
-          <button class="botaoProximo" onclick="proximo()">Próximo</button>
-
-        </div>
-
-        <!-- ETAPA 4 -->
-
-        <div class="etapa">
-
-          <h3>Autor</h3>
-
-          <div class="linha">
-
-            <div class="campo">
-              Nome do autor
-              <input type="text" id="autor">
-            </div>
-
-            <div class="campo">
-              Idade
-              <input type="number" id="idadeAutor">
-            </div>
-          </div>
-          <div class="linha">
-
-            <div class="campo">
-              Relação com a vítima
-              <input type="text" id="relacaoAutor">
-            </div>
-
-          </div>
-
-          <button class="botaoVoltar" onclick="voltar()">Voltar</button>
-          <button class="botaoProximo" onclick="proximo()">Próximo</button>
-
-        </div>
-
-        <!-- ETAPA 5 -->
-
-        <div class="etapa">
-
-          <h3>Tipificação</h3>
-
-          <h3>Tipificação da Violência</h3>
-
-          <h4>Violência Física</h4>
-          <label><input type="checkbox" value="Agressão Física"> Agressão Física</label>
-          <label><input type="checkbox" value="Maus-tratos"> Maus-tratos</label>
-          <label><input type="checkbox" value="Negligência"> Negligência</label>
-
-          <h4>Violência Psicológica</h4>
-          <label><input type="checkbox" value="Ameaça"> Ameaça</label>
-          <label><input type="checkbox" value="Humilhação"> Humilhação</label>
-          <label><input type="checkbox" value="Bullying"> Bullying</label>
-
-          <h4>Violência Sexual</h4>
-          <label><input type="checkbox" value="Abuso Sexual"> Abuso Sexual</label>
-          <label><input type="checkbox" value="Assédio Sexual"> Assédio Sexual</label>
-          <label><input type="checkbox" value="Exploração Sexual"> Exploração Sexual</label>
-
-          <button class="botaoVoltar" onclick="voltar()">Voltar</button>
-          <button class="botaoProximo" onclick="proximo()">Próximo</button>
-        </div>
-
-        <!-- ETAPA 6 -->
-
-        <div class="etapa">
-
-          <h3>Resumo da Ocorrência</h3>
-
-          <textarea id="resumo"></textarea>
-
-          <button class="botaoVoltar" onclick="voltar()">Voltar</button>
-          <button class="botaoProximo" onclick="proximo()">Próximo</button>
-
-        </div>
-
-        <!-- ETAPA 7 -->
-
-        <div class="etapa">
-
-          <h3>Encaminhamento</h3>
-
-          <textarea id="encaminhamento"></textarea>
-
-          <button class="botaoVoltar" onclick="voltar()">Voltar</button>
-          <button class="botaoProximo" onclick="salvarNotificacao()">Salvar Notificação</button>
-
-        </div>
-
-      </div><!-- RELATORIOS -->
+<!-- ETAPA 1 -->
+
+<div class="etapa ativa">
+
+  <h3>Dados da Ocorrência</h3>
+  
+  <div class="linha">
+    <div class="campo">
+      Data de preenchimento
+      <input type="date" id="dataPreenchimento">
+    </div>
+  
+    <div class="campo">
+      Onde ocorreu?
+      <select id="localTipo">
+        <option>Na escola</option>
+        <option>No âmbito familiar</option>
+        <option>Outros</option>
+      </select>
+    </div>
+  </div>
+  
+  <div class="campo">
+    Especifique o local (se necessário)
+    <input type="text" id="localDetalhado">
+  </div>
+  
+  <button class="botaoProximo" onclick="proximo()">Próximo</button>
+  
+  </div>
+      <!-- ETAPA 2 -->
+  
+      <div class="etapa">
+  
+  <h3>Dados da Vítima</h3>
+  
+  <input type="text" id="nomeVitima" placeholder="Nome">
+  <input type="number" id="idadeVitima" placeholder="Idade">
+  
+  <h4>Raça/Cor</h4>
+  <label><input type="radio" name="raca" value="Branca"> Branca</label>
+  <label><input type="radio" name="raca" value="Preta"> Preta</label>
+  <label><input type="radio" name="raca" value="Parda"> Parda</label>
+  <label><input type="radio" name="raca" value="Indígena"> Indígena</label>
+  <label><input type="radio" name="raca" value="Amarela"> Amarela</label>
+  
+  <h4>Sexo</h4>
+  <label><input type="radio" name="sexo" value="Feminino"> Feminino</label>
+  <label><input type="radio" name="sexo" value="Masculino"> Masculino</label>
+  <label><input type="radio" name="sexo" value="Não informou"> Não informou</label>
+  
+  <h4>Orientação Sexual</h4>
+  <label><input type="radio" name="orientacao" value="Heterossexual"> Heterossexual</label>
+  <label><input type="radio" name="orientacao" value="Homossexual"> Homossexual</label>
+  <label><input type="radio" name="orientacao" value="Bissexual"> Bissexual</label>
+  <label><input type="radio" name="orientacao" value="Ignorado"> Ignorado</label>
+  
+  <h4>Escolaridade</h4>
+  <select id="escolaridade">
+    <option>Creche</option>
+    <option>Pré-Escola</option>
+    <option>1º ano</option>
+    <option>2º ano</option>
+    <option>3º ano</option>
+    <option>4º ano</option>
+    <option>5º ano</option>
+    <option>6º ano</option>
+    <option>7º ano</option>
+    <option>8º ano</option>
+    <option>9º ano</option>
+    <option>Ensino Médio</option>
+  </select>
+  
+  <div class="botoesEtapa">
+    <button class="botaoVoltar" onclick="voltar()">Voltar</button>
+      <button class="botaoProximo" onclick="proximo()">Próximo</button>
+  </div>
+  
+  </div>
+      <!-- ETAPA 3 -->
+  
+      <div class="etapa">
+  
+      <h3>Responsável</h3>
+  
+      <div class="linha">
+  
+      <div class="campo">
+      Nome do responsável
+      <input type="text" id="responsavel">
+      </div>
+  
+      <div class="campo">
+      Parentesco
+      <input type="text" id="parentesco">
+      </div>
+      </div>
+      <div class="linha">
+  
+      <div class="campo">
+      Telefone
+      <input type="text" id="telefoneResponsavel">
+      </div>
+  
+      <div class="campo">
+      Endereço
+      <input type="text" id="enderecoResponsavel">
+      </div>
+      </div>
+  
+      <button class="botaoVoltar" onclick="voltar()">Voltar</button>
+      <button class="botaoProximo" onclick="proximo()">Próximo</button>
+  
+      </div>
+  
+    
+  
+      <!-- ETAPA 4 -->
+  <div class="etapa">
+  
+  <h3>Autor</h3>
+  
+  <div class="linha">
+  
+    <div class="campo">
+      Nome do autor
+      <input type="text" id="autor">
+    </div>
+  
+    <div class="campo">
+      Idade
+      <input type="number" id="idadeAutor">
+    </div>
+  
+  </div>
+  
+  <div class="linha">
+  
+    <div class="campo">
+      Relação com a vítima
+      <input type="text" id="relacaoAutor">
+    </div>
+  
+  </div>
+  
+  <div class="botoesEtapa">
+    <button class="botaoVoltar" onclick="voltar()">Voltar</button>
+      <button class="botaoProximo" onclick="proximo()">Próximo</button>
+  </div>
+  
+  </div>
+  <!-- ETAPA 5 -->
+  <div class="etapa" id="etapaTipificacao">
+  
+  <h3>Tipificação da Violência</h3>
+  
+  <h4>Violência Física</h4>
+  <label><input type="checkbox" value="Agressão Física"> Agressão Física</label>
+  <label><input type="checkbox" value="Conflito físico"> Conflito físico</label>
+  <label><input type="checkbox" value="Maus-tratos"> Maus-tratos</label>
+  <label><input type="checkbox" value="Negligência"> Negligência</label>
+  
+  <h4>Violência Psicológica</h4>
+  <label><input type="checkbox" value="Ameaça"> Ameaça</label>
+  <label><input type="checkbox" value="Humilhação"> Humilhação</label>
+  <label><input type="checkbox" value="Bullying"> Bullying</label>
+  <label><input type="checkbox" value="Chantagem"> Chantagem</label>
+  
+  <h4>Violência Sexual</h4>
+  <label><input type="checkbox" value="Abuso Sexual"> Abuso Sexual</label>
+  <label><input type="checkbox" value="Assédio Sexual"> Assédio Sexual</label>
+  <label><input type="checkbox" value="Exploração Sexual"> Exploração Sexual</label>
+  <label><input type="checkbox" value="Estupro"> Estupro</label>
+  
+  <h4>Violência Virtual</h4>
+  <label><input type="checkbox" value="Cyberbullying"> Cyberbullying</label>
+  <label><input type="checkbox" value="Assédio virtual"> Assédio virtual</label>
+  <label><input type="checkbox" value="Invasão de dispositivo"> Invasão de dispositivo</label>
+  
+  <h4>Violência Moral</h4>
+  <label><input type="checkbox" value="Calúnia"> Calúnia</label>
+  <label><input type="checkbox" value="Difamação"> Difamação</label>
+  <label><input type="checkbox" value="Injúria"> Injúria</label>
+  
+  <hr>
+  
+  <h3>Motivação da Violência</h3>
+  
+  <label><input type="checkbox" value="Racismo"> Racismo</label>
+  <label><input type="checkbox" value="Intolerância Religiosa"> Intolerância Religiosa</label>
+  <label><input type="checkbox" value="Sexismo"> Sexismo</label>
+  <label><input type="checkbox" value="Diversidade de gênero"> Diversidade de gênero</label>
+  <label><input type="checkbox" value="Capacitismo"> Capacitismo</label>
+  <label><input type="checkbox" value="Outros"> Outros</label>
+  
+  <hr>
+  
+  <h3>Quem praticou a violência?</h3>
+  
+  <label><input type="checkbox" value="Criança"> Criança</label>
+  <label><input type="checkbox" value="Adolescente"> Adolescente</label>
+  <label><input type="checkbox" value="Pai"> Pai</label>
+  <label><input type="checkbox" value="Mãe"> Mãe</label>
+  <label><input type="checkbox" value="Responsável"> Responsável</label>
+  <label><input type="checkbox" value="Professor"> Professor</label>
+  
+  <div class="botoesEtapa">
+    <button class="botaoVoltar" onclick="voltar()">Voltar</button>
+      <button class="botaoProximo" onclick="proximo()">Próximo</button>
+  </div>
+  
+  </div>
+  <!-- ETAPA 6 -->
+  <div class="etapa">
+  
+  <h3>Resumo da Ocorrência</h3>
+  
+  <textarea id="resumo" placeholder="Descreva resumidamente o que aconteceu..." rows="5"></textarea>
+  
+  <div class="botoesEtapa">
+    <button class="botaoVoltar" onclick="voltar()">Voltar</button>
+    <button class="botaoProximo" onclick="proximo()">Próximo</button>
+  </div>
+  
+  </div>
+      <!-- ETAPA 7 -->
+  <!-- ETAPA 7 -->
+  <div class="etapa">
+  
+  <h3>Encaminhamento</h3>
+  
+  <textarea id="encaminhamento" placeholder="Descreva quais ações serão tomadas..." rows="5"></textarea>
+  
+  <div class="botoesEtapa">
+    <button class="botaoVoltar" onclick="voltar()">Voltar</button>
+    <button class="btnSalvarnotificação" onclick="salvarNotificacao()">Salvar Notificação</button>
+  </div>
+
+      </div>
+      </div>
+      
+      <!-- RELATORIOS -->
       <div id="relatorios" class="aba">
 
         <h2>Menu de Relatórios</h2>
