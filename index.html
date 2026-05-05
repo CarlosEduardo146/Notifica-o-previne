@@ -24,47 +24,90 @@
   <!-- PAGINA INICIAL -->
 
   <div id="inicio">
-
-    <div class="topo">
-
-      <img src="previne.png">
-      <span>SISTEMA DE NOTIFICAÇÃO PREVINE</span>
-
-    </div>
-
-    <div class="container">
-
-      <div class="titulo1">Bem-Vindo ao</div>
-      <div class="titulo2">Sistema PREVINE</div>
-
-      <div class="cards">
-
-        <div class="card">
-          <h3>Painel Administrativo</h3>
-          <button class="botao verde" onclick="abrirLogin()">Entrar no Sistema</button>
+    <div class="inicioFrame">
+      <div class="topo">
+        <div class="topoMarca">
+          <img src="previne.png">
+          <div class="topoTexto">
+            <strong>Previne</strong>
+            <span>Sistema de Denúncias</span>
+          </div>
         </div>
-
-        <div class="card verde">
-          <h2>Registrar Notificação </h2>
-          <button class="botao branco" onclick="abrirRegistroPublico()">Acessar Registro</button>
-        </div>
-
+        <button class="botaoArea" onclick="abrirLogin()">
+          <i class="fi fi-sr-lock"></i>
+          Área administrativa
+        </button>
       </div>
 
-      <div class="rodape">
+      <div class="container">
+        <section class="heroInicio">
+          <div class="heroTexto">
+            <h1>Denuncie abusos com segurança e anonimato</h1>
+            <p>Sua denúncia é importante. Aqui você pode falar com segurança e ajudar a transformar realidades.</p>
+            <button class="botaoDenuncia" onclick="abrirRegistroPublico()">
+              <i class="fi fi-sr-paper-plane"></i>
+              Fazer denúncia agora
+            </button>
 
-        <span>Desenvolvimento e Apoio</span>
+            <div class="beneficios">
+              <div class="beneficioItem">
+                <i class="fi fi-br-shield-check"></i>
+                <div>
+                  <strong>100% anônimo</strong>
+                  <small>Sua identidade é protegida</small>
+                </div>
+              </div>
+              <div class="beneficioItem">
+                <i class="fi fi-br-clock-three"></i>
+                <div>
+                  <strong>Rápido</strong>
+                  <small>Leva menos de 2 minutos</small>
+                </div>
+              </div>
+              <div class="beneficioItem">
+                <i class="fi fi-sr-shield"></i>
+                <div>
+                  <strong>Seguro</strong>
+                  <small>Seus dados estão protegidos</small>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <div class="logos">
-          <img src="prefeitura.png">
-          <img src="mpce.png">
-        </div>
+          <div class="heroIlustracao">
+            <img src="previne home imagem.png".png">
+          </div>
+        </section>
 
+        <section class="comoFunciona">
+          <h2>Como funciona</h2>
+          <div class="passos">
+            <div class="passoItem">
+              <span>1.</span>
+              <p>Você registra a denúncia</p>
+            </div>
+            <div class="passoItem">
+              <span>2.</span>
+              <p>O sistema protege sua identidade</p>
+            </div>
+            <div class="passoItem">
+              <span>3.</span>
+              <p>A administração analisa o caso</p>
+            </div>
+          </div>
+        </section>
       </div>
 
+      <div class="faixaInstitucional">
+        <div class="faixaConteudo">
+          <i class="fi fi-sr-shield-check"></i>
+          <div>
+            <strong>Sistema oficial de registro e acompanhamento de denúncias</strong>
+            <small>Plataforma segura • Proteção de dados garantida • Atendimento responsável</small>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-
   </div>
 
   <!-- LOGIN MODAL -->
@@ -93,8 +136,13 @@
   <div class="painel" id="painel">
 
     <div class="sidebar">
-
-      <h3>PREVINE</h3>
+      <div class="sidebarBrand">
+        <img src="previne.png" alt="Previne">
+        <div>
+          <strong>Previne</strong>
+          <small>Sistema de Notificação</small>
+        </div>
+      </div>
 
       <button onclick="abrirAba('dashboard')"><i class="fi fi-br-stats"></i> Dashboard</button>
       <button onclick="abrirAba('registros')"><i class="fi fi-sr-document"></i> Registros</button>
@@ -258,7 +306,7 @@ font-size:13px;
       <div id="dashboard" class="aba">
 
         <h2>Dashboard</h2>
-        <div style="margin-bottom:20px; display:flex; gap:10px; flex-wrap:wrap;">
+        <div class="filtrosDashboard">
 
           <select id="filtroMes">
             <option value="">Todos os meses</option>
