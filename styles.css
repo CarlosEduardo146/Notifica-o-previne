@@ -27,7 +27,7 @@ body {
   font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   background: var(--bg);
   height: 100dvh;
-  overflow: hidden;
+  overflow: visible;
 }
 
 img {
@@ -49,7 +49,7 @@ img {
   border-radius: 12px;
   background: #fff;
   box-shadow: 0 8px 26px rgba(31, 59, 31, 0.1);
-  overflow: hidden;
+  overflow: visible;
 }
 
 #inicio .topo {
@@ -914,7 +914,7 @@ table {
   border-collapse: collapse;
   border: 1px solid var(--line);
   border-radius: 12px;
-  overflow: hidden;
+  overflow: visible;
   margin-top: 12px;
   background: #fff;
 }
@@ -1295,4 +1295,11 @@ th {
     font-size:28px;
 }
 
+}
+#escola {
+  direction: ltr;
+  writing-mode: horizontal-tb;
+}
+.formUsuario {
+  overflow: visible;
 }

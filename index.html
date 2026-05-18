@@ -197,22 +197,31 @@ font-size:13px;
                     <input id="perfilNome">
                   </div>
 
-                  <div class="campo">
-                    <label>Email</label>
-                    <input id="perfilEmail" disabled>
-                  </div>
-                </div>
+                 <div class="linha">
 
-                <div class="linha">
-                  <div class="campo">
-                    <label>CPF</label>
-                    <input id="perfilCpf">
-                  </div>
+  <div class="campo">
+    <label>Email</label>
+    <input id="email">
+  </div>
 
-                  <div class="campo">
-                    <label>Nível</label>
-                    <input id="perfilNivel" disabled>
-                  </div>
+  <div class="campo">
+    <label>Nível</label>
+
+    <select id="nivel">
+      <option value="usuario">Usuário</option>
+      <option value="admin">Administrador</option>
+    </select>
+  </div>
+
+</div>
+<label>Escola</label>
+
+<select id="escola">
+  <option value="">Selecione</option>
+  <option value="CEI Francisca Monteiro">CEI Francisca Monteiro</option>
+  <option value="CEI Maria José">CEI Maria José</option>
+  <option value="Escola Paulo Freire">Escola Paulo Freire</option>
+</select>              
                 </div>
 
                 <button class="botaoSalvar" onclick="salvarPerfil()">Salvar Alterações</button>
@@ -735,46 +744,102 @@ font-size:13px;
         <input id="pesquisaUsuario" placeholder="🔍 Pesquisar usuário..." onkeyup="pesquisarUsuario()">
 
         <!-- FORMULÁRIO -->
-        <div class="formUsuario">
+<div class="formUsuario">
 
-          <div class="linha">
-            <div class="campo">
-              <label>Nome</label>
-              <input id="nome">
-            </div>
+  
+  <div class="linha">
 
-            <div class="campo">
-              <label>CPF</label>
-              <input id="cpf">
-            </div>
-          </div>
+    <div class="campo">
+      <label>Nome</label>
+      <input id="nome">
+    </div>
 
-          <div class="linha">
-            <div class="campo">
-              <label>Email</label>
-              <input id="email">
-            </div>
+    <div class="campo">
+      <label>Escola</label>
 
-            <div class="campo">
-              <label>Nível</label>
-              <select id="nivel">
-                <option value="usuario">Usuário</option>
-                <option value="admin">Administrador</option>
-              </select>
-            </div>
-          </div>
+      <select id="escola">
+        <option value="CEJAH">CEJAH</option>
+        <option value="CACE">CACE</OPTION>
+        <option value="EMEF. DEPUTADO ULISSES GUIMARÃES">EMEF. DEPUTADO ULISSES GUIMARÃES</option>
+        <option value="EMEF. DIONÍZIA ROCHA DE MORAIS">EMEF. DIONÍZIA ROCHA DE MORAIS</option>
+        <option value="EMEF. DOMITILIA ASSUNÇÃO DE MENEZES">EMEF. DOMITILIA ASSUNÇÃO DE MENEZES</option>
+        <option value="EMEF. EUCLIDIA PEREIRA DE AZEVEDO">EMEF. EUCLIDIA PEREIRA DE AZEVEDO</option>
+        <option value="EMEFQ. FERNANDO AUGUSTO NOGUEIRA">EMEFQ. FERNANDO AUGUSTO NOGUEIRA</option>
+        <option value="EMEF. FRANCISCA GADELHA PIRES">EMEF. FRANCISCA GADELHA PIRES </option>
+        <option value="EMEF. FRANCISCA MONTEIRO DE OLIVEIRA">EMEF. FRANCISCA MONTEIRO DE OLIVEIRA</option>
+        <option value="EMEF. FRANCISCO XAVIER DE FREITAS"> EMEF. FRANCISCO XAVIER DE FREITAS </option>
+        <option value="EMEF. GEOVÂNIA ALBANO DE ALMEIDA ">EMEF. GEOVÂNIA ALBANO DE ALMEIDA </option>
+        <option value="EMEF. JOÃO ANTÔNIO DA SILVA">EMEF. JOÃO ANTÔNIO DA SILVA</option>
+        <option value="EMEF. JOAQUIM ANTONIO DA SILVA">EMEF. JOAQUIM ANTONIO DA SILVA </option>
+        <option value="EMEF. JOSÉ ALDEMIR DA SILVA">EMEF. JOSÉ ALDEMIR DA SILVA </option>
+        <option value="EMEF. JORGE PEREIRA DA ROCHA">EMEF. JORGE PEREIRA DA ROCHA </option>
+        <option value="EMEF. MARIA PINHEIRO DA SILVA">EMEF. MARIA PINHEIRO DA SILVA </option>
+        <option value="EMEF. MANOEL FELIPE DOS SANTOS" >EMEF. MANOEL FELIPE DOS SANTOS </option>
+        <option value="EMEF. MARIA JOSÉ DE SOUSA">EMEF. MARIA JOSÉ DE SOUSA </option>
+        <option value="EMEF. MARIA LUIZA BARBOZA CHAVES">EMEF. MARIA LUIZA BARBOZA CHAVES </option>
+        <option value="EMEF. MARIA REGIANA DA SILVA">EMEF. MARIA REGIANA DA SILVA </option>
+        <option value="EMEF. MARINA FERREIRA DE ALMEIDA"  >EMEF. MARINA FERREIRA DE ALMEIDA </option>
+        <option value="EMEF. MILTON NOGUEIRA NERIS">EMEF. MILTON NOGUEIRA NERIS </option>
+        <option value="EMEFQ. MARIA TEODORA EVANGELISTA COSTA">EMEFQ. MARIA TEODORA EVANGELISTA COSTA </option>
+        <option value="EMEFQ. OLÍMPIO NOGUEIRA LOPES">EMEFQ. OLÍMPIO NOGUEIRA LOPES </option>
+        <option value="EMEF. PROFESSORA RAIMUNDA DUARTE TEXEIRA"  >EMEF. PROFESSORA RAIMUNDA DUARTE TEXEIRA </option>    
+        <option value="EMEF. PROFESSORA DIONE MARIA BEZERRA PESSOA">EMEF. PROFESSORA DIONE MARIA BEZERRA PESSOA </option>
+        <option value="EMEF. RAIMUNDO DOMINGOS DE SOUSA">EMEF. RAIMUNDO DOMINGOS DE SOUSA </option>
+        <option value="EMEF. SEBASTIÃO LOPES DE OLIVEIRA">EMEF. SEBASTIÃO LOPES DE OLIVEIRA </option>
+        <option value="EMEF. CEI ADÍLIA FERREIRA LIMA">EMEF. CEI ADÍLIA FERREIRA LIMA </option>
+        <option value="CEI ALDA DE CARVALHO BENTO">CEI ALDA DE CARVALHO BENTO </option>
+        <option value="CEI ANNA REBECA SOUSA PEREIRA" >CEI ANNA REBECA SOUSA PEREIRA </option>
+        <option value="CEI CLEONICE PIRES DE SOUSA ">CEI CLEONICE PIRES DE SOUSA</option>
+        <option value="CEI DONA SINHÁ">CEI DONA SINHÁ </option>
+        <option value="CEI DR. WALDEMAR GONÇALVES DE SOUSA">CEI DR. WALDEMAR GONÇALVES DE SOUSA </option>
+        <option value="CEI EUFRAZINA MARTINS DOS SANTOS">CEI EUFRAZINA MARTINS DOS SANTOS </option>
+        <option value="CEI FRANCISCA ERMIRA KOHLER">CEI FRANCISCA ERMIRA KOHLER </option>
+        <option value="CEI JOSÉ ANTONIO DA SILVA - PROF SENA">CEI JOSÉ ANTONIO DA SILVA - PROF SENA </option>
+        <option value="CEI MARIA CARMEN LUCIA DA SILVA">CEI MARIA CARMEN LUCIA DA SILVA </option>
+        <option value="CEI MARIA DO CARMO DE OLIVEIRA ">CEI MARIA DO CARMO DE OLIVEIRA </option>
+        <option value="CEI MARIA ELIZIETE MARTINS CARNEIRO">CEI MARIA ELIZIETE MARTINS CARNEIRO </option>
+        <option value="CEI MARIA JAYCEGLAB NOBRE RABELO">CEI MARIA JAYCEGLAB NOBRE RABELO </option>
+        <option value="MARIA JOSÉ ALVES DA SILVA">MARIA JOSÉ ALVES DA SILVA </option>
+        <option value="CEI NARA RICARDO DE LINO">CEI NARA RICARDO DE LINO </option>
+        <option value="CEI NELSA NAVILHA GRENDENE BARTELLE">CEI NELSA NAVILHA GRENDENE BARTELLE </option>
+        <option value="CEI PEDRO NOGUEIRA DE QUEIROZ">CEI PEDRO NOGUEIRA DE QUEIROZ </option>
+        <option value="CEI STELA MARIA NASPOLINI">CEI STELA MARIA NASPOLINI </option>
+        <option value="CEI VICENTE XAVIER DA SILVA">CEI VICENTE XAVIER DA SILVA </option>
+      </select>
+    </div>
 
-          <button class="botaoSalvar" onclick="cadastrarUsuario()">Cadastrar Usuário</button>
+  </div>
 
-        </div>
 
-        <!-- TABELA -->
-        <table id="tabelaUsuarios">
+  <div class="linha">
+
+    <div class="campo">
+      <label>Email</label>
+      <input id="email">
+    </div>
+
+    <div class="campo">
+      <label>Nível</label>
+
+      <select id="nivel">
+        <option value="usuario">Usuário</option>
+        <option value="admin">Administrador</option>
+      </select>
+    </div>
+
+  </div>
+
+  <button class="botaoSalvar" onclick="cadastrarUsuario()">Cadastrar Usuário</button>
+
+</div>
+
+<!-- TABELA -->
+<table id="tabelaUsuarios">
 
           <thead>
             <tr>
               <th>Nome</th>
-              <th>CPF</th>
+              <th>Escola</th>
               <th>Email</th>
               <th>Senha</th>
               <th>Nível</th>
@@ -799,14 +864,15 @@ font-size:13px;
 
         let existeAdmin = usuarios.find(u => u.email === "admin");
 
-        if (!existeAdmin) {
-          usuarios.push({
-            nome: "Administrador",
-            email: "admin",
-            senha: "1234",
-            nivel: "admin",
-            status: "Ativo"
-          });
+        if (!existeAdmin) { 
+        usuarios.push({
+        nome: "Administrador",
+        email: "admin",
+        senha: "1234",
+        nivel: "admin",
+        escola: "Todas",
+        status: "Ativo"
+        });
           localStorage.setItem("usuarios", JSON.stringify(usuarios));
         }
 
@@ -991,19 +1057,20 @@ font-size:13px;
           let cpf = document.getElementById("cpf").value
           let email = document.getElementById("email").value
           let nivel = document.getElementById("nivel").value
-
+          let escola = document.getElementById("escola").value;
           let senha = gerarSenha()
 
           let usuarios = JSON.parse(localStorage.getItem("usuarios")) || []
 
-          usuarios.push({
-            nome: nome,
-            cpf: cpf,
-            email: email,
-            senha: senha,
-            nivel: nivel,
-            status: "Ativo"
-          })
+         usuarios.push({
+        nome: nome,
+        cpf: cpf,
+        email: email,
+        senha: senha,
+        nivel: nivel,
+        escola: escola,
+        status: "Ativo"
+        })
 
           localStorage.setItem("usuarios", JSON.stringify(usuarios))
 
@@ -1046,148 +1113,168 @@ font-size:13px;
 
         }
 
-        function salvarNotificacao() {
+function salvarNotificacao() {
 
-          document.body.innerHTML += '<div class="loader" id="load"></div>'
+  let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
 
-          setTimeout(() => {
-            document.getElementById("load").remove()
+  let raca =
+    document.querySelector('input[name="raca"]:checked')?.value || "";
 
-            // resto do código continua normal...
-          }, 800)
+  let sexo =
+    document.querySelector('input[name="sexo"]:checked')?.value || "";
 
-          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
+  let orientacao =
+    document.querySelector('input[name="orientacao"]:checked')?.value || "";
 
-          let raca = document.querySelector('input[name="raca"]:checked')?.value || ""
-          let genero = document.querySelector('input[name="genero"]:checked')?.value || ""
-          let orientacao = document.querySelector('input[name="orientacao"]:checked')?.value || ""
+  let tipos = [];
 
-          let tipos = []
+  document
+    .querySelectorAll('#etapaTipificacao input[type="checkbox"]:checked')
+    .forEach(c => {
+      tipos.push(c.value);
+    });
 
-          document.querySelectorAll('.etapa input[type="checkbox"]:checked').forEach(c => {
-            tipos.push(c.value)
-          })
+  let usuarioLogado =
+    JSON.parse(localStorage.getItem("usuarioLogado")) || {};
 
-          let novo = {
+  let novo = {
 
-            protocolo: gerarProtocolo(relatorios.length + 1),
+    protocolo: gerarProtocolo(relatorios.length + 1),
 
-            data: document.getElementById("dataOcorrencia").value,
+    escola: usuarioLogado.escola || "Pública",
 
-            local: document.getElementById("localOcorrencia").value,
-            municipio: document.getElementById("municipio").value,
-            estado: document.getElementById("estado").value,
+    data:
+      document.getElementById("dataPreenchimento").value || "",
 
-            vitima: document.getElementById("nomeVitima").value,
-            idade: document.getElementById("idadeVitima").value,
-            sexo: document.getElementById("sexoVitima").value,
-            cpf: document.getElementById("cpfVitima").value,
+    local:
+      document.getElementById("localTipo").value || "",
 
-            raca: raca,
-            genero: genero,
-            orientacao: orientacao,
-            escolaridade: document.getElementById("escolaridade").value,
+    localDetalhado:
+      document.getElementById("localDetalhado").value || "",
 
-            responsavel: document.getElementById("responsavel").value,
-            telefone: document.getElementById("telefoneResponsavel").value,
-            parentesco: document.getElementById("parentesco").value,
-            endereco: document.getElementById("enderecoResponsavel").value,
-            autor: document.getElementById("autor").value,
-            idadeAutor: document.getElementById("idadeAutor").value,
-            relacaoAutor: document.getElementById("relacaoAutor").value,
-            tipo: tipos.join(", "),
+    vitima:
+      document.getElementById("nomeVitima").value || "",
 
-            resumo: document.getElementById("resumo").value,
-            encaminhamento: document.getElementById("encaminhamento").value,
+    idade:
+      document.getElementById("idadeVitima").value || "",
 
-            status: "Em andamento"
-          };
+    sexo: sexo,
 
-          relatorios.push(novo)
+    raca: raca,
 
-          localStorage.setItem("relatorios", JSON.stringify(relatorios))
-          adicionarNotificacao("Nova notificação: " + novo.vitima)
-          alert("Notificação registrada!\nProtocolo: " + novo.protocolo)
+    orientacao: orientacao,
 
-          etapaAtual = 0
-          mostrarEtapa()
+    escolaridade:
+      document.getElementById("escolaridade").value || "",
 
-        } function filtrarRelatorios() {
+    responsavel:
+      document.getElementById("responsavel").value || "",
 
-          let vitima = document.getElementById("filtroVitima").value.toLowerCase();
-          let mes = document.getElementById("filtroMes").value;
-          let ano = document.getElementById("filtroAno").value;
+    telefone:
+      document.getElementById("telefoneResponsavel").value || "",
 
-          let tabela = document.querySelector("#tabelaRelatorios tbody");
-          tabela.innerHTML = "";
+    parentesco:
+      document.getElementById("parentesco").value || "",
 
-          relatorios.forEach(r => {
+    endereco:
+      document.getElementById("enderecoResponsavel").value || "",
 
-            let data = new Date(r.data);
-            let mesRegistro = ("0" + (data.getMonth() + 1)).slice(-2);
-            let anoRegistro = data.getFullYear();
+    autor:
+      document.getElementById("autor").value || "",
 
-            if (
-              (r.vitima.toLowerCase().includes(vitima) || vitima == "") &&
-              (mesRegistro == mes || mes == "") &&
-              (anoRegistro == ano || ano == "")
-            ) {
+    idadeAutor:
+      document.getElementById("idadeAutor").value || "",
 
-              let linha = tabela.insertRow();
+    relacaoAutor:
+      document.getElementById("relacaoAutor").value || "",
 
-              linha.insertCell(0).innerHTML = r.protocolo;
-              linha.insertCell(1).innerHTML = r.data;
-              linha.insertCell(2).innerHTML = r.vitima;
-              linha.insertCell(3).innerHTML = r.tipo;
+    tipo: tipos.join(", "),
 
-            }
+    resumo:
+      document.getElementById("resumo").value || "",
 
-          });
+    encaminhamento:
+      document.getElementById("encaminhamento").value || "",
 
-        }
-        function exportarPDF() {
+    status: "Em andamento"
 
-          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
+  };
 
-          if (relatorios.length == 0) {
-            alert("Nenhum registro encontrado");
-            return;
-          }
+  relatorios.push(novo);
 
-          const { jsPDF } = window.jspdf;
+  localStorage.setItem(
+    "relatorios",
+    JSON.stringify(relatorios)
+  );
 
-          let doc = new jsPDF();
+  adicionarNotificacao(
+    "Nova notificação: " + novo.vitima
+  );
 
-          doc.setFontSize(16);
-          doc.text("RELATÓRIO GERAL - SISTEMA PREVINE", 105, 20, null, null, "center");
+  alert(
+    "Notificação registrada!\nProtocolo: " +
+    novo.protocolo
+  );
 
-          let y = 40;
+  limparFormulario();
 
-          doc.setFontSize(11);
+  etapaAtual = 0;
 
-          relatorios.forEach(r => {
+  mostrarEtapa();
 
-            doc.text(
-              "Protocolo: " + r.protocolo +
-              " | Data: " + (r.data || "") +
-              " | Vítima: " + (r.vitima || "") +
-              " | Tipo: " + (r.tipo || ""),
-              10,
-              y
-            );
+}
+ function exportarPDF() {
 
-            y += 10;
+  let usuario = JSON.parse(localStorage.getItem("usuarioLogado")) || {};
 
-            if (y > 270) {
-              doc.addPage();
-              y = 20;
-            }
+  let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
 
-          });
+  // FILTRO POR ESCOLA
+  if (usuario.nivel !== "admin") {
+    relatorios = relatorios.filter(r => r.escola === usuario.escola);
+  }
 
-          doc.save("Relatorio_Geral_PREVINE.pdf");
+  // VERIFICA SE EXISTE REGISTRO
+  if (relatorios.length == 0) {
+    alert("Nenhum registro encontrado");
+    return;
+  }
 
-        } function relatorioMensal() {
+  const { jsPDF } = window.jspdf;
+
+  let doc = new jsPDF();
+
+  doc.setFontSize(16);
+  doc.text("RELATÓRIO GERAL - SISTEMA PREVINE", 105, 20, null, null, "center");
+
+  let y = 40;
+
+  doc.setFontSize(11);
+
+  relatorios.forEach(r => {
+
+    doc.text(
+      "Protocolo: " + r.protocolo +
+      " | Data: " + (r.data || "") +
+      " | Vítima: " + (r.vitima || "") +
+      " | Tipo: " + (r.tipo || ""),
+      10,
+      y
+    );
+
+    y += 10;
+
+    if (y > 270) {
+      doc.addPage();
+      y = 20;
+    }
+
+  });
+
+  doc.save("Relatorio_Geral_PREVINE.pdf");
+
+}
+        function relatorioMensal() {
           let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
           let tabela = document.querySelector("#tabelaRelatorios tbody");
           let mesAtual = new Date().getMonth() + 1;
@@ -1567,22 +1654,56 @@ font-size:13px;
 
         }
         function carregarUsuarios() {
-          let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-          let tbody = document.querySelector("#tabelaUsuarios tbody");
-          if (!tbody) return;
 
-          tbody.innerHTML = "";
-          usuarios.forEach(u => {
-            let linha = tbody.insertRow();
-            linha.insertCell(0).innerText = u.nome || "";
-            linha.insertCell(1).innerText = u.cpf || "";
-            linha.insertCell(2).innerText = u.email || "";
-            linha.insertCell(3).innerText = u.senha || "";
-            linha.insertCell(4).innerText = u.nivel || "";
-            linha.insertCell(5).innerHTML = `<span class="${u.status === "Ativo" ? "statusAtivo" : "statusInativo"}">${u.status || "Ativo"}</span>`;
-            linha.insertCell(6).innerHTML = `<button class="botaoAcao botaoEditar" onclick="editarUsuario(this)">Editar</button> <button class="botaoAcao botaoStatus" onclick="mudarStatus(this)">Status</button> <button class="botaoAcao botaoExcluir" onclick="excluirUsuario('${u.email}')">Excluir</button>`;
-          });
-        }
+  let usuarios =
+    JSON.parse(localStorage.getItem("usuarios")) || [];
+
+  let tbody =
+    document.querySelector("#tabelaUsuarios tbody");
+
+  if (!tbody) return;
+
+  tbody.innerHTML = "";
+
+  usuarios.forEach(u => {
+
+    let linha = tbody.insertRow();
+
+    linha.insertCell(0).innerText = u.nome || "";
+    linha.insertCell(1).innerText = u.escola || "";
+    linha.insertCell(2).innerText = u.email || "";
+    linha.insertCell(3).innerText = u.senha || "";
+    linha.insertCell(4).innerText = u.nivel || "";
+
+    linha.insertCell(5).innerHTML =
+      `<span class="${
+        u.status === "Ativo"
+          ? "statusAtivo"
+          : "statusInativo"
+      }">
+        ${u.status || "Ativo"}
+      </span>`;
+
+    linha.insertCell(6).innerHTML = `
+      <button class="botaoAcao botaoEditar"
+        onclick="editarUsuario(this)">
+        Editar
+      </button>
+
+      <button class="botaoAcao botaoStatus"
+        onclick="mudarStatus(this)">
+        Status
+      </button>
+
+      <button class="botaoAcao botaoExcluir"
+        onclick="excluirUsuario('${u.email}')">
+        Excluir
+      </button>
+    `;
+
+  });
+
+}
         function pesquisarUsuario() {
           let termo = document.getElementById("pesquisaUsuario")?.value.toLowerCase().trim() || "";
           let linhas = document.querySelectorAll("#tabelaUsuarios tbody tr");
@@ -2005,7 +2126,8 @@ font-size:13px;
 </div>
 `;
           });
-
+subtitulo.innerText =
+  user.nivel + " • " + (user.escola || "Sem escola")
           carregarHistorico();
         }
         function alterarStatusConsulta(protocolo) {
