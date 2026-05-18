@@ -125,8 +125,44 @@
       <button class="btn" onclick="entrar()">Entrar</button>
 
       <div class="link">
-        <p>Não lembra sua senha? <a href="#">Recuperar senha</a></p>
-      </div>
+  <p>
+    Não lembra sua senha?
+    <a href="#" onclick="abrirRecuperacao()">Recuperar senha</a>
+  </p>
+</div>
+
+<!-- MODAL RECUPERAR SENHA -->
+<div id="modalRecuperar" class="overlay" style="display:none;">
+
+  <div class="modal">
+
+    <span class="fechar" onclick="fecharRecuperacao()">✖</span>
+
+    <h2>RECUPERAR SENHA</h2>
+
+    <input
+      type="email"
+      id="emailRecuperar"
+      placeholder="Digite seu e-mail"
+      class="input"
+    >
+
+    <button class="btn" onclick="recuperarSenha()">
+      Recuperar Senha
+    </button>
+
+    <div id="resultadoRecuperacao"
+      style="
+      margin-top:15px;
+      text-align:center;
+      font-weight:bold;
+      color:#2e7d32;
+    ">
+    </div>
+
+  </div>
+
+</div>
 
     </div>
 
@@ -2292,6 +2328,59 @@ ${s.protocolo} - ${s.vitima}
           if (elAdmins) elAdmins.innerText = admins;
 
         }
+        /* ===== RECUPERAR SENHA ===== */
+
+function abrirRecuperacao() {
+
+  document.getElementById("modalRecuperar").style.display = "flex";
+
+}
+
+function fecharRecuperacao() {
+
+  document.getElementById("modalRecuperar").style.display = "none";
+
+  document.getElementById("resultadoRecuperacao").innerHTML = "";
+
+  document.getElementById("emailRecuperar").value = "";
+
+}
+
+function recuperarSenha() {
+
+  let email =
+    document.getElementById("emailRecuperar")
+    .value
+    .trim();
+
+  let usuarios =
+    JSON.parse(localStorage.getItem("usuarios")) || [];
+
+  let usuario =
+    usuarios.find(u => u.email === email);
+
+  let resultado =
+    document.getElementById("resultadoRecuperacao");
+
+  if (!usuario) {
+
+    resultado.style.color = "#c62828";
+
+    resultado.innerHTML =
+      "❌ E-mail não encontrado";
+
+    return;
+
+  }
+
+  resultado.style.color = "#2e7d32";
+
+  resultado.innerHTML = `
+    ✅ Senha encontrada:<br><br>
+    <strong>${usuario.senha}</strong>
+  `;
+
+}
       </script>
       <div class="botaoFlutuante" title="Adicionar novo registro" onclick="abrirNovoRegistroAtalho()">
         +
