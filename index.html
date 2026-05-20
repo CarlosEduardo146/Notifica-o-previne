@@ -237,7 +237,7 @@ font-size:13px;
 
   <div class="campo">
     <label>Email</label>
-    <input id="email">
+   <input id="emailUsuario">  
   </div>
 
   <div class="campo">
@@ -252,7 +252,7 @@ font-size:13px;
 </div>
 <label>Escola</label>
 
-<select id="escola">
+<select id="escolaUsuario">
   <option value="">Selecione</option>
   <option value="CEI Francisca Monteiro">CEI Francisca Monteiro</option>
   <option value="CEI Maria José">CEI Maria José</option>
@@ -711,13 +711,14 @@ font-size:13px;
 
           <thead>
             <tr>
-              <th>Protocolo</th>
-              <th>Data</th>
-              <th>Vítima</th>
-              <th>Tipo</th>
-              <th>Status</th>
-              <th>Ações</th>
-            </tr>
+  <th>Protocolo</th>
+  <th>Escola</th>
+  <th>Data</th>
+  <th>Vítima</th>
+  <th>Tipo</th>
+  <th>Status</th>
+  <th>Ações</th>
+</tr>
           </thead>
 
           <tbody></tbody>
@@ -857,7 +858,7 @@ font-size:13px;
     <div class="campo">
       <label>Nível</label>
 
-      <select id="nivel">
+      <select id="nivelUsuario">
         <option value="usuario">Usuário</option>
         <option value="admin">Administrador</option>
       </select>
@@ -956,7 +957,7 @@ font-size:13px;
         function abrirPainel() {
 
           let painel = document.getElementById("painel");
-          let modoPublico = painel.classList.contains("modoPubli coRegistro");
+          let modoPublico = painel.classList.contains("modoPublicoRegistro");
 
           if (!modoPublico) {
 
@@ -1071,8 +1072,14 @@ font-size:13px;
 
         }
         function sair() {
-          location.reload()
-        } function gerarSenha(tamanho = 8) {
+
+  localStorage.removeItem("usuarioLogado");
+  localStorage.removeItem("tipo");
+
+  location.reload();
+
+}
+ function gerarSenha(tamanho = 8) {
 
           let caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
@@ -1087,34 +1094,41 @@ font-size:13px;
           return senha;
 
         }
-        function cadastrarUsuario() {
+       function cadastrarUsuario() {
 
-          let nome = document.getElementById("nome").value
-          let cpf = document.getElementById("cpf").value
-          let email = document.getElementById("email").value
-          let nivel = document.getElementById("nivel").value
-          let escola = document.getElementById("escola").value;
-          let senha = gerarSenha()
+  let nome = document.getElementById("nome").value;
+  let email = document.getElementById("email").value;
+  let nivel = document.getElementById("nivelUsuario").value;
+  let escola = document.getElementById("escola").value;
 
-          let usuarios = JSON.parse(localStorage.getItem("usuarios")) || []
+  let senha = gerarSenha();
 
-         usuarios.push({
-        nome: nome,
-        cpf: cpf,
-        email: email,
-        senha: senha,
-        nivel: nivel,
-        escola: escola,
-        status: "Ativo"
-        })
+  let usuarios =
+    JSON.parse(localStorage.getItem("usuarios")) || [];
 
-          localStorage.setItem("usuarios", JSON.stringify(usuarios))
+  usuarios.push({
+    nome: nome,
+    email: email,
+    senha: senha,
+    nivel: nivel,
+    escola: escola,
+    status: "Ativo"
+  });
 
-          alert("Usuário cadastrado!\nSenha: " + senha)
+  localStorage.setItem(
+    "usuarios",
+    JSON.stringify(usuarios)
+  );
 
-          carregarUsuarios()
-          atualizarCardsUsuarios();
-        } let etapaAtual = 0;
+  alert(
+    "Usuário cadastrado!\nSenha: " + senha
+  );
+
+  carregarUsuarios();
+  atualizarCardsUsuarios();
+
+} 
+        let etapaAtual = 0;
         function mostrarEtapa() {
 
           let etapas = document.querySelectorAll(".etapa")
@@ -1244,9 +1258,9 @@ function salvarNotificacao() {
   );
 
   adicionarNotificacao(
-    "Nova notificação: " + novo.vitima
-  );
-
+  "Nova notificação: " + novo.vitima,
+  novo.escola
+);
   alert(
     "Notificação registrada!\nProtocolo: " +
     novo.protocolo
@@ -1500,16 +1514,46 @@ function salvarNotificacao() {
 
         }
         function renderLinhaRelatorio(tabela, r) {
-          let linha = tabela.insertRow();
-          let protocolo = String(r.protocolo || "");
 
-          linha.insertCell(0).innerHTML = protocolo;
-          linha.insertCell(1).innerHTML = r.data || "";
-          linha.insertCell(2).innerHTML = r.vitima || "";
-          linha.insertCell(3).innerHTML = r.tipo || "";
-          linha.insertCell(4).innerHTML = `<button onclick="alterarStatus('${protocolo}')">${r.status || "Em andamento"}</button>`;
-          linha.insertCell(5).innerHTML = `<button onclick="relatorioIndividual('${protocolo}')">PDF</button> <button onclick="deletarRegistro('${protocolo}')" style="background:#c62828;color:white;">Excluir</button>`;
-        }
+  let linha = tabela.insertRow();
+
+  let protocolo =
+    String(r.protocolo || "");
+
+  linha.insertCell(0).innerHTML =
+    protocolo;
+
+  linha.insertCell(1).innerHTML =
+    r.escola || "";
+
+  linha.insertCell(2).innerHTML =
+    r.data || "";
+
+  linha.insertCell(3).innerHTML =
+    r.vitima || "";
+
+  linha.insertCell(4).innerHTML =
+    r.tipo || "";
+
+  linha.insertCell(5).innerHTML =
+    `<button onclick="alterarStatus('${protocolo}')">
+      ${r.status || "Em andamento"}
+    </button>`;
+
+  linha.insertCell(6).innerHTML = `
+    <button onclick="relatorioIndividual('${protocolo}')">
+      PDF
+    </button>
+
+    <button
+      onclick="deletarRegistro('${protocolo}')"
+      style="background:#c62828;color:white;"
+    >
+      Excluir
+    </button>
+  `;
+
+}
         function carregarRelatorios() {
           relatorioGeral();
         }
@@ -1645,7 +1689,8 @@ function salvarNotificacao() {
           localStorage.setItem("usuarios", JSON.stringify(usuarios))
 
           carregarUsuarios()
-
+          atualizarCardsUsuarios();
+          carregarHistorico();
         } function mudarStatus(btn) {
 
           let linha = btn.parentElement.parentElement
@@ -1672,7 +1717,7 @@ function salvarNotificacao() {
 
           document.getElementById("nome").value = linha.children[0].innerText
           document.getElementById("cpf").value = linha.children[1].innerText
-          document.getElementById("email").value = linha.children[2].innerText
+          document.getElementById("email").value = linha.children[2].innerText  
 
           linha.remove()
 
@@ -1944,19 +1989,29 @@ function salvarNotificacao() {
 
           fecharSenha()
         }
-        function adicionarNotificacao(texto) {
+        function adicionarNotificacao(texto, escola) {
 
-          let notificacoes = JSON.parse(localStorage.getItem("notificacoes")) || []
+  let notificacoes =
+    JSON.parse(localStorage.getItem("notificacoes")) || [];
 
-          notificacoes.unshift({
-            texto: texto,
-            data: new Date().toLocaleString()
-          })
+  notificacoes.unshift({
 
-          localStorage.setItem("notificacoes", JSON.stringify(notificacoes))
+    texto: texto,
 
-          atualizarBadge()
-        }
+    escola: escola || "Não informada",
+
+    data: new Date().toLocaleString()
+
+  });
+
+  localStorage.setItem(
+    "notificacoes",
+    JSON.stringify(notificacoes)
+  );
+
+  atualizarBadge();
+
+}
         function atualizarBadge() {
 
           let notificacoes = JSON.parse(localStorage.getItem("notificacoes")) || []
@@ -1966,35 +2021,73 @@ function salvarNotificacao() {
         }
         function verNotificacoes() {
 
-          let lista = document.getElementById("listaNotificacoes")
+  let lista =
+    document.getElementById("listaNotificacoes");
 
-          if (lista.style.display === "block") {
-            lista.style.display = "none"
-            return
-          }
+  if (lista.style.display === "block") {
 
-          let notificacoes = JSON.parse(localStorage.getItem("notificacoes")) || []
+    lista.style.display = "none";
+    return;
 
-          lista.innerHTML = ""
+  }
 
-          if (notificacoes.length === 0) {
-            lista.innerHTML = "<p>Nenhuma notificação</p>"
-          } else {
+  let notificacoes =
+    JSON.parse(localStorage.getItem("notificacoes")) || [];
 
-            notificacoes.forEach(n => {
-              lista.innerHTML += `
-<div style="border-bottom:1px solid #eee;padding:6px;">
+  let usuario =
+    JSON.parse(localStorage.getItem("usuarioLogado")) || {};
+
+  lista.innerHTML = "";
+
+  // FILTRO POR ESCOLA
+  if (usuario.nivel !== "admin") {
+
+    notificacoes = notificacoes.filter(
+      n => n.escola === usuario.escola
+    );
+
+  }
+
+  if (notificacoes.length === 0) {
+
+    lista.innerHTML =
+      "<p>Nenhuma notificação</p>";
+
+  } else {
+
+    notificacoes.forEach(n => {
+
+      lista.innerHTML += `
+
+<div style="
+border-bottom:1px solid #eee;
+padding:10px;
+margin-bottom:6px;
+">
+
 <strong>${n.texto}</strong><br>
-<small>${n.data}</small>
+
+<small>
+🏫 Escola: ${n.escola}
+</small>
+
+<br>
+
+<small>
+🕒 ${n.data}
+</small>
+
 </div>
-`
-            })
 
-          }
+`;
 
-          lista.style.display = "block"
+    });
 
-        }
+  }
+
+  lista.style.display = "block";
+
+}
         function salvarPerfil() {
 
           let usuarios = JSON.parse(localStorage.getItem("usuarios")) || []
@@ -2104,8 +2197,8 @@ function salvarNotificacao() {
           let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
 
           let resultados = relatorios.filter(r =>
-            r.protocolo.toLowerCase().includes(termo) ||
-            r.vitima.toLowerCase().includes(termo)
+            (r.protocolo || "").toLowerCase().includes(termo) ||
+            (r.vitima || "").toLowerCase().includes(termo)
           );
 
           let div = document.getElementById("resultadoConsulta");
@@ -2162,8 +2255,10 @@ function salvarNotificacao() {
 </div>
 `;
           });
-subtitulo.innerText =
-  user.nivel + " • " + (user.escola || "Sem escola")
+if (subtitulo) {
+  subtitulo.innerText =
+    user.nivel + " • " + (user.escola || "Sem escola");
+}
           carregarHistorico();
         }
         function alterarStatusConsulta(protocolo) {
@@ -2295,7 +2390,18 @@ ${s.protocolo} - ${s.vitima}
           });
 
         }
-        document.getElementById("filtroData").addEventListener("change", buscarRegistroAvancado);
+        let filtroData = document.getElementById("filtroData");
+        let filtroStatus = document.getElementById("filtroStatus");
+        let busca = document.getElementById("buscaProtocolo");
+
+        if (filtroData)
+          filtroData.addEventListener("change", buscarRegistroAvancado);
+
+        if (filtroStatus)
+          filtroStatus.addEventListener("change", buscarRegistroAvancado);
+
+        if (busca)
+          busca.addEventListener("keyup", buscarRegistroAvancado);
         document.getElementById("filtroStatus").addEventListener("change", buscarRegistroAvancado);
         document.getElementById("buscaProtocolo").addEventListener("keyup", buscarRegistroAvancado);
         function atualizarCardsUsuarios() {
@@ -2373,12 +2479,39 @@ function recuperarSenha() {
 
   }
 
+  let novaSenha = gerarSenha(8);
+
+  usuario.senha = novaSenha;
+
+  localStorage.setItem(
+    "usuarios",
+    JSON.stringify(usuarios)
+  );
+
   resultado.style.color = "#2e7d32";
 
   resultado.innerHTML = `
-    ✅ Senha encontrada:<br><br>
-    <strong>${usuario.senha}</strong>
+    ✅ Nova senha gerada:<br><br>
+    <strong>${novaSenha}</strong>
   `;
+
+}
+function obterRelatoriosFiltrados() {
+
+ let relatorios = obterRelatoriosFiltrados();
+
+  let usuario =
+    JSON.parse(localStorage.getItem("usuarioLogado")) || {};
+
+  // ADMIN VÊ TUDO
+  if (usuario.nivel === "admin") {
+    return relatorios;
+  }
+
+  // USUÁRIO VÊ SOMENTE A ESCOLA DELE
+  return relatorios.filter(
+    r => r.escola === usuario.escola
+  );
 
 }
       </script>
