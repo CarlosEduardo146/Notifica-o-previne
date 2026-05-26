@@ -21,7 +21,7 @@ O **Sistema PREVINE** oferece dois modos de acesso:
 | JavaScript (Vanilla) | Lógica e interatividade |
 | [Chart.js](https://www.chartjs.org/) | Gráficos do dashboard |
 | [jsPDF](https://github.com/parallax/jsPDF) | Geração de relatórios em PDF |
-| localStorage | Armazenamento local dos dados |
+| Supabase | Armazenamento Web|
 | [Flaticon Uicons](https://www.flaticon.com/uicons) | Ícones da interface |
 
 ---
