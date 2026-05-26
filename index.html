@@ -472,18 +472,118 @@
     </div>
 
     <!-- CONSULTA -->
-    <div id="consulta" class="aba">
-      <h2 class="tituloConsulta">Consultar Registro</h2>
-      <div class="boxConsulta">
-        <div class="campoBusca">
-          <i class="fi fi-br-search"></i>
-          <input type="text" id="buscaProtocolo" placeholder="Digite o protocolo (ex: PREV-0001)" onkeyup="buscarRegistro()">
-          <button onclick="buscarRegistro()">Buscar</button>
-        </div>
-      </div>
-      <div id="resultadoConsulta" class="resultadoConsulta"></div>
-    </div>
+<div id="consulta" class="aba">
 
+  <style>
+    .header-consulta { margin-bottom: 2rem; }
+    .header-consulta h2 { font-size: 22px; font-weight: 600; color: #1b1b1b; display: flex; align-items: center; gap: 10px; }
+    .header-consulta p { font-size: 14px; color: #666; margin-top: 4px; }
+    .header-icon { width: 40px; height: 40px; background: #eaf3de; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+
+    .search-card-novo { background: #fff; border: 0.5px solid #e4e2da; border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .search-label-novo { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; display: block; }
+    .search-row-novo { display: flex; gap: 10px; align-items: stretch; }
+    .search-input-wrap-novo { flex: 1; position: relative; }
+    .search-input-wrap-novo .icone-busca { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 18px; color: #aaa; pointer-events: none; }
+    .search-input-novo { width: 100%; height: 48px; border: 1.5px solid #e4e2da; border-radius: 12px; padding: 0 16px 0 44px; font-size: 15px; color: #2c2c2a; background: #fff; transition: border-color .2s, box-shadow .2s; outline: none; }
+    .search-input-novo:focus { border-color: #97c459; box-shadow: 0 0 0 3px rgba(99,153,34,.12); }
+    .search-input-novo::placeholder { color: #aaa; }
+
+    .btn-buscar-novo { height: 48px; padding: 0 24px; background: #27500a; color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background .15s, transform .1s; white-space: nowrap; }
+    .btn-buscar-novo:hover { background: #1b3d07; }
+    .btn-buscar-novo:active { transform: scale(0.97); }
+
+    .search-hints-novo { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
+    .hint-chip-novo { font-size: 12px; color: #3b6d11; background: #eaf3de; border: 1px solid #c0dd97; border-radius: 20px; padding: 3px 10px; cursor: pointer; transition: background .15s; }
+    .hint-chip-novo:hover { background: #c0dd97; }
+
+    .estado-vazio-novo { text-align: center; padding: 4rem 2rem; }
+    .estado-vazio-icone-novo { width: 80px; height: 80px; background: #eaf3de; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; font-size: 32px; }
+    .estado-vazio-novo h3 { font-size: 17px; font-weight: 500; color: #2c2c2a; margin-bottom: 6px; }
+    .estado-vazio-novo p { font-size: 14px; color: #666; max-width: 300px; margin: 0 auto; }
+
+    .estado-erro-novo { text-align: center; padding: 3rem 2rem; }
+    .estado-erro-icone-novo { width: 64px; height: 64px; background: #fcebeb; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 28px; }
+    .estado-erro-novo h3 { font-size: 16px; font-weight: 500; color: #2c2c2a; margin-bottom: 4px; }
+    .estado-erro-novo p { font-size: 13px; color: #666; }
+
+    .resultados-count-novo { font-size: 13px; color: #666; margin-bottom: 1rem; }
+    .resultados-count-novo strong { color: #3b6d11; }
+
+    .card-resultado-novo { background: #fff; border: 0.5px solid #e4e2da; border-radius: 16px; margin-bottom: 1rem; overflow: hidden; transition: box-shadow .2s, transform .15s; }
+    .card-resultado-novo:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-1px); }
+
+    .card-resultado-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 0.5px solid #e4e2da; background: #f8f9f7; flex-wrap: wrap; gap: 8px; }
+    .protocolo-badge-novo { background: #eaf3de; border: 1px solid #c0dd97; color: #3b6d11; font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 20px; font-family: monospace; }
+    .escola-info-novo { font-size: 13px; color: #666; display: flex; align-items: center; gap: 5px; }
+    .status-badge-andamento { font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 20px; background: #faeeda; color: #854f0b; border: 1px solid #fac775; white-space: nowrap; }
+    .status-badge-concluido { font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 20px; background: #eaf3de; color: #3b6d11; border: 1px solid #c0dd97; white-space: nowrap; }
+
+    .card-resultado-body { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+    .card-secao { padding: 1rem 1.25rem; border-right: 0.5px solid #e4e2da; }
+    .card-secao:last-child { border-right: none; }
+    .card-secao-titulo { font-size: 11px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
+    .campo-label-novo { font-size: 11px; color: #aaa; margin-bottom: 1px; }
+    .campo-valor-novo { font-size: 14px; color: #2c2c2a; margin-bottom: 8px; }
+    .campo-valor-novo.destaque { font-weight: 600; }
+
+    .card-resultado-footer { padding: .875rem 1.25rem; border-top: 0.5px solid #e4e2da; display: flex; gap: 8px; background: #f8f9f7; flex-wrap: wrap; }
+    .btn-acao-novo { height: 36px; padding: 0 16px; border-radius: 10px; font-size: 13px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background .15s, transform .1s; border: 1px solid transparent; }
+    .btn-acao-novo:active { transform: scale(0.97); }
+    .btn-pdf-novo { background: #fff; border-color: #e4e2da; color: #2c2c2a; }
+    .btn-pdf-novo:hover { background: #f1f0eb; }
+    .btn-status-and-novo { background: #faeeda; border-color: #fac775; color: #854f0b; }
+    .btn-status-and-novo:hover { background: #fef3c7; }
+    .btn-status-ok-novo { background: #eaf3de; border-color: #c0dd97; color: #3b6d11; }
+    .btn-status-ok-novo:hover { background: #d4edba; }
+    .btn-excluir-novo { background: #fcebeb; border-color: #f7c1c1; color: #a32d2d; }
+    .btn-excluir-novo:hover { background: #fdd; }
+
+    .skeleton-novo { animation: pulse-novo 1.5s ease-in-out infinite; }
+    @keyframes pulse-novo { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .skel-block-novo { background: #e4e2da; border-radius: 8px; margin-bottom: 8px; }
+
+    @media(max-width:640px) {
+      .card-resultado-body { grid-template-columns: 1fr; }
+      .card-secao { border-right: none; border-bottom: 0.5px solid #e4e2da; }
+      .card-secao:last-child { border-bottom: none; }
+      .search-row-novo { flex-direction: column; }
+    }
+  </style>
+
+  <div class="header-consulta">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="header-icon">🔍</div>
+      <div>
+        <h2>Consultar registro</h2>
+        <p>Busque notificações por protocolo ou nome da vítima</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-card-novo">
+    <span class="search-label-novo">Busca</span>
+    <div class="search-row-novo">
+      <div class="search-input-wrap-novo">
+        <i class="fi fi-br-search icone-busca"></i>
+        <input class="search-input-novo" id="buscaProtocolo" type="text"
+          placeholder="Ex: PREV-0001 ou nome da vítima..."
+          onkeyup="if(event.key==='Enter') buscarRegistro()">
+      </div>
+      <button class="btn-buscar-novo" onclick="buscarRegistro()">
+        <i class="fi fi-br-search"></i> Buscar
+      </button>
+    </div>
+    <div class="search-hints-novo">
+      <span style="font-size:12px;color:#aaa">Exemplos:</span>
+      <span class="hint-chip-novo" onclick="document.getElementById('buscaProtocolo').value='PREV-0001';buscarRegistro()">PREV-0001</span>
+      <span class="hint-chip-novo" onclick="document.getElementById('buscaProtocolo').value='PREV-0002';buscarRegistro()">PREV-0002</span>
+    </div>
+  </div>
+
+  <div id="resultadoConsulta"></div>
+
+</div>
     <!-- USUÁRIOS -->
     <div id="usuarios" class="aba">
       <div class="topoUsuarios"><h2>Gerenciamento de Usuários</h2></div>
@@ -502,6 +602,8 @@
             <select id="escola">
               <option value="CEJAH">CEJAH</option>
               <option value="CACE">CACE</option>
+              <option value="SECRETARA MUNICIPAL DE EDUCAÇÃO DE HORIZONTE">SECRETARA MUNICIPAL DE EDUCAÇÃO DE HORIZONTE</option>
+              <option value="CONSELHO TUTELAR DE HORIZONTE">CONSELHO TUTELAR DE HORIZONTE</option>
               <option value="EMEF. DEPUTADO ULISSES GUIMARÃES">EMEF. DEPUTADO ULISSES GUIMARÃES</option>
               <option value="EMEF. DIONÍZIA ROCHA DE MORAIS">EMEF. DIONÍZIA ROCHA DE MORAIS</option>
               <option value="EMEF. DOMITILIA ASSUNÇÃO DE MENEZES">EMEF. DOMITILIA ASSUNÇÃO DE MENEZES</option>
@@ -581,6 +683,30 @@
 
 <script>
 // -------------------------------------------------------
+// CONTROLE DE ACESSO — instituições com visão global
+// -------------------------------------------------------
+
+/**
+ * Instituições que têm acesso a TODOS os registros de todas as escolas.
+ * Qualquer usuário cadastrado em uma dessas instituições verá tudo,
+ * independentemente do nível (admin ou usuário comum).
+ */
+const ESCOLAS_ACESSO_GLOBAL = [
+  "SECRETARA MUNICIPAL DE EDUCAÇÃO DE HORIZONTE",
+  "CONSELHO TUTELAR DE HORIZONTE"
+];
+
+/**
+ * Retorna true se o usuário logado tem acesso global (vê todas as escolas).
+ * Critérios: nível admin  OU  escola pertence à lista de acesso global.
+ */
+function temAcessoGlobal(user) {
+  if (!user) return false;
+  if (user.nivel === "admin") return true;
+  return ESCOLAS_ACESSO_GLOBAL.includes((user.escola || "").trim());
+}
+
+// -------------------------------------------------------
 // MAPEAMENTO DE TIPIFICAÇÃO → CATEGORIA
 // -------------------------------------------------------
 const MAPA_TIPO = {
@@ -605,7 +731,6 @@ const ICONE_TIPO = {
   virtual: "💻", moral: "🗣️", motiv: "🎯", praticou: "👤"
 };
 
-// ── Cores RGB para o PDF por categoria ──
 const COR_CATEGORIA_PDF = {
   fisica:   [183, 28, 28],
   psico:    [245, 127, 23],
@@ -616,10 +741,6 @@ const COR_CATEGORIA_PDF = {
   praticou: [106, 27, 154]
 };
 
-/**
- * Converte string de tipos separados por vírgula → HTML de tags coloridas
- * FIX: garante split correto e filtra strings vazias
- */
 function renderTags(tipoStr) {
   if (!tipoStr || tipoStr.trim() === "") {
     return '<span style="color:#999;font-size:12px;">Não informado</span>';
@@ -637,10 +758,6 @@ function renderTags(tipoStr) {
     '</div>';
 }
 
-/**
- * Converte string de tipos → lista de strings limpas
- * FIX: função utilitária para reutilizar em todos os lugares
- */
 function parseTipos(tipoStr) {
   if (!tipoStr || tipoStr.trim() === "") return [];
   return tipoStr.split(",").map(t => t.trim()).filter(t => t.length > 0);
@@ -915,11 +1032,21 @@ function pesquisarUsuario() {
 // -------------------------------------------------------
 // RELATÓRIOS
 // -------------------------------------------------------
+
+/**
+ * Retorna os relatórios filtrados conforme o nível de acesso do usuário:
+ *  - Admin, Secretaria ou Conselho Tutelar → todos os registros
+ *  - Demais usuários → apenas registros da própria escola
+ */
 async function obterRelatoriosFiltrados() {
   const user = carregarSessao() || {};
-  let lista = await dbSelect("relatorios");
-  if (user.nivel !== "admin") lista = lista.filter(r => r.escola === user.escola);
-  return lista;
+  const lista = await dbSelect("relatorios");
+
+  // Acesso global: admin, Secretaria Municipal ou Conselho Tutelar
+  if (temAcessoGlobal(user)) return lista;
+
+  // Acesso restrito: apenas registros da escola do usuário
+  return lista.filter(r => r.escola === user.escola);
 }
 
 async function carregarRelatorios() {
@@ -948,7 +1075,6 @@ async function relatorioVitimas() {
 
 async function relatorioTipos() { await relatorioVitimas(); }
 
-// FIX RELATÓRIO: célula de tipo usa renderTags() corretamente
 function renderLinhaRelatorio(tabela, r) {
   const linha = tabela.insertRow();
   const proto = String(r.protocolo || "");
@@ -958,7 +1084,6 @@ function renderLinhaRelatorio(tabela, r) {
   linha.insertCell(2).innerHTML = r.data   || "";
   linha.insertCell(3).innerHTML = r.vitima || "";
 
-  // ── Célula de tipificação com tags coloridas ──
   const celTipo = linha.insertCell(4);
   celTipo.innerHTML = renderTags(r.tipo);
 
@@ -986,56 +1111,123 @@ async function deletarRegistro(protocolo) {
 }
 
 // -------------------------------------------------------
-// CONSULTA — FIX: usa renderTags() na seção de tipo
+// CONSULTA
 // -------------------------------------------------------
 async function buscarRegistro() {
   const termo = document.getElementById("buscaProtocolo").value.trim().toLowerCase();
+  const div   = document.getElementById("resultadoConsulta");
+
+  if (!termo) {
+    div.innerHTML = `
+      <div class="estado-vazio-novo">
+        <div class="estado-vazio-icone-novo">🔍</div>
+        <h3>Pronto para buscar</h3>
+        <p>Digite o protocolo ou nome da vítima para localizar um registro.</p>
+      </div>`;
+    return;
+  }
+
+  div.innerHTML = `
+    <div class="search-card-novo skeleton-novo">
+      <div class="skel-block-novo" style="width:40%;height:16px"></div>
+      <div class="skel-block-novo" style="width:100%;height:80px;margin-top:8px"></div>
+    </div>`;
+
+  // obterRelatoriosFiltrados() já aplica o controle de acesso correto
   const lista = await obterRelatoriosFiltrados();
+
   const resultados = lista.filter(r =>
     (r.protocolo || "").toLowerCase().includes(termo) ||
     (r.vitima    || "").toLowerCase().includes(termo)
   );
 
-  const div = document.getElementById("resultadoConsulta");
-  if (resultados.length === 0) {
-    div.innerHTML = "<div class='erroConsulta'>❌ Nenhum registro encontrado.</div>"; return;
+  if (!resultados.length) {
+    div.innerHTML = `
+      <div class="estado-erro-novo">
+        <div class="estado-erro-icone-novo">❌</div>
+        <h3>Nenhum registro encontrado</h3>
+        <p>Verifique o protocolo ou tente outro nome.</p>
+      </div>`;
+    return;
   }
 
-  div.innerHTML = "";
+  let html = `<p class="resultados-count-novo"><strong>${resultados.length}</strong> registro${resultados.length > 1 ? "s" : ""} encontrado${resultados.length > 1 ? "s" : ""}</p>`;
+
   resultados.forEach(r => {
-    const cardDiv = document.createElement("div");
-    cardDiv.className = "cardResultado";
-    cardDiv.innerHTML = `
-      <h3>📄 ${r.protocolo}</h3>
-      <div class="secaoConsulta">
-        <h4>📍 Ocorrência</h4>
-        <p><strong>Data:</strong> ${r.data || "—"}</p>
-        <p><strong>Local:</strong> ${r.local || "—"}</p>
+    const isOk = r.status === "Concluído";
+
+    const dataFmt = r.data
+      ? r.data.split("-").reverse().join("/")
+      : "—";
+
+    const idSafe = (r.protocolo || "").replace(/[^a-zA-Z0-9]/g, "_");
+
+    html += `
+    <div class="card-resultado-novo">
+
+      <div class="card-resultado-header">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span class="protocolo-badge-novo">${r.protocolo || ""}</span>
+          <span class="escola-info-novo">
+            <i class="fi fi-sr-school"></i> ${r.escola || ""}
+          </span>
+        </div>
+        <span class="${isOk ? "status-badge-concluido" : "status-badge-andamento"}">
+          ${isOk ? "✓ Concluído" : "⏳ Em andamento"}
+        </span>
       </div>
-      <div class="secaoConsulta">
-        <h4>👤 Vítima</h4>
-        <p><strong>Nome:</strong> ${r.vitima || "—"}</p>
-        <p><strong>Idade:</strong> ${r.idade || "—"}</p>
-        <p><strong>Sexo:</strong> ${r.sexo || "—"}</p>
+
+      <div class="card-resultado-body">
+
+        <div class="card-secao">
+          <div class="card-secao-titulo">📍 Ocorrência</div>
+          <div class="campo-label-novo">Data</div>
+          <div class="campo-valor-novo destaque">${dataFmt}</div>
+          <div class="campo-label-novo">Local</div>
+          <div class="campo-valor-novo">${r.local || "—"}</div>
+        </div>
+
+        <div class="card-secao">
+          <div class="card-secao-titulo">👤 Vítima</div>
+          <div class="campo-label-novo">Nome</div>
+          <div class="campo-valor-novo destaque">${r.vitima || "—"}</div>
+          <div class="campo-label-novo">Idade / Sexo</div>
+          <div class="campo-valor-novo">${r.idade || "—"} anos • ${r.sexo || "—"}</div>
+          <div class="campo-label-novo">Raça / Cor</div>
+          <div class="campo-valor-novo">${r.raca || "—"}</div>
+        </div>
+
+        <div class="card-secao">
+          <div class="card-secao-titulo">⚠️ Tipificação</div>
+          <div id="tags_consulta_${idSafe}"></div>
+        </div>
+
       </div>
-      <div class="secaoConsulta">
-        <h4>⚠️ Tipificação</h4>
-        <div id="tags_${r.protocolo.replace(/[^a-zA-Z0-9]/g,'_')}"></div>
+
+      <div class="card-resultado-footer">
+        <button class="btn-acao-novo btn-pdf-novo"
+          onclick="relatorioIndividual('${r.protocolo}')">
+          <i class="fi fi-sr-document"></i> Ver PDF
+        </button>
+        <button class="btn-acao-novo ${isOk ? "btn-status-ok-novo" : "btn-status-and-novo"}"
+          onclick="alterarStatusConsulta('${r.protocolo}')">
+          <i class="fi fi-sr-refresh"></i> Mudar status
+        </button>
+        <button class="btn-acao-novo btn-excluir-novo"
+          onclick="if(confirm('Excluir ${r.protocolo}?')) deletarRegistro('${r.protocolo}').then(()=>buscarRegistro())">
+          <i class="fi fi-sr-trash"></i> Excluir
+        </button>
       </div>
-      <div class="secaoConsulta">
-        <h4>📊 Status</h4>
-        <p><strong>${r.status || "Em andamento"}</strong></p>
-      </div>
-      <div class="acoesConsulta">
-        <button onclick="relatorioIndividual('${r.protocolo}')">📄 PDF</button>
-        <button onclick="alterarStatusConsulta('${r.protocolo}')">🔄 Status</button>
-      </div>
-    `;
-    div.appendChild(cardDiv);
-    // Inserir tags via innerHTML separado para garantir renderização correta
-    const tagId = "tags_" + r.protocolo.replace(/[^a-zA-Z0-9]/g,'_');
-    const tagEl = cardDiv.querySelector("#" + tagId);
-    if (tagEl) tagEl.innerHTML = renderTags(r.tipo);
+
+    </div>`;
+  });
+
+  div.innerHTML = html;
+
+  resultados.forEach(r => {
+    const idSafe = (r.protocolo || "").replace(/[^a-zA-Z0-9]/g, "_");
+    const el = document.getElementById("tags_consulta_" + idSafe);
+    if (el) el.innerHTML = renderTags(r.tipo);
   });
 }
 
@@ -1118,7 +1310,14 @@ async function adicionarNotificacao(texto, escola) {
 }
 
 async function atualizarBadge() {
-  const lista = await dbSelect("notificacoes");
+  const user = carregarSessao() || {};
+  let lista = await dbSelect("notificacoes");
+
+  // Secretaria e Conselho Tutelar veem notificações de todas as escolas
+  if (!temAcessoGlobal(user)) {
+    lista = lista.filter(n => n.escola === user.escola);
+  }
+
   document.getElementById("badgeNotif").innerText = lista.length;
 }
 
@@ -1127,7 +1326,12 @@ async function verNotificacoes() {
   if (lista_el.style.display === "block") { lista_el.style.display = "none"; return; }
   const user = carregarSessao() || {};
   let lista = await dbSelect("notificacoes");
-  if (user.nivel !== "admin") lista = lista.filter(n => n.escola === user.escola);
+
+  // Secretaria e Conselho Tutelar veem notificações de todas as escolas
+  if (!temAcessoGlobal(user)) {
+    lista = lista.filter(n => n.escola === user.escola);
+  }
+
   lista_el.innerHTML = "";
   if (lista.length === 0) {
     lista_el.innerHTML = "<p>Nenhuma notificação</p>";
@@ -1222,7 +1426,7 @@ async function recuperarSenha() {
 }
 
 // -------------------------------------------------------
-// PDF INDIVIDUAL — FIX: usa parseTipos() para gerar tags coloridas corretamente
+// PDF INDIVIDUAL
 // -------------------------------------------------------
 async function relatorioIndividual(protocolo) {
   const lista = await dbSelect("relatorios", { protocolo });
@@ -1250,7 +1454,6 @@ async function relatorioIndividual(protocolo) {
     doc.setDrawColor(46,125,50); doc.setLineWidth(0.2); doc.line(10, 42, 200, 42);
     y = 52;
 
-    // DADOS DA OCORRÊNCIA
     doc.setFont("helvetica","bold"); doc.setFontSize(11);
     doc.text("DADOS DA OCORRÊNCIA", 105, y, null, null, "center"); y += 6;
     doc.setFont("helvetica","normal"); doc.setFontSize(10);
@@ -1258,7 +1461,6 @@ async function relatorioIndividual(protocolo) {
     doc.rect(10, y, 190, 8); doc.text("Protocolo: " + (r.protocolo||""), 12, y+6); y += 10;
     doc.rect(10, y, 190, 8); doc.text("Data: " + (r.data||""), 12, y+6); y += 14;
 
-    // DADOS DA VÍTIMA
     doc.setFont("helvetica","bold"); doc.text("DADOS DA VÍTIMA", 105, y, null, null, "center"); y += 6;
     doc.setFont("helvetica","normal");
     doc.rect(10,y,95,8); doc.rect(105,y,95,8);
@@ -1267,11 +1469,10 @@ async function relatorioIndividual(protocolo) {
     doc.text("Sexo: "+(r.sexo||""), 12, y+6);
     doc.text("Raça/Cor: "+(r.raca||""), 107, y+6); y += 14;
 
-    // ── TIPIFICAÇÃO NO PDF — FIX: usa parseTipos() ──
     doc.setFont("helvetica","bold"); doc.setFontSize(11);
     doc.text("TIPIFICAÇÃO DA VIOLÊNCIA", 105, y, null, null, "center"); y += 6;
 
-    const itens = parseTipos(r.tipo);  // <-- FIX: função correta de parse
+    const itens = parseTipos(r.tipo);
 
     if (itens.length === 0) {
       doc.setFont("helvetica","italic"); doc.setFontSize(10);
@@ -1299,12 +1500,10 @@ async function relatorioIndividual(protocolo) {
         const cat = MAPA_TIPO[item] || "moral";
         const cor = COR_CATEGORIA_PDF[cat] || [100,100,100];
 
-        // Fundo colorido da tag
         doc.setFillColor(cor[0], cor[1], cor[2]);
         doc.setDrawColor(cor[0], cor[1], cor[2]);
         doc.roundedRect(tagX, tagY, tagW, tagH, 2, 2, "F");
 
-        // Texto branco da tag
         doc.setFont("helvetica","bold");
         doc.setFontSize(7.5);
         doc.setTextColor(255,255,255);
@@ -1325,7 +1524,6 @@ async function relatorioIndividual(protocolo) {
       y += alturaBloco + 6;
     }
 
-    // RESUMO
     doc.setFont("helvetica","bold"); doc.setFontSize(11);
     doc.text("RESUMO DA OCORRÊNCIA", 105, y, null, null, "center"); y += 6;
     doc.setFont("helvetica","normal"); doc.setFontSize(10);
@@ -1336,7 +1534,6 @@ async function relatorioIndividual(protocolo) {
     doc.text(resumoTexto, 12, y+6);
     y += altResumo + 6;
 
-    // ENCAMINHAMENTO
     if (y > 240) { doc.addPage(); y = 20; }
     doc.setFont("helvetica","bold"); doc.setFontSize(11);
     doc.text("ENCAMINHAMENTO", 105, y, null, null, "center"); y += 6;
@@ -1356,7 +1553,7 @@ async function relatorioIndividual(protocolo) {
 }
 
 // -------------------------------------------------------
-// PDF GERAL — FIX: usa parseTipos() para renderizar tags corretamente
+// PDF GERAL
 // -------------------------------------------------------
 async function exportarTodosPDF() {
   const lista = await obterRelatoriosFiltrados();
@@ -1375,7 +1572,6 @@ async function exportarTodosPDF() {
   doc.setFontSize(10); doc.setFont("helvetica","normal");
   doc.text("Data de geração: " + new Date().toLocaleDateString("pt-BR"), 10, y); y += 10;
 
-  // Cabeçalho da tabela
   doc.setFont("helvetica","bold"); doc.setFontSize(9);
   doc.setFillColor(46,125,50); doc.setTextColor(255,255,255);
   doc.rect(10, y, 190, 8, "F");
@@ -1387,13 +1583,12 @@ async function exportarTodosPDF() {
   y += 10;
 
   lista.forEach((r, idx) => {
-    const itens = parseTipos(r.tipo);  // <-- FIX: função correta de parse
+    const itens = parseTipos(r.tipo);
     const linhasTipo = Math.ceil(itens.length / 2) || 1;
     const altLinha = Math.max(10, linhasTipo * 7 + 5);
 
     if (y + altLinha > 270) { doc.addPage(); y = 20; }
 
-    // Fundo alternado
     if (idx % 2 === 0) {
       doc.setFillColor(245,245,245);
       doc.rect(10, y, 190, altLinha, "F");
@@ -1405,7 +1600,6 @@ async function exportarTodosPDF() {
     doc.text(String(r.data||""), 48, y + 6);
     doc.text(String(r.vitima||"").substring(0, 18), 75, y + 6);
 
-    // Tags coloridas no PDF geral
     if (itens.length === 0) {
       doc.setTextColor(180,180,180);
       doc.text("Não informado", 125, y + 6);
@@ -1433,7 +1627,6 @@ async function exportarTodosPDF() {
       });
     }
 
-    // Linha separadora suave
     doc.setDrawColor(220,220,220);
     doc.line(10, y + altLinha, 200, y + altLinha);
 
