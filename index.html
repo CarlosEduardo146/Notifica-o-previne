@@ -1,2524 +1,2387 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Notificação PREVINE</title>
+  <link rel="icon" type="image/png" href="previne.png">
+  <title>SISTEMA DE NOTIFICAÇÃO</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <!-- Rounded Regular (mais comum) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css">
-
-  <!-- Rounded Bold -->
   <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css">
-
-  <!-- Rounded Solid -->
   <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css">
   <link rel="stylesheet" href="./styles.css">
-
-
+  
+  <style>
+    .tagsTipo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .tagTipo {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+      line-height: 1.5;
+    }
+    .tagTipo.fisica   { background: #fce4ec; color: #b71c1c; border: 1px solid #ef9a9a; }
+    .tagTipo.psico    { background: #fff8e1; color: #f57f17; border: 1px solid #ffe082; }
+    .tagTipo.sexual   { background: #ede7f6; color: #4a148c; border: 1px solid #ce93d8; }
+    .tagTipo.virtual  { background: #e3f2fd; color: #0d47a1; border: 1px solid #90caf9; }
+    .tagTipo.moral    { background: #e8f5e9; color: #1b5e20; border: 1px solid #a5d6a7; }
+    .tagTipo.motiv    { background: #fff3e0; color: #bf360c; border: 1px solid #ffcc80; }
+    .tagTipo.praticou { background: #f3e5f5; color: #6a1b9a; border: 1px solid #ce93d8; }
+    .escola-restrita  { background:#f5f5f5; color:#999; font-style:italic; font-size:12px;
+                        padding:2px 8px; border-radius:4px; border:1px dashed #ccc; }
+  </style>
 </head>
-
 <body>
-  <!-- PAGINA INICIAL -->
 
-  <div id="inicio">
-    <div class="inicioFrame">
-      <div class="topo">
-        <div class="topoMarca">
-          <img src="previne.png">
-          <div class="topoTexto">
-            <strong>Previne</strong>
-            <span>Sistema de Notificação</span>
+<script>
+  const SUPABASE_URL  = "https://xuhnxajszpttrnmzysgr.supabase.co";
+  const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1aG54YWpzenB0dHJubXp5c2dyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MjA4NzksImV4cCI6MjA5NTI5Njg3OX0.JlgJ2VyocEZhZoyPoA_544u-O68t_rYi6SI0WiqNUOU";
+
+  const { createClient } = supabase;
+  const db = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  async function dbSelect(tabela, filtros = {}) {
+    let query = db.from(tabela).select("*");
+    for (let [col, val] of Object.entries(filtros)) query = query.eq(col, val);
+    const { data, error } = await query;
+    if (error) { console.error("dbSelect", error); return []; }
+    return data || [];
+  }
+
+  async function dbInsert(tabela, obj) {
+    const { data, error } = await db.from(tabela).insert([obj]).select();
+    if (error) { console.error("dbInsert", error); return null; }
+    return data?.[0] || null;
+  }
+
+  async function dbUpdate(tabela, filtro, changes) {
+    let query = db.from(tabela).update(changes);
+    for (let [col, val] of Object.entries(filtro)) query = query.eq(col, val);
+    const { error } = await query;
+    if (error) console.error("dbUpdate", error);
+  }
+
+  async function dbDelete(tabela, filtro) {
+    let query = db.from(tabela).delete();
+    for (let [col, val] of Object.entries(filtro)) query = query.eq(col, val);
+    const { error } = await query;
+    if (error) console.error("dbDelete", error);
+  }
+</script>
+
+<!-- PAGINA INICIAL -->
+<div id="inicio">
+  <div class="inicioFrame">
+    <div class="topo">
+      <div class="topoMarca">
+        <img src="previne.png">
+        <div class="topoTexto">
+          <strong>Sistema de Notificação</strong>
+        </div>
+      </div>
+      <button class="botaoArea" onclick="abrirLogin()">
+        <i class="fi fi-sr-lock"></i>
+        Área administrativa
+      </button>
+    </div>
+
+    <div class="container">
+      <section class="heroInicio">
+        <div class="heroTexto">
+          <h1>Notifique violência com segurança e anonimato</h1>
+          <p>Sua notificação é importante. Aqui você pode falar com segurança e ajudar a transformar realidades.</p>
+          <button class="botaoDenuncia" onclick="abrirRegistroPublico()">
+            <i class="fi fi-sr-paper-plane"></i>
+            Realizar notificação agora
+          </button>
+          <div class="beneficios">
+            <div class="beneficioItem">
+              <i class="fi fi-br-shield-check"></i>
+              <div><strong>100% anônimo</strong><small>Sua identidade é protegida</small></div>
+            </div>
+            <div class="beneficioItem">
+              <i class="fi fi-br-clock-three"></i>
+              <div><strong>Rápido</strong><small>Leva menos de 2 minutos</small></div>
+            </div>
+            <div class="beneficioItem">
+              <i class="fi fi-sr-shield"></i>
+              <div><strong>Seguro</strong><small>Seus dados estão protegidos</small></div>
+            </div>
           </div>
         </div>
-        <button class="botaoArea" onclick="abrirLogin()">
-          <i class="fi fi-sr-lock"></i>
-          Área administrativa
+        <div class="heroIlustracao">
+          <img src="previne home imagem.png">
+        </div>
+      </section>
+
+      <section class="comoFunciona">
+        <h2>Como funciona</h2>
+        <div class="passos">
+          <div class="passoItem"><span>1.</span><p>Você registra a denúncia</p></div>
+          <div class="passoItem"><span>2.</span><p>O sistema protege sua identidade</p></div>
+          <div class="passoItem"><span>3.</span><p>A administração analisa o caso</p></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="faixaInstitucional">
+      <div class="faixaConteudo">
+        <i class="fi fi-sr-shield-check"></i>
+        <div>
+          <strong>Sistema oficial de registro e acompanhamento de denúncias</strong>
+          <small>Plataforma segura • Proteção de dados garantida • Atendimento responsável</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div id="loginModal" class="overlay" style="display:none;">
+  <div class="modal">
+    <span class="fechar" onclick="fecharLogin()">✖</span>
+    <h2>ENTRAR COM E-MAIL E SENHA</h2>
+    <input id="usuario" type="email" placeholder="E-mail" class="input">
+    <input id="senha" type="password" placeholder="Senha" class="input">
+    <button class="btn" onclick="entrar()">Entrar</button>
+    <div class="link">
+      <p>Não lembra sua senha? <a href="#" onclick="abrirRecuperacao()">Recuperar senha</a></p>
+    </div>
+
+    <div id="modalRecuperar" class="overlay" style="display:none;">
+      <div class="modal">
+        <span class="fechar" onclick="fecharRecuperacao()">✖</span>
+        <h2>RECUPERAR SENHA</h2>
+        <input type="email" id="emailRecuperar" placeholder="Digite seu e-mail" class="input">
+        <button class="btn" onclick="recuperarSenha()">Recuperar Senha</button>
+        <div id="resultadoRecuperacao" style="margin-top:15px;text-align:center;font-weight:bold;color:#2e7d32;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAINEL -->
+<div class="painel" id="painel">
+  <button class="sidebar-toggle" onclick="toggleSidebar()">&#8942;</button>
+  <div class="sidebar-backdrop" onclick="fecharSidebar()"></div>
+  <div class="sidebar">
+    <div class="sidebarBrand">
+      <img src="previne.png" alt="Previne">
+      <div><strong>Sistema de Notificação</strong></div>
+    </div>
+    <button onclick="abrirAba('dashboard')"><i class="fi fi-br-stats"></i> Dashboard</button>
+    <button onclick="abrirAba('registros')"><i class="fi fi-sr-document"></i> Registros</button>
+    <button onclick="abrirAba('relatorios')"><i class="fi fi-sr-chart-histogram"></i> Relatórios</button>
+    <button onclick="abrirAba('consulta')"><i class="fi fi-br-search"></i> Consultar Registro</button>
+    <button id="menuUsuarios" onclick="abrirAba('usuarios')"><i class="fi fi-sr-users"></i> Usuários</button>
+    <button onclick="sair()"><i class="fi fi-sr-sign-out-alt"></i> Sair</button>
+  </div>
+
+  <div class="main">
+
+    <div class="topoAdmin">
+      <div class="ladoDireito">
+
+        <div class="notificacao" onclick="verNotificacoes()">
+          <i class="fi fi-rr-bell-ring"></i>
+          <span class="badge" id="badgeNotif">0</span>
+          <div id="listaNotificacoes" style="display:none;position:absolute;top:30px;right:0;background:white;width:250px;max-height:300px;overflow:auto;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.2);padding:10px;z-index:999;font-size:13px;"></div>
+        </div>
+
+        <div id="perfilModal" class="overlay" style="display:none;">
+          <div class="modal">
+            <span class="fechar" onclick="fecharPerfil()">✖</span>
+            <h2>Meu Perfil</h2>
+            <div class="formUsuario">
+              <div class="linha">
+                <div class="campo">
+                  <label>Nome</label>
+                  <input id="perfilNome">
+                </div>
+                <div class="linha">
+                  <div class="campo" style="flex:1 1 100%;">
+                    <label>Email</label>
+                    <input id="emailUsuario" readonly style="width:100%;box-sizing:border-box;">
+                  </div>
+                  <div class="campo" id="campoNivel">
+                    <label>Nível</label>
+                    <select id="nivel">
+                      <option value="usuario">Usuário</option>
+                      <option value="admin">Administrador</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <button class="botaoSalvar" onclick="salvarPerfil()">Salvar Alterações</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="senhaModal" class="overlay" style="display:none;">
+          <div class="modal">
+            <span class="fechar" onclick="fecharSenha()">✖</span>
+            <h2>Alterar Senha</h2>
+            <div class="formUsuario">
+              <div class="campo"><label>Senha Atual</label><input type="password" id="senhaAtual"></div>
+              <div class="campo"><label>Nova Senha</label><input type="password" id="novaSenha"></div>
+              <div class="campo"><label>Confirmar Nova Senha</label><input type="password" id="confirmarSenha"></div>
+              <button class="botaoSalvar" onclick="salvarSenha()">Salvar Nova Senha</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="usuarioMenu" onclick="toggleMenuUsuario()">
+          <div class="avatar">C</div>
+          <div class="infoUsuario">
+            <strong id="nomeUsuario">Administrador</strong>
+            <small id="perfilSubtitulo">Usuário logado</small>
+          </div>
+        </div>
+
+        <div id="dropdownUsuario" class="dropdownUsuario">
+          <div onclick="abrirPerfil()"><i class="fi fi-sr-user"></i> Perfil</div>
+          <div onclick="alterarSenha()"><i class="fi fi-sr-key"></i> Alterar senha</div>
+          <div onclick="sair()"><i class="fi fi-sr-sign-out-alt"></i> Sair</div>
+        </div>
+
+      </div>
+    </div>
+
+   <!-- DASHBOARD -->
+<div id="dashboard" class="aba">
+  <h2>Dashboard</h2>
+
+  <div class="filtrosDashboard">
+    <select id="filtroMes">
+      <option value="">Todos os meses</option>
+      <option value="0">Jan</option><option value="1">Fev</option>
+      <option value="2">Mar</option><option value="3">Abr</option>
+      <option value="4">Mai</option><option value="5">Jun</option>
+      <option value="6">Jul</option><option value="7">Ago</option>
+      <option value="8">Set</option><option value="9">Out</option>
+      <option value="10">Nov</option><option value="11">Dez</option>
+    </select>
+    <input type="number" id="filtroAno" placeholder="Ano" style="width:90px">
+    <input type="text" id="filtroTipo" placeholder="Tipo de violência" style="min-width:160px">
+    <button onclick="carregarGraficos()">
+      <i class="fi fi-br-filter"></i> Filtrar
+    </button>
+  </div>
+
+  <div class="cardsDashboard">
+    <div class="cardDash">
+      <div class="cardDashIcone" style="background:#eaf3de;color:#27500a">
+        <i class="fi fi-sr-document"></i>
+      </div>
+      <h3 id="totalRegistros">0</h3>
+      <p>Notificações Registradas</p>
+    </div>
+    <div class="cardDash">
+      <div class="cardDashIcone" style="background:#faeeda;color:#854f0b">
+        <i class="fi fi-rr-clock-three"></i>
+      </div>
+      <h3 id="casosAndamento">0</h3>
+      <p>Casos em Andamento</p>
+    </div>
+    <div class="cardDash">
+      <div class="cardDashIcone" style="background:#e6f1fb;color:#185fa5">
+        <i class="fi fi-sr-shield-check"></i>
+      </div>
+      <h3 id="casosConcluidos">0</h3>
+      <p>Casos Concluídos</p>
+    </div>
+    <div class="cardDash">
+      <div class="cardDashIcone" style="background:#fbeaf0;color:#993556">
+        <i class="fi fi-sr-stats"></i>
+      </div>
+      <h3 id="taxaConclusao">0%</h3>
+      <p>Taxa de Conclusão</p>
+    </div>
+  </div>
+
+  <div class="graficos">
+    <div class="grafico grafico-full">
+      <h3>Notificações por Mês</h3>
+      <div style="position:relative;width:100%;height:220px">
+        <canvas id="graficoMes"></canvas>
+      </div>
+    </div>
+
+    <div class="grafico">
+      <h3>Distribuição por Sexo</h3>
+      <div class="legGrafico" id="legSexo"></div>
+      <div style="position:relative;width:100%;height:200px">
+        <canvas id="graficoSexo"></canvas>
+      </div>
+    </div>
+
+    <div class="grafico">
+      <h3>Distribuição por Idade</h3>
+      <div class="legGrafico" id="legIdade"></div>
+      <div style="position:relative;width:100%;height:200px">
+        <canvas id="graficoIdade"></canvas>
+      </div>
+    </div>
+
+    <div class="grafico">
+      <h3>Status dos Casos</h3>
+      <div class="legGrafico" id="legStatus"></div>
+      <div style="position:relative;width:100%;height:200px">
+        <canvas id="graficoStatus"></canvas>
+      </div>
+    </div>
+
+    <div class="grafico">
+      <h3>Tipos Mais Frequentes</h3>
+      <div style="position:relative;width:100%;height:200px">
+        <canvas id="graficoTipos"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Visível apenas para Secretaria e Conselho Tutelar -->
+  <div id="secaoEscolas" style="display:none; margin-top:14px;">
+    <div class="grafico">
+      <h3>
+        Notificações por Escola
+        <span class="badgeRestrito">Acesso restrito</span>
+      </h3>
+      <div class="legGrafico" id="legEscolas"></div>
+      <div id="wrapEscolas" style="position:relative;width:100%;height:320px">
+        <canvas id="graficoEscolas"></canvas>
+      </div>
+    </div>
+  </div>
+
+</div>
+   <!-- FORMULÁRIO DE REGISTRO DE NOTIFICAÇÃO -->
+<div id="registros" class="aba">
+
+  <div class="reg-wrap">
+  
+    <div class="page-hero">
+      <div class="hero-badge">
+        <i class="fi fi-sr-document"></i>
+      </div>
+      <div>
+        <div class="hero-title">
+          Registro de notificação
+          <span class="hero-step-count" id="regStepCount">— etapa 1 de 7</span>
+        </div>
+        <div class="hero-sub">Preencha cada etapa para registrar a ocorrência com segurança</div>
+      </div>
+    </div>
+  
+    <div class="reg-progress-track">
+      <div class="reg-progress-fill" id="regProgressFill" style="width:14.28%"></div>
+    </div>
+  
+    <div class="reg-stepper" id="regStepper">
+      <div class="rs-step rs-active" data-ri="0">
+        <div class="rs-circle"><span>1</span></div>
+        <div class="rs-label">Ocorrência</div>
+      </div>
+      <div class="rs-line" id="rl0"></div>
+      <div class="rs-step" data-ri="1">
+        <div class="rs-circle"><span>2</span></div>
+        <div class="rs-label">Vítima</div>
+      </div>
+      <div class="rs-line" id="rl1"></div>
+      <div class="rs-step" data-ri="2">
+        <div class="rs-circle"><span>3</span></div>
+        <div class="rs-label">Responsável</div>
+      </div>
+      <div class="rs-line" id="rl2"></div>
+      <div class="rs-step" data-ri="3">
+        <div class="rs-circle"><span>4</span></div>
+        <div class="rs-label">Autor</div>
+      </div>
+      <div class="rs-line" id="rl3"></div>
+      <div class="rs-step" data-ri="4">
+        <div class="rs-circle"><span>5</span></div>
+        <div class="rs-label">Tipificação</div>
+      </div>
+      <div class="rs-line" id="rl4"></div>
+      <div class="rs-step" data-ri="5">
+        <div class="rs-circle"><span>6</span></div>
+        <div class="rs-label">Resumo</div>
+      </div>
+      <div class="rs-line" id="rl5"></div>
+      <div class="rs-step" data-ri="6">
+        <div class="rs-circle"><span>7</span></div>
+        <div class="rs-label">Encaminh.</div>
+      </div>
+    </div>
+  
+    <!-- ETAPA 1 — OCORRÊNCIA -->
+    <div class="reg-etapa reg-active reg-card" id="re0">
+      <div class="reg-card-top">
+        <div class="reg-card-icon green"><i class="fi fi-sr-calendar"></i></div>
+        <div>
+          <div class="reg-card-title">Dados da ocorrência</div>
+          <div class="reg-card-sub">Quando e onde aconteceu</div>
+        </div>
+      </div>
+      <div class="reg-card-body">
+        <div class="reg-grid">
+          <div class="reg-field">
+            <span class="reg-label">Data de preenchimento</span>
+            <input type="date" id="dataPreenchimento">
+          </div>
+          <div class="reg-field">
+            <span class="reg-label">Onde ocorreu</span>
+            <select id="localTipo">
+              <option>Na escola</option>
+              <option>No âmbito familiar</option>
+              <option>Outros</option>
+            </select>
+          </div>
+          <div class="reg-field reg-grid-full">
+            <span class="reg-label">Especificação do local</span>
+            <input type="text" id="localDetalhado" placeholder="Ex: Pátio da escola, corredor, sala de aula...">
+          </div>
+        </div>
+      </div>
+      <div class="reg-card-footer">
+        <span></span>
+        <button class="reg-btn reg-btn-next" onclick="regGoTo(1)">
+          <i class="fi fi-br-arrow-right"></i> Próximo
         </button>
       </div>
-
-      <div class="container">
-        <section class="heroInicio">
-          <div class="heroTexto">
-            <h1>Notifique violência com segurança e anonimato</h1>
-            <p>Sua notificação é importante. Aqui você pode falar com segurança e ajudar a transformar realidades.</p>
-            <button class="botaoDenuncia" onclick="abrirRegistroPublico()">
-              <i class="fi fi-sr-paper-plane"></i>
-              Realizar notificação agora
-            </button>
-
-            <div class="beneficios">
-              <div class="beneficioItem">
-                <i class="fi fi-br-shield-check"></i>
-                <div>
-                  <strong>100% anônimo</strong>
-                  <small>Sua identidade é protegida</small>
-                </div>
-              </div>
-              <div class="beneficioItem">
-                <i class="fi fi-br-clock-three"></i>
-                <div>
-                  <strong>Rápido</strong>
-                  <small>Leva menos de 2 minutos</small>
-                </div>
-              </div>
-              <div class="beneficioItem">
-                <i class="fi fi-sr-shield"></i>
-                <div>
-                  <strong>Seguro</strong>
-                  <small>Seus dados estão protegidos</small>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="heroIlustracao">
-            <img src="previne home imagem.png".png">
-          </div>
-        </section>
-
-        <section class="comoFunciona">
-          <h2>Como funciona</h2>
-          <div class="passos">
-            <div class="passoItem">
-              <span>1.</span>
-              <p>Você registra a denúncia</p>
-            </div>
-            <div class="passoItem">
-              <span>2.</span>
-              <p>O sistema protege sua identidade</p>
-            </div>
-            <div class="passoItem">
-              <span>3.</span>
-              <p>A administração analisa o caso</p>
-            </div>
-          </div>
-        </section>
+    </div>
+  
+    <!-- ETAPA 2 — VÍTIMA -->
+    <div class="reg-etapa reg-card" id="re1">
+      <div class="reg-card-top">
+        <div class="reg-card-icon green"><i class="fi fi-sr-user"></i></div>
+        <div>
+          <div class="reg-card-title">Dados da vítima</div>
+          <div class="reg-card-sub">Informações sobre a pessoa afetada</div>
+        </div>
       </div>
+      <div class="reg-card-body">
+        <div class="reg-grid" style="margin-bottom:12px">
+          <div class="reg-field reg-grid-full">
+  <span class="reg-label">Nomes das vítimas</span>
+  <div id="listaVitimas">
+    <div class="vitima-row" style="display:flex;gap:8px;margin-bottom:6px">
+      <input type="text" class="inputVitima" placeholder="Nome da vítima" style="flex:1">
+    </div>
+  </div>
+  <button type="button" onclick="adicionarVitima()" style="margin-top:4px;padding:5px 12px;border:1px dashed #639922;background:transparent;color:#639922;border-radius:8px;cursor:pointer;font-size:12px">
+    + Adicionar vítima
+  </button>
+</div>
+          <div class="reg-field">
+            <span class="reg-label">Idade</span>
+            <input type="number" id="idadeVitima" placeholder="Ex: 12">
+          </div>
+          <div class="reg-field reg-grid-full">
+            <span class="reg-label">Escolaridade</span>
+            <select id="escolaridade">
+              <option>Creche</option><option>Pré-Escola</option>
+              <option>1º ano</option><option>2º ano</option><option>3º ano</option>
+              <option>4º ano</option><option>5º ano</option><option>6º ano</option>
+              <option>7º ano</option><option>8º ano</option><option>9º ano</option>
+              <option>Ensino Médio</option>
+            </select>
+          </div>
+        </div>
+        <div class="reg-divider"></div>
+        <div class="reg-group-label">Raça / cor</div>
+        <div class="reg-pill-row" style="margin-bottom:1rem">
+          <label class="reg-pill"><input type="radio" name="raca" value="Branca"><span class="reg-dot"></span>Branca</label>
+          <label class="reg-pill"><input type="radio" name="raca" value="Preta"><span class="reg-dot"></span>Preta</label>
+          <label class="reg-pill"><input type="radio" name="raca" value="Parda"><span class="reg-dot"></span>Parda</label>
+          <label class="reg-pill"><input type="radio" name="raca" value="Indígena"><span class="reg-dot"></span>Indígena</label>
+          <label class="reg-pill"><input type="radio" name="raca" value="Amarela"><span class="reg-dot"></span>Amarela</label>
+        </div>
+        <div class="reg-divider"></div>
+        <div class="reg-group-label">Sexo</div>
+        <div class="reg-pill-row" style="margin-bottom:1rem">
+          <label class="reg-pill"><input type="radio" name="sexo" value="Feminino"><span class="reg-dot"></span>Feminino</label>
+          <label class="reg-pill"><input type="radio" name="sexo" value="Masculino"><span class="reg-dot"></span>Masculino</label>
+          <label class="reg-pill"><input type="radio" name="sexo" value="Não informou"><span class="reg-dot"></span>Não informou</label>
+        </div>
+        <div class="reg-divider"></div>
+        <div class="reg-group-label">Identidade de gênero</div>
+        <div class="reg-pill-row" style="margin-bottom:1rem">
+          <label class="reg-pill"><input type="radio" name="identGenero" value="Homem Cisgênero"><span class="reg-dot"></span>Homem Cisgênero</label>
+          <label class="reg-pill"><input type="radio" name="identGenero" value="Mulher Cisgênero"><span class="reg-dot"></span>Mulher Cisgênero</label>
+          <label class="reg-pill"><input type="radio" name="identGenero" value="Homem Transexual"><span class="reg-dot"></span>Homem Transexual</label>
+          <label class="reg-pill"><input type="radio" name="identGenero" value="Mulher Transexual"><span class="reg-dot"></span>Mulher Transexual</label>
+          <label class="reg-pill"><input type="radio" name="identGenero" value="Travesti"><span class="reg-dot"></span>Travesti</label>
+          <label class="reg-pill"><input type="radio" name="identGenero" value="Ignorado"><span class="reg-dot"></span>Ignorado</label>
+          <label class="reg-pill"><input type="radio" name="identGenero" value="Não se aplica"><span class="reg-dot"></span>Não se aplica</label>
+        </div>
+        <div class="reg-divider"></div>
+        <div class="reg-group-label">Orientação sexual</div>
+        <div class="reg-pill-row" style="flex-wrap:wrap;align-items:center;">
+          <label class="reg-pill"><input type="radio" name="orientacao" value="Heterossexual"><span class="reg-dot"></span>Heterossexual</label>
+          <label class="reg-pill"><input type="radio" name="orientacao" value="Homossexual"><span class="reg-dot"></span>Homossexual</label>
+          <label class="reg-pill"><input type="radio" name="orientacao" value="Bissexual"><span class="reg-dot"></span>Bissexual</label>
+          <label class="reg-pill"><input type="radio" name="orientacao" value="Não se aplica"><span class="reg-dot"></span>Não se aplica</label>
+          <label class="reg-pill"><input type="radio" name="orientacao" value="Ignorado"><span class="reg-dot"></span>Ignorado</label>
+          <label class="reg-pill" style="align-items:center;gap:6px">
+            <input type="radio" name="orientacao" value="Outro" id="orientacaoOutro" onchange="toggleOrientacaoOutro(this)">
+            <span class="reg-dot"></span>Outro:
+            <input type="text" id="orientacaoOutroTexto" placeholder="Especifique..."
+              style="display:none;padding:4px 8px;border:1px solid #ce93d8;border-radius:8px;font-size:12px;outline:none;background:#fdf6ff;width:130px">
+          </label>
+        </div>
+      </div>
+      <div class="reg-card-footer">
+        <button class="reg-btn reg-btn-ghost" onclick="regGoTo(0)">
+          <i class="fi fi-br-arrow-left"></i> Voltar
+        </button>
+        <button class="reg-btn reg-btn-next" onclick="regGoTo(2)">
+          <i class="fi fi-br-arrow-right"></i> Próximo
+        </button>
+      </div>
+    </div>
+  
+    <!-- ETAPA 3 — RESPONSÁVEL -->
+    <div class="reg-etapa reg-card" id="re2">
+      <div class="reg-card-top">
+        <div class="reg-card-icon green"><i class="fi fi-sr-users"></i></div>
+        <div>
+          <div class="reg-card-title">Responsável</div>
+          <div class="reg-card-sub">Dados do responsável pela vítima</div>
+        </div>
+      </div>
+      <div class="reg-card-body">
+        <div class="reg-grid">
+          <div class="reg-field">
+            <span class="reg-label">Nome do responsável</span>
+            <input type="text" id="responsavel" placeholder="Nome completo">
+          </div>
+          <div class="reg-field">
+            <span class="reg-label">Parentesco</span>
+            <input type="text" id="parentesco" placeholder="Ex: Mãe, Pai, Avó...">
+          </div>
+          <div class="reg-field">
+            <span class="reg-label">Telefone</span>
+            <input type="text" id="telefoneResponsavel" placeholder="(00) 00000-0000">
+          </div>
+          <div class="reg-field">
+            <span class="reg-label">Endereço</span>
+            <input type="text" id="enderecoResponsavel" placeholder="Rua, número, bairro">
+          </div>
+        </div>
+      </div>
+      <div class="reg-card-footer">
+        <button class="reg-btn reg-btn-ghost" onclick="regGoTo(1)">
+          <i class="fi fi-br-arrow-left"></i> Voltar
+        </button>
+        <button class="reg-btn reg-btn-next" onclick="regGoTo(3)">
+          <i class="fi fi-br-arrow-right"></i> Próximo
+        </button>
+      </div>
+    </div>
+  
+    <!-- ETAPA 4 — AUTOR -->
+    <div class="reg-etapa reg-card" id="re3">
+      <div class="reg-card-top">
+        <div class="reg-card-icon amber"><i class="fi fi-sr-user-slash"></i></div>
+        <div>
+          <div class="reg-card-title">Autor da violência</div>
+          <div class="reg-card-sub">Dados de quem praticou o ato</div>
+        </div>
+      </div>
+      <div class="reg-card-body">
+        <div class="reg-grid">
+          <div class="reg-field reg-grid-full">
+  <span class="reg-label">Nomes dos autores</span>
+  <div id="listaAutores">
+    <div class="autor-row" style="display:flex;gap:8px;margin-bottom:6px">
+      <input type="text" class="inputAutor" placeholder="Nome (se conhecido)" astyle="flex:1">
+    </div>
+  </div>
+  <button type="button" onclick="adicionarAutor()" style="margin-top:4px;padding:5px 12px;border:1px dashed #ce93d8;background:transparent;color:#9c27b0;border-radius:8px;cursor:pointer;font-size:12px">
+    + Adicionar autor
+  </button>
+</div>
+          <div class="reg-field">
+            <span class="reg-label">Idade</span>
+            <input type="number" id="idadeAutor" placeholder="Ex: 35">
+          </div>
+          <div class="reg-field reg-grid-full">
+            <span class="reg-label">Relação com a vítima</span>
+            <input type="text" id="relacaoAutor" placeholder="Ex: Colega de escola, familiar, desconhecido...">
+          </div>
+        </div>
 
-      <div class="faixaInstitucional">
-        <div class="faixaConteudo">
+        <div class="reg-divider"></div>
+        <div class="reg-group-label">Quem praticou</div>
+        <div class="reg-pill-row">
+          <label class="reg-pill"><input type="checkbox" value="Criança"><span class="reg-dot"></span>Criança</label>
+          <label class="reg-pill"><input type="checkbox" value="Adolescente"><span class="reg-dot"></span>Adolescente</label>
+          <label class="reg-pill"><input type="checkbox" value="Pai"><span class="reg-dot"></span>Pai</label>
+          <label class="reg-pill"><input type="checkbox" value="Mãe"><span class="reg-dot"></span>Mãe</label>
+          <label class="reg-pill"><input type="checkbox" value="Responsável"><span class="reg-dot"></span>Responsável</label>
+          <label class="reg-pill"><input type="checkbox" value="Professor"><span class="reg-dot"></span>Professor</label>
+        </div>
+
+        <div class="reg-divider"></div>
+        <div class="reg-group-label">Outros — especifique</div>
+        <div class="reg-pill-row" style="align-items:center;">
+          <label class="reg-pill">
+            <input type="checkbox" id="checkOutros" value="Outros" onchange="toggleOutros(this)">
+            <span class="reg-dot"></span>Outros
+          </label>
+        </div>
+        <input type="text" id="outrosTexto" placeholder="Especifique quem praticou..."
+          style="display:none;margin-top:8px;width:100%;padding:8px 12px;border:1px solid #ce93d8;border-radius:8px;font-size:13px;outline:none;background:#fdf6ff;box-sizing:border-box;">
+      </div>
+      <div class="reg-card-footer">
+        <button class="reg-btn reg-btn-ghost" onclick="regGoTo(2)">
+          <i class="fi fi-br-arrow-left"></i> Voltar
+        </button>
+        <button class="reg-btn reg-btn-next" onclick="regGoTo(4)">
+          <i class="fi fi-br-arrow-right"></i> Próximo
+        </button>
+      </div>
+    </div>
+  
+<!-- ETAPA 5 — TIPIFICAÇÃO -->
+<div class="reg-etapa reg-card" id="re4">
+  <div class="reg-card-top">
+    <div class="reg-card-icon red"><i class="fi fi-sr-shield-exclamation"></i></div>
+    <div>
+      <div class="reg-card-title">Tipificação da violência</div>
+      <div class="reg-card-sub">Selecione os tipos que se aplicam ao caso</div>
+    </div>
+  </div>
+  <div class="reg-card-body" id="etapaTipificacao">
+
+    <div class="reg-tipo-section">
+      <div class="reg-tipo-head">Violência física</div>
+      <div class="reg-pill-row">
+        <label class="reg-tag fisica"><input type="checkbox" value="Agressão Física">Agressão Física</label>
+        <label class="reg-tag fisica"><input type="checkbox" value="Conflito físico">Conflito físico</label>
+        <label class="reg-tag fisica"><input type="checkbox" value="Dano físico por meio de arma de fogo">Dano físico por meio de arma de fogo</label>
+        <label class="reg-tag fisica"><input type="checkbox" value="Esfaqueamento">Esfaqueamento</label>
+        <label class="reg-tag fisica"><input type="checkbox" value="Negligência">Negligência</label>
+        <label class="reg-tag fisica"><input type="checkbox" value="Maus-tratos">Maus-tratos</label>
+        <label class="reg-tag fisica" style="align-items:center;gap:6px">
+          <input type="checkbox" id="checkFisicaOutro" onchange="toggleFisicaOutro(this)">
+          <span class="reg-dot"></span>Outro:
+          <input type="text" id="fisicaOutroTexto" placeholder="Especifique..."
+            style="display:none;padding:3px 7px;border:1px solid #ef9a9a;border-radius:8px;font-size:12px;outline:none;background:#fff5f5;width:130px">
+        </label>
+      </div>
+    </div>
+
+    <div class="reg-divider"></div>
+
+    <div class="reg-tipo-section">
+      <div class="reg-tipo-head">Violência psicológica</div>
+      <div class="reg-pill-row">
+        <label class="reg-tag psico"><input type="checkbox" value="Agressão verbal e xingamentos">Agressão verbal e xingamentos</label>
+        <label class="reg-tag psico"><input type="checkbox" value="Ameaça">Ameaça</label>
+        <label class="reg-tag psico"><input type="checkbox" value="Chantagem">Chantagem</label>
+        <label class="reg-tag psico"><input type="checkbox" value="Constrangimento">Constrangimento</label>
+        <label class="reg-tag psico"><input type="checkbox" value="Exploração">Exploração</label>
+        <label class="reg-tag psico"><input type="checkbox" value="Exposição de criança ou adolescente a crime violento">Exposição de criança ou adolescente a crime violento contra membro da família ou da rede de apoio</label>
+        <label class="reg-tag psico"><input type="checkbox" value="Humilhação">Humilhação</label>
+        <label class="reg-tag psico"><input type="checkbox" value="Intimidação sistemática (Bullying)">Intimidação sistemática (Bullying)</label>
+        <label class="reg-tag psico"><input type="checkbox" value="Isolamento">Isolamento</label>
+        <label class="reg-tag psico"><input type="checkbox" value="Manipulação">Manipulação</label>
+        <label class="reg-tag psico"><input type="checkbox" value="Perseguição">Perseguição</label>
+        <label class="reg-tag psico"><input type="checkbox" value="Preconceito contra a pessoa com deficiência">Preconceito contra a pessoa com deficiência</label>
+        <label class="reg-tag psico"><input type="checkbox" value="Vigilância constante">Vigilância constante</label>
+        <label class="reg-tag psico" style="align-items:center;gap:6px">
+          <input type="checkbox" id="checkPsicoOutro" onchange="togglePsicoOutro(this)">
+          <span class="reg-dot"></span>Outro:
+          <input type="text" id="psicoOutroTexto" placeholder="Especifique..."
+            style="display:none;padding:3px 7px;border:1px solid #ffe082;border-radius:8px;font-size:12px;outline:none;background:#fffdf0;width:130px">
+        </label>
+      </div>
+    </div>
+
+    <div class="reg-divider"></div>
+
+    <div class="reg-tipo-section">
+      <div class="reg-tipo-head">Violência sexual</div>
+      <div class="reg-pill-row">
+        <label class="reg-tag sexual"><input type="checkbox" value="Abuso Sexual">Abuso Sexual</label>
+        <label class="reg-tag sexual"><input type="checkbox" value="Assédio Sexual">Assédio Sexual</label>
+        <label class="reg-tag sexual"><input type="checkbox" value="Estupro">Estupro</label>
+        <label class="reg-tag sexual"><input type="checkbox" value="Exploração Sexual">Exploração Sexual</label>
+        <label class="reg-tag sexual"><input type="checkbox" value="Importunação Sexual">Importunação Sexual</label>
+        <label class="reg-tag sexual"><input type="checkbox" value="Pornografia Infantil">Pornografia Infantil</label>
+        <label class="reg-tag sexual"><input type="checkbox" value="Sexting">Sexting (divulgação de conteúdos eróticos por dispositivos móveis)</label>
+        <label class="reg-tag sexual"><input type="checkbox" value="Tráfico Sexual de Pessoas">Tráfico Sexual de Pessoas</label>
+        <label class="reg-tag sexual" style="align-items:center;gap:6px">
+          <input type="checkbox" id="checkSexualOutro" onchange="toggleSexualOutro(this)">
+          <span class="reg-dot"></span>Outro:
+          <input type="text" id="sexualOutroTexto" placeholder="Especifique..."
+            style="display:none;padding:3px 7px;border:1px solid #ce93d8;border-radius:8px;font-size:12px;outline:none;background:#fdf6ff;width:130px">
+        </label>
+      </div>
+    </div>
+
+    <div class="reg-divider"></div>
+
+    <div class="reg-tipo-section">
+      <div class="reg-tipo-head">Violência virtual</div>
+      <div class="reg-pill-row">
+        <label class="reg-tag virtual"><input type="checkbox" value="Cyberbullying">Cyberbullying</label>
+        <label class="reg-tag virtual"><input type="checkbox" value="Assédio virtual">Assédio virtual</label>
+        <label class="reg-tag virtual"><input type="checkbox" value="Invasão de dispositivo">Invasão de dispositivo</label>
+      </div>
+    </div>
+
+    <div class="reg-divider"></div>
+
+    <div class="reg-tipo-section">
+      <div class="reg-tipo-head">Violência moral</div>
+      <div class="reg-pill-row">
+        <label class="reg-tag moral"><input type="checkbox" value="Calúnia">Calúnia</label>
+        <label class="reg-tag moral"><input type="checkbox" value="Difamação">Difamação</label>
+        <label class="reg-tag moral"><input type="checkbox" value="Injúria">Injúria</label>
+      </div>
+    </div>
+
+    <div class="reg-divider"></div>
+
+    <div class="reg-tipo-section">
+      <div class="reg-tipo-head">Motivação</div>
+      <div class="reg-pill-row">
+        <label class="reg-tag motiv"><input type="checkbox" value="Racismo">Racismo</label>
+        <label class="reg-tag motiv"><input type="checkbox" value="Intolerância Religiosa">Intolerância religiosa</label>
+        <label class="reg-tag motiv"><input type="checkbox" value="Sexismo">Sexismo</label>
+        <label class="reg-tag motiv"><input type="checkbox" value="Diversidade de gênero">Diversidade de gênero</label>
+        <label class="reg-tag motiv"><input type="checkbox" value="Capacitismo">Capacitismo</label>
+        <label class="reg-tag motiv"><input type="checkbox" value="Outros">Outros</label>
+      </div>
+    </div>
+
+  </div>
+  <div class="reg-card-footer">
+    <button class="reg-btn reg-btn-ghost" onclick="regGoTo(3)">
+      <i class="fi fi-br-arrow-left"></i> Voltar
+    </button>
+    <button class="reg-btn reg-btn-next" onclick="regGoTo(5)">
+      <i class="fi fi-br-arrow-right"></i> Próximo
+    </button>
+  </div>
+</div>
+    <!-- ETAPA 6 — RESUMO -->
+    <div class="reg-etapa reg-card" id="re5">
+      <div class="reg-card-top">
+        <div class="reg-card-icon green"><i class="fi fi-sr-document"></i></div>
+        <div>
+          <div class="reg-card-title">Resumo da ocorrência</div>
+          <div class="reg-card-sub">Descreva o que aconteceu</div>
+        </div>
+      </div>
+      <div class="reg-card-body">
+        <div class="reg-field">
+          <span class="reg-label">Descrição dos fatos</span>
+          <textarea id="resumo" placeholder="Relate os detalhes relevantes de forma objetiva e clara. Inclua contexto, pessoas envolvidas e circunstâncias."></textarea>
+        </div>
+      </div>
+      <div class="reg-card-footer">
+        <button class="reg-btn reg-btn-ghost" onclick="regGoTo(4)">
+          <i class="fi fi-br-arrow-left"></i> Voltar
+        </button>
+        <button class="reg-btn reg-btn-next" onclick="regGoTo(6)">
+          <i class="fi fi-br-arrow-right"></i> Próximo
+        </button>
+      </div>
+    </div>
+  
+    <!-- ETAPA 7 — ENCAMINHAMENTO -->
+    <div class="reg-etapa reg-card" id="re6">
+      <div class="reg-card-top">
+        <div class="reg-card-icon green"><i class="fi fi-sr-paper-plane"></i></div>
+        <div>
+          <div class="reg-card-title">Encaminhamento</div>
+          <div class="reg-card-sub">Ações e providências a adotar</div>
+        </div>
+      </div>
+      <div class="reg-card-body">
+        <div class="reg-field" style="margin-bottom:1.25rem">
+          <span class="reg-label">Descrição das ações</span>
+          <textarea id="encaminhamento" placeholder="Descreva os encaminhamentos e providências que serão adotadas a partir desta notificação..."></textarea>
+        </div>
+        <div class="reg-notice">
           <i class="fi fi-sr-shield-check"></i>
           <div>
-            <strong>Sistema oficial de registro e acompanhamento de denúncias</strong>
-            <small>Plataforma segura • Proteção de dados garantida • Atendimento responsável</small>
+            <div class="reg-notice-title">Pronto para salvar</div>
+            <div class="reg-notice-sub">Verifique as informações antes de confirmar. Um número de protocolo será gerado automaticamente ao salvar.</div>
           </div>
         </div>
       </div>
+      <div class="reg-card-footer">
+        <button class="reg-btn reg-btn-ghost" onclick="regGoTo(5)">
+          <i class="fi fi-br-arrow-left"></i> Voltar
+        </button>
+        <button class="reg-btn reg-btn-save btnSalvarnotificação" onclick="salvarNotificacao()">
+          <i class="fi fi-sr-disk"></i> Salvar notificação
+        </button>
+      </div>
     </div>
+  
+  </div>
+  
   </div>
 
-  <!-- LOGIN MODAL -->
-  <div id="loginModal" class="overlay" style="display:none;">
-    <div class="modal">
+    <!-- RELATÓRIOS -->
+    <div id="relatorios" class="aba">
+      <h2>Menu de Relatórios</h2>
+      <div class="cardsRelatorio">
+        <div class="cardRelatorio" onclick="relatorioMensal()"><h3>Relatório Mensal</h3><p>Notificações por mês</p></div>
+        <div class="cardRelatorio" onclick="relatorioVitimas()"><h3>Relatório de Vítimas</h3><p>Lista de vítimas registradas</p></div>
+        <div class="cardRelatorio" onclick="relatorioEscola()"><h3>Relatório por Escola</h3><p>Notificações filtradas por escola</p></div>
+        <div class="cardRelatorio" onclick="exportarTodosPDF()"><h3>Exportar Relatório Geral</h3><p>Gerar relatório completo em PDF</p></div>
+      </div>
+      <div id="resultadoRelatorio"></div>
+      <div id="filtroEscolaWrap" style="display:none; margin-bottom:12px;">
+        <label style="font-weight:600; font-size:13px; margin-right:8px;">Escola:</label>
+        <select id="selectEscolaRelatorio" onchange="aplicarFiltroEscola()"
+          style="padding:6px 12px; border:1px solid #ccc; border-radius:8px; font-size:13px; min-width:280px;">
+        </select>
+      </div>
+      <table id="tabelaRelatorios">
+        <thead>
+          <tr>
+            <th>Protocolo</th><th>Escola</th><th>Data</th>
+            <th>Vítima</th><th>Tipo</th><th>Status</th><th>Ações</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-      <span class="fechar" onclick="fecharLogin()">✖</span>
+    <!-- CONSULTA -->
+    <div id="consulta" class="aba">
+      <div class="header-consulta">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="header-icon">🔍</div>
+          <div>
+            <h2>Consultar registro</h2>
+            <p>Busque notificações por protocolo ou nome da vítima</p>
+          </div>
+        </div>
+      </div>
 
-      <h2>ENTRAR COM E-MAIL E SENHA</h2>
+      <div class="search-card-novo">
+        <span class="search-label-novo">Busca</span>
+        <div class="search-row-novo">
+          <div class="search-input-wrap-novo">
+            <i class="fi fi-br-search icone-busca"></i>
+            <input class="search-input-novo" id="buscaProtocolo" type="text"
+              placeholder="Ex: PREV-0001 ou nome da vítima..."
+              onkeyup="if(event.key==='Enter') buscarRegistro()">
+          </div>
+          <button class="btn-buscar-novo" onclick="buscarRegistro()">
+            <i class="fi fi-br-search"></i> Buscar
+          </button>
+        </div>
+        <div class="search-hints-novo">
+          <span style="font-size:12px;color:#aaa">Exemplos:</span>
+          <span class="hint-chip-novo" onclick="document.getElementById('buscaProtocolo').value='PREV-0001';buscarRegistro()">PREV-0001</span>
+          <span class="hint-chip-novo" onclick="document.getElementById('buscaProtocolo').value='PREV-0002';buscarRegistro()">PREV-0002</span>
+        </div>
+      </div>
 
-      <input id="usuario" type="email" placeholder="E-mail" class="input">
-      <input id="senha" type="password" placeholder="Senha" class="input">
+      <div id="resultadoConsulta"></div>
+    </div>
 
+    <!-- USUÁRIOS -->
+    <div id="usuarios" class="aba">
+      <div class="topoUsuarios"><h2>Gerenciamento de Usuários</h2></div>
+      <div class="cardsUsuarios">
+        <div class="cardUsuario"><h3 id="totalUsuarios">0</h3><p>Total de Usuários</p></div>
+        <div class="cardUsuario"><h3 id="usuariosAtivos">0</h3><p>Usuários Ativos</p></div>
+        <div class="cardUsuario"><h3 id="usuariosInativos">0</h3><p>Usuários Inativos</p></div>
+        <div class="cardUsuario"><h3 id="admins">0</h3><p>Administradores</p></div>
+      </div>
+      <input id="pesquisaUsuario" placeholder="🔍 Pesquisar usuário..." onkeyup="pesquisarUsuario()">
+      <div class="formUsuario">
+        <div class="linha">
+          <div class="campo"><label>Nome</label><input id="nome"></div>
+          <div class="campo">
+            <label>Escola</label>
+            <select id="escola">
+              <option value="CEJAH">CEJAH</option>
+              <option value="CACE">CACE</option>
+              <option value="SECRETARA MUNICIPAL DE EDUCAÇÃO DE HORIZONTE">SECRETARA MUNICIPAL DE EDUCAÇÃO DE HORIZONTE</option>
+              <option value="CONSELHO TUTELAR DE HORIZONTE">CONSELHO TUTELAR DE HORIZONTE</option>
+              <option value="EMEF. DEPUTADO ULISSES GUIMARÃES">EMEF. DEPUTADO ULISSES GUIMARÃES</option>
+              <option value="EMEF. DIONÍZIA ROCHA DE MORAIS">EMEF. DIONÍZIA ROCHA DE MORAIS</option>
+              <option value="EMEF. DOMITILIA ASSUNÇÃO DE MENEZES">EMEF. DOMITILIA ASSUNÇÃO DE MENEZES</option>
+              <option value="EMEF. EUCLIDIA PEREIRA DE AZEVEDO">EMEF. EUCLIDIA PEREIRA DE AZEVEDO</option>
+              <option value="EMEFQ. FERNANDO AUGUSTO NOGUEIRA">EMEFQ. FERNANDO AUGUSTO NOGUEIRA</option>
+              <option value="EMEF. FRANCISCA GADELHA PIRES">EMEF. FRANCISCA GADELHA PIRES</option>
+              <option value="EMEF. FRANCISCA MONTEIRO DE OLIVEIRA">EMEF. FRANCISCA MONTEIRO DE OLIVEIRA</option>
+              <option value="EMEF. FRANCISCO XAVIER DE FREITAS">EMEF. FRANCISCO XAVIER DE FREITAS</option>
+              <option value="EMEF. GEOVÂNIA ALBANO DE ALMEIDA">EMEF. GEOVÂNIA ALBANO DE ALMEIDA</option>
+              <option value="EMEF. JOÃO ANTÔNIO DA SILVA">EMEF. JOÃO ANTÔNIO DA SILVA</option>
+              <option value="EMEF. JOAQUIM ANTONIO DA SILVA">EMEF. JOAQUIM ANTONIO DA SILVA</option>
+              <option value="EMEF. JOSÉ ALDEMIR DA SILVA">EMEF. JOSÉ ALDEMIR DA SILVA</option>
+              <option value="EMEF. JORGE PEREIRA DA ROCHA">EMEF. JORGE PEREIRA DA ROCHA</option>
+              <option value="EMEF. MARIA PINHEIRO DA SILVA">EMEF. MARIA PINHEIRO DA SILVA</option>
+              <option value="EMEF. MANOEL FELIPE DOS SANTOS">EMEF. MANOEL FELIPE DOS SANTOS</option>
+              <option value="EMEF. MARIA JOSÉ DE SOUSA">EMEF. MARIA JOSÉ DE SOUSA</option>
+              <option value="EMEF. MARIA LUIZA BARBOZA CHAVES">EMEF. MARIA LUIZA BARBOZA CHAVES</option>
+              <option value="EMEF. MARIA REGIANA DA SILVA">EMEF. MARIA REGIANA DA SILVA</option>
+              <option value="EMEF. MARINA FERREIRA DE ALMEIDA">EMEF. MARINA FERREIRA DE ALMEIDA</option>
+              <option value="EMEF. MILTON NOGUEIRA NERIS">EMEF. MILTON NOGUEIRA NERIS</option>
+              <option value="EMEFQ. MARIA TEODORA EVANGELISTA COSTA">EMEFQ. MARIA TEODORA EVANGELISTA COSTA</option>
+              <option value="EMEFQ. OLÍMPIO NOGUEIRA LOPES">EMEFQ. OLÍMPIO NOGUEIRA LOPES</option>
+              <option value="EMEF. PROFESSORA RAIMUNDA DUARTE TEXEIRA">EMEF. PROFESSORA RAIMUNDA DUARTE TEXEIRA</option>
+              <option value="EMEF. PROFESSORA DIONE MARIA BEZERRA PESSOA">EMEF. PROFESSORA DIONE MARIA BEZERRA PESSOA</option>
+              <option value="EMEF. RAIMUNDO DOMINGOS DE SOUSA">EMEF. RAIMUNDO DOMINGOS DE SOUSA</option>
+              <option value="EMEF. SEBASTIÃO LOPES DE OLIVEIRA">EMEF. SEBASTIÃO LOPES DE OLIVEIRA</option>
+              <option value="EMEF. CEI ADÍLIA FERREIRA LIMA">EMEF. CEI ADÍLIA FERREIRA LIMA</option>
+              <option value="CEI ALDA DE CARVALHO BENTO">CEI ALDA DE CARVALHO BENTO</option>
+              <option value="CEI ANNA REBECA SOUSA PEREIRA">CEI ANNA REBECA SOUSA PEREIRA</option>
+              <option value="CEI CLEONICE PIRES DE SOUSA">CEI CLEONICE PIRES DE SOUSA</option>
+              <option value="CEI DONA SINHÁ">CEI DONA SINHÁ</option>
+              <option value="CEI DR. WALDEMAR GONÇALVES DE SOUSA">CEI DR. WALDEMAR GONÇALVES DE SOUSA</option>
+              <option value="CEI EUFRAZINA MARTINS DOS SANTOS">CEI EUFRAZINA MARTINS DOS SANTOS</option>
+              <option value="CEI FRANCISCA ERMIRA KOHLER">CEI FRANCISCA ERMIRA KOHLER</option>
+              <option value="CEI JOSÉ ANTONIO DA SILVA - PROF SENA">CEI JOSÉ ANTONIO DA SILVA - PROF SENA</option>
+              <option value="CEI MARIA CARMEN LUCIA DA SILVA">CEI MARIA CARMEN LUCIA DA SILVA</option>
+              <option value="CEI MARIA DO CARMO DE OLIVEIRA">CEI MARIA DO CARMO DE OLIVEIRA</option>
+              <option value="CEI MARIA ELIZIETE MARTINS CARNEIRO">CEI MARIA ELIZIETE MARTINS CARNEIRO</option>
+              <option value="CEI MARIA JAYCEGLAB NOBRE RABELO">CEI MARIA JAYCEGLAB NOBRE RABELO</option>
+              <option value="MARIA JOSÉ ALVES DA SILVA">MARIA JOSÉ ALVES DA SILVA</option>
+              <option value="CEI NARA RICARDO DE LINO">CEI NARA RICARDO DE LINO</option>
+              <option value="CEI NELSA NAVILHA GRENDENE BARTELLE">CEI NELSA NAVILHA GRENDENE BARTELLE</option>
+              <option value="CEI PEDRO NOGUEIRA DE QUEIROZ">CEI PEDRO NOGUEIRA DE QUEIROZ</option>
+              <option value="CEI STELA MARIA NASPOLINI">CEI STELA MARIA NASPOLINI</option>
+              <option value="CEI VICENTE XAVIER DA SILVA">CEI VICENTE XAVIER DA SILVA</option>
+            </select>
+          </div>
+        </div>
+        <div class="linha">
+          <div class="campo"><label>Email</label><input id="email"></div>
+          <div class="campo">
+            <label>Nível</label>
+            <select id="nivelUsuario">
+              <option value="usuario">Usuário</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+        </div>
+        <button class="botaoSalvar" onclick="cadastrarUsuario()">Cadastrar Usuário</button>
+      </div>
 
-      <button class="btn" onclick="entrar()">Entrar</button>
+      <table id="tabelaUsuarios">
+        <thead>
+          <tr>
+            <th>Nome</th><th>Escola</th><th>Email</th>
+            <th>Senha</th><th>Nível</th><th>Status</th><th>Ações</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-      <div class="link">
-  <p>
-    Não lembra sua senha?
-    <a href="#" onclick="abrirRecuperacao()">Recuperar senha</a>
-  </p>
+  </div>
 </div>
 
-<!-- MODAL RECUPERAR SENHA -->
-<div id="modalRecuperar" class="overlay" style="display:none;">
-
-  <div class="modal">
-
-    <span class="fechar" onclick="fecharRecuperacao()">✖</span>
-
-    <h2>RECUPERAR SENHA</h2>
-
-    <input
-      type="email"
-      id="emailRecuperar"
-      placeholder="Digite seu e-mail"
-      class="input"
-    >
-
-    <button class="btn" onclick="recuperarSenha()">
-      Recuperar Senha
-    </button>
-
-    <div id="resultadoRecuperacao"
-      style="
-      margin-top:15px;
-      text-align:center;
-      font-weight:bold;
-      color:#2e7d32;
-    ">
-    </div>
-
-  </div>
-
-</div>
-
-    </div>
-
-  </div>
-  <!-- PAINEL -->
-
-  <div class="painel" id="painel">
-
-    <div class="sidebar">
-      <div class="sidebarBrand">
-        <img src="previne.png" alt="Previne">
-        <div>
-          <strong>Previne</strong>
-          <small>Sistema de Notificação</small>
-        </div>
-      </div>
-
-      <button onclick="abrirAba('dashboard')"><i class="fi fi-br-stats"></i> Dashboard</button>
-      <button onclick="abrirAba('registros')"><i class="fi fi-sr-document"></i> Registros</button>
-      <button onclick="abrirAba('relatorios')"><i class="fi fi-sr-chart-histogram"></i> Relatórios</button>
-      <button onclick="abrirAba('consulta')">
-        <i class="fi fi-br-search"></i> Consultar Registro
-      </button>
-      <button id="menuUsuarios" onclick="abrirAba('usuarios')"><i class="fi fi-sr-users"></i> Usuários</button>
-      <button onclick="sair()"><i class="fi fi-sr-sign-out-alt"></i> Sair</button>
-
-    </div>
-
-    <div class="main">
-
-      <div class="topoAdmin">
-
-        <div class="ladoDireito">
-
-          <div class="notificacao" onclick="verNotificacoes()">
-            <i class="fi fi-rr-bell-ring"></i> <span class="badge" id="badgeNotif">0</span>
-
-            <div id="listaNotificacoes" style="
-display:none;
-position:absolute;
-top:30px;
-right:0;
-background:white;
-width:250px;
-max-height:300px;
-overflow:auto;
-border-radius:8px;
-box-shadow:0 4px 10px rgba(0,0,0,0.2);
-padding:10px;
-z-index:999;
-font-size:13px;
-"></div>
-
-          </div>
-          <div id="perfilModal" class="overlay" style="display:none;">
-
-            <div class="modal">
-
-              <span class="fechar" onclick="fecharPerfil()">✖</span>
-
-              <h2>Meu Perfil</h2>
-
-              <div class="formUsuario">
-
-                <div class="linha">
-                  <div class="campo">
-                    <label>Nome</label>
-                    <input id="perfilNome">
-                  </div>
-
-                 <div class="linha">
-
-  <div class="campo">
-    <label>Email</label>
-   <input id="emailUsuario">  
-  </div>
-
-  <div class="campo">
-    <label>Nível</label>
-
-    <select id="nivel">
-      <option value="usuario">Usuário</option>
-      <option value="admin">Administrador</option>
-    </select>
-  </div>
-
-</div>
-<label>Escola</label>
-
-<select id="escolaUsuario">
-  <option value="">Selecione</option>
-  <option value="CEI Francisca Monteiro">CEI Francisca Monteiro</option>
-  <option value="CEI Maria José">CEI Maria José</option>
-  <option value="Escola Paulo Freire">Escola Paulo Freire</option>
-</select>              
-                </div>
-
-                <button class="botaoSalvar" onclick="salvarPerfil()">Salvar Alterações</button>
-
-              </div>
-
-            </div>
-
-          </div>
-          <div id="senhaModal" class="overlay" style="display:none;">
-
-            <div class="modal">
-
-              <span class="fechar" onclick="fecharSenha()">✖</span>
-
-              <h2>Alterar Senha</h2>
-
-              <div class="formUsuario">
-
-                <div class="campo">
-                  <label>Senha Atual</label>
-                  <input type="password" id="senhaAtual">
-                </div>
-
-                <div class="campo">
-                  <label>Nova Senha</label>
-                  <input type="password" id="novaSenha">
-                </div>
-
-                <div class="campo">
-                  <label>Confirmar Nova Senha</label>
-                  <input type="password" id="confirmarSenha">
-                </div>
-
-                <button class="botaoSalvar" onclick="salvarSenha()">Salvar Nova Senha</button>
-
-              </div>
-
-            </div>
-
-          </div>
-          <div id="senha" class="aba">
-
-            <h2>Alterar Senha</h2>
-
-            <div class="formUsuario">
-
-              <div class="campo">
-                <label>Senha Atual</label>
-                <input type="password" id="senhaAtual">
-              </div>
-
-              <div class="campo">
-                <label>Nova Senha</label>
-                <input type="password" id="novaSenha">
-              </div>
-
-              <div class="campo">
-                <label>Confirmar Nova Senha</label>
-                <input type="password" id="confirmarSenha">
-              </div>
-
-              <button class="botaoSalvar" onclick="salvarSenha()">Alterar Senha</button>
-
-            </div>
-
-          </div>
-          <div class="usuarioMenu" onclick="toggleMenuUsuario()">
-
-            <div class="avatar">C</div>
-
-            <div class="infoUsuario">
-              <strong id="nomeUsuario">Administrador</strong>
-              <small id="perfilSubtitulo">Usuário logado</small>
-            </div>
-
-          </div>
-
-          <div id="dropdownUsuario" class="dropdownUsuario">
-
-            <div onclick="abrirPerfil()"><i class="fi fi-sr-user"></i> Perfil</div>
-            <div onclick="alterarSenha()"><i class="fi fi-sr-key"></i> Alterar senha</div>
-            <div onclick="sair()"><i class="fi fi-sr-sign-out-alt"></i> Sair</div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-      <div id="dashboard" class="aba">
-
-        <h2>Dashboard</h2>
-        <div class="filtrosDashboard">
-
-          <select id="filtroMes">
-            <option value="">Todos os meses</option>
-            <option value="0">Jan</option>
-            <option value="1">Fev</option>
-            <option value="2">Mar</option>
-            <option value="3">Abr</option>
-            <option value="4">Mai</option>
-            <option value="5">Jun</option>
-            <option value="6">Jul</option>
-            <option value="7">Ago</option>
-            <option value="8">Set</option>
-            <option value="9">Out</option>
-            <option value="10">Nov</option>
-            <option value="11">Dez</option>
-          </select>
-
-          <input type="number" id="filtroAno" placeholder="Ano">
-
-          <input type="text" id="filtroTipo" placeholder="Tipo de violência">
-
-          <button onclick="carregarGraficos()">Filtrar</button>
-
-        </div>
-        <div class="cardsDashboard">
-
-          <div class="cardDash">
-            <h3 id="totalRegistros">0</h3>
-            <p>Notificações Registradas</p>
-          </div>
-
-          <div class="cardDash">
-            <h3 id="casosAndamento">0</h3>
-            <p>Casos em Andamento</p>
-          </div>
-
-          <div class="cardDash">
-            <h3 id="casosConcluidos">0</h3>
-            <p>Casos Concluídos</p>
-          </div>
-
-        </div>
-
-        <div class="graficos">
-
-          <div class="grafico">
-            <h3>Notificações por Mês</h3>
-            <canvas id="graficoMes"></canvas>
-          </div>
-
-          <div class="grafico">
-            <h3>Distribuição por Sexo</h3>
-            <canvas id="graficoSexo"></canvas>
-          </div>
-
-          <div class="grafico">
-            <h3>Distribuição por Idade</h3>
-            <canvas id="graficoIdade"></canvas>
-          </div>
-
-          <div class="grafico">
-            <h3>Status dos Casos</h3>
-            <canvas id="graficoStatus"></canvas>
-          </div>
-
-        </div>
-      </div><!-- REGISTROS -->
-      <div id="registros" class="aba">
-
-        <h2>Registro de Notificação</h2>
-
-        <div class="abasTopo">
-
-          <div class="abaItem ativa">1 Ocorrência</div>
-          <div class="abaItem">2 Vítima</div>
-          <div class="abaItem">3 Responsável</div>
-          <div class="abaItem">4 Autor</div>
-          <div class="abaItem">5 Tipificação</div>
-          <div class="abaItem">6 Resumo</div>
-          <div class="abaItem">7 Encaminhamento</div>
-
-        </div>
-
-<!-- ETAPA 1 -->
-
-<div class="etapa ativa">
-
-  <h3>Dados da Ocorrência</h3>
-  
-  <div class="linha">
-    <div class="campo">
-      Data de preenchimento
-      <input type="date" id="dataPreenchimento">
-    </div>
-  
-    <div class="campo">
-      Onde ocorreu?
-      <select id="localTipo">
-        <option>Na escola</option>
-        <option>No âmbito familiar</option>
-        <option>Outros</option>
-      </select>
-    </div>
-  </div>
-  
-  <div class="campo">
-    Especifique o local (se necessário)
-    <input type="text" id="localDetalhado">
-  </div>
-  
-  <button class="botaoProximo" onclick="proximo()">Próximo</button>
-  
-  </div>
-      <!-- ETAPA 2 -->
-  
-      <div class="etapa">
-  
-  <h3>Dados da Vítima</h3>
-  
-  <input type="text" id="nomeVitima" placeholder="Nome">
-  <input type="number" id="idadeVitima" placeholder="Idade">
-  
-  <h4>Raça/Cor</h4>
-  <label><input type="radio" name="raca" value="Branca"> Branca</label>
-  <label><input type="radio" name="raca" value="Preta"> Preta</label>
-  <label><input type="radio" name="raca" value="Parda"> Parda</label>
-  <label><input type="radio" name="raca" value="Indígena"> Indígena</label>
-  <label><input type="radio" name="raca" value="Amarela"> Amarela</label>
-  
-  <h4>Sexo</h4>
-  <label><input type="radio" name="sexo" value="Feminino"> Feminino</label>
-  <label><input type="radio" name="sexo" value="Masculino"> Masculino</label>
-  <label><input type="radio" name="sexo" value="Não informou"> Não informou</label>
-  
-  <h4>Orientação Sexual</h4>
-  <label><input type="radio" name="orientacao" value="Heterossexual"> Heterossexual</label>
-  <label><input type="radio" name="orientacao" value="Homossexual"> Homossexual</label>
-  <label><input type="radio" name="orientacao" value="Bissexual"> Bissexual</label>
-  <label><input type="radio" name="orientacao" value="Ignorado"> Ignorado</label>
-  
-  <h4>Escolaridade</h4>
-  <select id="escolaridade">
-    <option>Creche</option>
-    <option>Pré-Escola</option>
-    <option>1º ano</option>
-    <option>2º ano</option>
-    <option>3º ano</option>
-    <option>4º ano</option>
-    <option>5º ano</option>
-    <option>6º ano</option>
-    <option>7º ano</option>
-    <option>8º ano</option>
-    <option>9º ano</option>
-    <option>Ensino Médio</option>
-  </select>
-  
-  <div class="botoesEtapa">
-    <button class="botaoVoltar" onclick="voltar()">Voltar</button>
-      <button class="botaoProximo" onclick="proximo()">Próximo</button>
-  </div>
-  
-  </div>
-      <!-- ETAPA 3 -->
-  
-      <div class="etapa">
-  
-      <h3>Responsável</h3>
-  
-      <div class="linha">
-  
-      <div class="campo">
-      Nome do responsável
-      <input type="text" id="responsavel">
-      </div>
-  
-      <div class="campo">
-      Parentesco
-      <input type="text" id="parentesco">
-      </div>
-      </div>
-      <div class="linha">
-  
-      <div class="campo">
-      Telefone
-      <input type="text" id="telefoneResponsavel">
-      </div>
-  
-      <div class="campo">
-      Endereço
-      <input type="text" id="enderecoResponsavel">
-      </div>
-      </div>
-  
-      <button class="botaoVoltar" onclick="voltar()">Voltar</button>
-      <button class="botaoProximo" onclick="proximo()">Próximo</button>
-  
-      </div>
-  
-    
-  
-      <!-- ETAPA 4 -->
-  <div class="etapa">
-  
-  <h3>Autor</h3>
-  
-  <div class="linha">
-  
-    <div class="campo">
-      Nome do autor
-      <input type="text" id="autor">
-    </div>
-  
-    <div class="campo">
-      Idade
-      <input type="number" id="idadeAutor">
-    </div>
-  
-  </div>
-  
-  <div class="linha">
-  
-    <div class="campo">
-      Relação com a vítima
-      <input type="text" id="relacaoAutor">
-    </div>
-  
-  </div>
-  
-  <div class="botoesEtapa">
-    <button class="botaoVoltar" onclick="voltar()">Voltar</button>
-      <button class="botaoProximo" onclick="proximo()">Próximo</button>
-  </div>
-  
-  </div>
-  <!-- ETAPA 5 -->
-  <div class="etapa" id="etapaTipificacao">
-  
-  <h3>Tipificação da Violência</h3>
-  
-  <h4>Violência Física</h4>
-  <label><input type="checkbox" value="Agressão Física"> Agressão Física</label>
-  <label><input type="checkbox" value="Conflito físico"> Conflito físico</label>
-  <label><input type="checkbox" value="Maus-tratos"> Maus-tratos</label>
-  <label><input type="checkbox" value="Negligência"> Negligência</label>
-  
-  <h4>Violência Psicológica</h4>
-  <label><input type="checkbox" value="Ameaça"> Ameaça</label>
-  <label><input type="checkbox" value="Humilhação"> Humilhação</label>
-  <label><input type="checkbox" value="Bullying"> Bullying</label>
-  <label><input type="checkbox" value="Chantagem"> Chantagem</label>
-  
-  <h4>Violência Sexual</h4>
-  <label><input type="checkbox" value="Abuso Sexual"> Abuso Sexual</label>
-  <label><input type="checkbox" value="Assédio Sexual"> Assédio Sexual</label>
-  <label><input type="checkbox" value="Exploração Sexual"> Exploração Sexual</label>
-  <label><input type="checkbox" value="Estupro"> Estupro</label>
-  
-  <h4>Violência Virtual</h4>
-  <label><input type="checkbox" value="Cyberbullying"> Cyberbullying</label>
-  <label><input type="checkbox" value="Assédio virtual"> Assédio virtual</label>
-  <label><input type="checkbox" value="Invasão de dispositivo"> Invasão de dispositivo</label>
-  
-  <h4>Violência Moral</h4>
-  <label><input type="checkbox" value="Calúnia"> Calúnia</label>
-  <label><input type="checkbox" value="Difamação"> Difamação</label>
-  <label><input type="checkbox" value="Injúria"> Injúria</label>
-  
-  <hr>
-  
-  <h3>Motivação da Violência</h3>
-  
-  <label><input type="checkbox" value="Racismo"> Racismo</label>
-  <label><input type="checkbox" value="Intolerância Religiosa"> Intolerância Religiosa</label>
-  <label><input type="checkbox" value="Sexismo"> Sexismo</label>
-  <label><input type="checkbox" value="Diversidade de gênero"> Diversidade de gênero</label>
-  <label><input type="checkbox" value="Capacitismo"> Capacitismo</label>
-  <label><input type="checkbox" value="Outros"> Outros</label>
-  
-  <hr>
-  
-  <h3>Quem praticou a violência?</h3>
-  
-  <label><input type="checkbox" value="Criança"> Criança</label>
-  <label><input type="checkbox" value="Adolescente"> Adolescente</label>
-  <label><input type="checkbox" value="Pai"> Pai</label>
-  <label><input type="checkbox" value="Mãe"> Mãe</label>
-  <label><input type="checkbox" value="Responsável"> Responsável</label>
-  <label><input type="checkbox" value="Professor"> Professor</label>
-  
-  <div class="botoesEtapa">
-    <button class="botaoVoltar" onclick="voltar()">Voltar</button>
-      <button class="botaoProximo" onclick="proximo()">Próximo</button>
-  </div>
-  
-  </div>
-  <!-- ETAPA 6 -->
-  <div class="etapa">
-  
-  <h3>Resumo da Ocorrência</h3>
-  
-  <textarea id="resumo" placeholder="Descreva resumidamente o que aconteceu..." rows="5"></textarea>
-  
-  <div class="botoesEtapa">
-    <button class="botaoVoltar" onclick="voltar()">Voltar</button>
-    <button class="botaoProximo" onclick="proximo()">Próximo</button>
-  </div>
-  
-  </div>
-      <!-- ETAPA 7 -->
-  <!-- ETAPA 7 -->
-  <div class="etapa">
-  
-  <h3>Encaminhamento</h3>
-  
-  <textarea id="encaminhamento" placeholder="Descreva quais ações serão tomadas..." rows="5"></textarea>
-  
-  <div class="botoesEtapa">
-    <button class="botaoVoltar" onclick="voltar()">Voltar</button>
-    <button class="btnSalvarnotificação" onclick="salvarNotificacao()">Salvar Notificação</button>
-  </div>
-
-      </div>
-      </div>
-      
-      <!-- RELATORIOS -->
-      <div id="relatorios" class="aba">
-
-        <h2>Menu de Relatórios</h2>
-
-        <div class="cardsRelatorio">
-
-          <div class="cardRelatorio" onclick="relatorioMensal()">
-            <h3>Relatório Mensal</h3>
-            <p>Notificações por mês</p>
-          </div>
-
-          <div class="cardRelatorio" onclick="relatorioVitimas()">
-            <h3>Relatório de Vítimas</h3>
-            <p>Lista de vítimas registradas</p>
-          </div>
-
-          <div class="cardRelatorio" onclick="relatorioTipos()">
-            <h3>Relatório por Tipo</h3>
-            <p>Tipos de violência registrados</p>
-          </div>
-
-          <div class="cardRelatorio" onclick="exportarTodosPDF()">
-            <h3>Exportar Relatório Geral</h3>
-            <p>Gerar relatório completo em PDF</p>
-          </div>
-
-        </div>
-
-        <div id="resultadoRelatorio"></div>
-
-        <table id="tabelaRelatorios">
-
-          <thead>
-            <tr>
-  <th>Protocolo</th>
-  <th>Escola</th>
-  <th>Data</th>
-  <th>Vítima</th>
-  <th>Tipo</th>
-  <th>Status</th>
-  <th>Ações</th>
-</tr>
-          </thead>
-
-          <tbody></tbody>
-
-        </table>
-
-      </div>
-      <div id="consulta" class="aba">
-
-        <h2 class="tituloConsulta">Consultar Registro</h2>
-
-        <div class="boxConsulta">
-
-          <div class="campoBusca">
-            <i class="fi fi-br-search"></i>
-            <input type="text" id="buscaProtocolo" placeholder="Digite o protocolo (ex: PREV-0001)"
-              onkeyup="buscarRegistro()">
-            <button onclick="buscarRegistro()">Buscar</button>
-          </div>
-
-        </div>
-
-        <div id="resultadoConsulta" class="resultadoConsulta"></div>
-
-      </div>
-
-      <div id="usuarios" class="aba">
-
-        <!-- TOPO -->
-        <div class="topoUsuarios">
-          <h2>Gerenciamento de Usuários</h2>
-        </div>
-
-        <!-- CARDS -->
-        <div class="cardsUsuarios">
-
-          <div class="cardUsuario">
-            <h3 id="totalUsuarios">0</h3>
-            <p>Total de Usuários</p>
-          </div>
-
-          <div class="cardUsuario">
-            <h3 id="usuariosAtivos">0</h3>
-            <p>Usuários Ativos</p>
-          </div>
-
-          <div class="cardUsuario">
-            <h3 id="usuariosInativos">0</h3>
-            <p>Usuários Inativos</p>
-          </div>
-
-          <div class="cardUsuario">
-            <h3 id="admins">0</h3>
-            <p>Administradores</p>
-          </div>
-
-        </div>
-
-        <!-- PESQUISA -->
-        <input id="pesquisaUsuario" placeholder="🔍 Pesquisar usuário..." onkeyup="pesquisarUsuario()">
-
-        <!-- FORMULÁRIO -->
-<div class="formUsuario">
-
-  
-  <div class="linha">
-
-    <div class="campo">
-      <label>Nome</label>
-      <input id="nome">
-    </div>
-
-    <div class="campo">
-      <label>Escola</label>
-
-      <select id="escola">
-        <option value="CEJAH">CEJAH</option>
-        <option value="CACE">CACE</OPTION>
-        <option value="EMEF. DEPUTADO ULISSES GUIMARÃES">EMEF. DEPUTADO ULISSES GUIMARÃES</option>
-        <option value="EMEF. DIONÍZIA ROCHA DE MORAIS">EMEF. DIONÍZIA ROCHA DE MORAIS</option>
-        <option value="EMEF. DOMITILIA ASSUNÇÃO DE MENEZES">EMEF. DOMITILIA ASSUNÇÃO DE MENEZES</option>
-        <option value="EMEF. EUCLIDIA PEREIRA DE AZEVEDO">EMEF. EUCLIDIA PEREIRA DE AZEVEDO</option>
-        <option value="EMEFQ. FERNANDO AUGUSTO NOGUEIRA">EMEFQ. FERNANDO AUGUSTO NOGUEIRA</option>
-        <option value="EMEF. FRANCISCA GADELHA PIRES">EMEF. FRANCISCA GADELHA PIRES </option>
-        <option value="EMEF. FRANCISCA MONTEIRO DE OLIVEIRA">EMEF. FRANCISCA MONTEIRO DE OLIVEIRA</option>
-        <option value="EMEF. FRANCISCO XAVIER DE FREITAS"> EMEF. FRANCISCO XAVIER DE FREITAS </option>
-        <option value="EMEF. GEOVÂNIA ALBANO DE ALMEIDA ">EMEF. GEOVÂNIA ALBANO DE ALMEIDA </option>
-        <option value="EMEF. JOÃO ANTÔNIO DA SILVA">EMEF. JOÃO ANTÔNIO DA SILVA</option>
-        <option value="EMEF. JOAQUIM ANTONIO DA SILVA">EMEF. JOAQUIM ANTONIO DA SILVA </option>
-        <option value="EMEF. JOSÉ ALDEMIR DA SILVA">EMEF. JOSÉ ALDEMIR DA SILVA </option>
-        <option value="EMEF. JORGE PEREIRA DA ROCHA">EMEF. JORGE PEREIRA DA ROCHA </option>
-        <option value="EMEF. MARIA PINHEIRO DA SILVA">EMEF. MARIA PINHEIRO DA SILVA </option>
-        <option value="EMEF. MANOEL FELIPE DOS SANTOS" >EMEF. MANOEL FELIPE DOS SANTOS </option>
-        <option value="EMEF. MARIA JOSÉ DE SOUSA">EMEF. MARIA JOSÉ DE SOUSA </option>
-        <option value="EMEF. MARIA LUIZA BARBOZA CHAVES">EMEF. MARIA LUIZA BARBOZA CHAVES </option>
-        <option value="EMEF. MARIA REGIANA DA SILVA">EMEF. MARIA REGIANA DA SILVA </option>
-        <option value="EMEF. MARINA FERREIRA DE ALMEIDA"  >EMEF. MARINA FERREIRA DE ALMEIDA </option>
-        <option value="EMEF. MILTON NOGUEIRA NERIS">EMEF. MILTON NOGUEIRA NERIS </option>
-        <option value="EMEFQ. MARIA TEODORA EVANGELISTA COSTA">EMEFQ. MARIA TEODORA EVANGELISTA COSTA </option>
-        <option value="EMEFQ. OLÍMPIO NOGUEIRA LOPES">EMEFQ. OLÍMPIO NOGUEIRA LOPES </option>
-        <option value="EMEF. PROFESSORA RAIMUNDA DUARTE TEXEIRA"  >EMEF. PROFESSORA RAIMUNDA DUARTE TEXEIRA </option>    
-        <option value="EMEF. PROFESSORA DIONE MARIA BEZERRA PESSOA">EMEF. PROFESSORA DIONE MARIA BEZERRA PESSOA </option>
-        <option value="EMEF. RAIMUNDO DOMINGOS DE SOUSA">EMEF. RAIMUNDO DOMINGOS DE SOUSA </option>
-        <option value="EMEF. SEBASTIÃO LOPES DE OLIVEIRA">EMEF. SEBASTIÃO LOPES DE OLIVEIRA </option>
-        <option value="EMEF. CEI ADÍLIA FERREIRA LIMA">EMEF. CEI ADÍLIA FERREIRA LIMA </option>
-        <option value="CEI ALDA DE CARVALHO BENTO">CEI ALDA DE CARVALHO BENTO </option>
-        <option value="CEI ANNA REBECA SOUSA PEREIRA" >CEI ANNA REBECA SOUSA PEREIRA </option>
-        <option value="CEI CLEONICE PIRES DE SOUSA ">CEI CLEONICE PIRES DE SOUSA</option>
-        <option value="CEI DONA SINHÁ">CEI DONA SINHÁ </option>
-        <option value="CEI DR. WALDEMAR GONÇALVES DE SOUSA">CEI DR. WALDEMAR GONÇALVES DE SOUSA </option>
-        <option value="CEI EUFRAZINA MARTINS DOS SANTOS">CEI EUFRAZINA MARTINS DOS SANTOS </option>
-        <option value="CEI FRANCISCA ERMIRA KOHLER">CEI FRANCISCA ERMIRA KOHLER </option>
-        <option value="CEI JOSÉ ANTONIO DA SILVA - PROF SENA">CEI JOSÉ ANTONIO DA SILVA - PROF SENA </option>
-        <option value="CEI MARIA CARMEN LUCIA DA SILVA">CEI MARIA CARMEN LUCIA DA SILVA </option>
-        <option value="CEI MARIA DO CARMO DE OLIVEIRA ">CEI MARIA DO CARMO DE OLIVEIRA </option>
-        <option value="CEI MARIA ELIZIETE MARTINS CARNEIRO">CEI MARIA ELIZIETE MARTINS CARNEIRO </option>
-        <option value="CEI MARIA JAYCEGLAB NOBRE RABELO">CEI MARIA JAYCEGLAB NOBRE RABELO </option>
-        <option value="MARIA JOSÉ ALVES DA SILVA">MARIA JOSÉ ALVES DA SILVA </option>
-        <option value="CEI NARA RICARDO DE LINO">CEI NARA RICARDO DE LINO </option>
-        <option value="CEI NELSA NAVILHA GRENDENE BARTELLE">CEI NELSA NAVILHA GRENDENE BARTELLE </option>
-        <option value="CEI PEDRO NOGUEIRA DE QUEIROZ">CEI PEDRO NOGUEIRA DE QUEIROZ </option>
-        <option value="CEI STELA MARIA NASPOLINI">CEI STELA MARIA NASPOLINI </option>
-        <option value="CEI VICENTE XAVIER DA SILVA">CEI VICENTE XAVIER DA SILVA </option>
-      </select>
-    </div>
-
-  </div>
-
-
-  <div class="linha">
-
-    <div class="campo">
-      <label>Email</label>
-      <input id="email">
-    </div>
-
-    <div class="campo">
-      <label>Nível</label>
-
-      <select id="nivelUsuario">
-        <option value="usuario">Usuário</option>
-        <option value="admin">Administrador</option>
-      </select>
-    </div>
-
-  </div>
-
-  <button class="botaoSalvar" onclick="cadastrarUsuario()">Cadastrar Usuário</button>
-
-</div>
-
-<!-- TABELA -->
-<table id="tabelaUsuarios">
-
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Escola</th>
-              <th>Email</th>
-              <th>Senha</th>
-              <th>Nível</th>
-              <th>Status</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-
-          <tbody></tbody>
-
-        </table>
-
-      </div>
-      <script>
-        // GARANTE QUE O ADMIN SEMPRE EXISTE
-
-        let usuarios = JSON.parse(localStorage.getItem("usuarios"));
-
-        if (!usuarios) {
-          usuarios = [];
-        }
-
-        let existeAdmin = usuarios.find(u => u.email === "admin");
-
-        if (!existeAdmin) { 
-        usuarios.push({
-        nome: "Administrador",
-        email: "admin",
-        senha: "1234",
-        nivel: "admin",
-        escola: "Todas",
-        status: "Ativo"
-        });
-          localStorage.setItem("usuarios", JSON.stringify(usuarios));
-        }
-
-        function gerarProtocolo(numero) {
-          return "PREV-" + String(numero).padStart(4, '0');
-        }
-        let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-        let protocolo = relatorios.length + 1;
-
-        function abrirLogin() {
-          document.getElementById("loginModal").style.display = "flex"
-        }
-        function fecharLogin() {
-          document.getElementById("loginModal").style.display = "none"
-        }
-        function entrar() {
-
-          let user = document.getElementById("usuario").value.trim();
-          let senha = document.getElementById("senha").value.trim();
-
-          let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-
-          let encontrado = usuarios.find(u => u.email === user && u.senha === senha);
-
-          if (encontrado) {
-
-            if (encontrado.status === "Inativo") {
-              alert("Usuário inativo! Procure o administrador.");
-              return;
-            }
-
-            localStorage.setItem("tipo", encontrado.nivel);
-            localStorage.setItem("usuarioLogado", JSON.stringify(encontrado));
-
-            alert("Login realizado!");
-
-            abrirPainel();
-
-          } else {
-
-            alert("Usuário ou senha inválidos!");
-          }
-        }
-
-        function abrirPainel() {
-
-          let painel = document.getElementById("painel");
-          let modoPublico = painel.classList.contains("modoPublicoRegistro");
-
-          if (!modoPublico) {
-
-            let userString = localStorage.getItem("usuarioLogado");
-
-            if (!userString) {
-              alert("Acesso não autorizado!");
-              location.reload();
-              return;
-            }
-
-            let user = JSON.parse(userString);
-
-            if (!user || user.status === "Inativo") {
-              alert("Usuário inativo! Acesso bloqueado.");
-              localStorage.removeItem("usuarioLogado");
-              location.reload();
-              return;
-            }
-
-          }
-
-          document.getElementById("loginModal").style.display = "none"
-          document.getElementById("inicio").style.display = "none"
-          document.getElementById("painel").style.display = "block"
-          document.getElementById("painel").classList.remove("modoPublicoRegistro")
-
-          let sidebar = document.querySelector(".sidebar")
-          if (sidebar) sidebar.style.display = ""
-
-          let topo = document.querySelector(".topoAdmin")
-          if (topo) topo.style.display = ""
-
-          let usuarioMenu = document.querySelector(".usuarioMenu")
-          if (usuarioMenu) usuarioMenu.style.display = "flex"
-
-          let tipo = localStorage.getItem("tipo")
-
-          // MOSTRA MENU USUÁRIO SOMENTE NO ADMIN
-          let menuUsuarios = document.getElementById("menuUsuarios")
-          if (tipo !== "admin") {
-            if (menuUsuarios) menuUsuarios.style.display = "none"
-          } else {
-            if (menuUsuarios) menuUsuarios.style.display = "block"
-          }
-
-          setTimeout(() => abrirAba("dashboard"), 100)
-
-          atualizarBadge()
-
-          let user = JSON.parse(localStorage.getItem("usuarioLogado"))
-
-          if (user) {
-            document.getElementById("nomeUsuario").innerText = user.nome
-            document.querySelector(".avatar").innerText = user.nome.charAt(0)
-
-            let subtitulo = document.getElementById("perfilSubtitulo")
-            if (subtitulo) {
-              subtitulo.innerText = user.nivel ? "Nível: " + user.nivel : "Usuário logado"
-            }
-          }
-
-
-        }
-        atualizarBotaoFlutuante()
-
-
-        function abrirAba(nome) {
-
-          let tipo = localStorage.getItem("tipo")
-
-          if (nome === "usuarios" && tipo !== "admin") {
-            alert("Acesso permitido apenas para administrador")
-            return
-          }
-
-          let abas = document.querySelectorAll(".aba")
-
-          abas.forEach(aba => {
-            aba.style.display = "none"
-          })
-
-          let ativa = document.getElementById(nome)
-          if (!ativa) return
-
-          ativa.style.display = "block"
-
-          ativa.style.animation = "none"
-          setTimeout(() => {
-            ativa.style.animation = "fadeSlide 0.4s"
-          }, 10)
-
-          // gráficos
-          if (nome === "dashboard") {
-            setTimeout(() => carregarGraficos(), 100)
-          } else {
-            destruirGraficos && destruirGraficos()
-          }
-
-          if (nome === "relatorios") {
-            carregarRelatorios && carregarRelatorios()
-          }
-
-          /* 🔥 NOVO: controle do histórico */
-          let historico = document.getElementById("historicoBusca")
-
-          if (historico) {
-            historico.style.display = (nome === "consulta") ? "block" : "none"
-          }
-
-          atualizarBotaoFlutuante()
-
-        }
-        function sair() {
-
-  localStorage.removeItem("usuarioLogado");
-  localStorage.removeItem("tipo");
-
-  location.reload();
-
+<div class="botaoFlutuante" title="Adicionar novo registro" onclick="abrirNovoRegistroAtalho()">+</div>
+
+<script>
+// -------------------------------------------------------
+// CONTROLE DE ACESSO — ESCOLA VISÍVEL
+// -------------------------------------------------------
+
+/**
+ * ÚNICA instituição que pode VER o nome da escola nos registros.
+ * Todas as outras verão "🔒 Restrito".
+ */
+const ESCOLA_VER_NOME = "SECRETARA MUNICIPAL DE EDUCAÇÃO DE HORIZONTE";
+
+/**
+ * Instituições com acesso global (veem todos os registros de todas as escolas).
+ */
+const ESCOLAS_ACESSO_GLOBAL = [
+  "SECRETARA MUNICIPAL DE EDUCAÇÃO DE HORIZONTE",
+  "CONSELHO TUTELAR DE HORIZONTE"
+];
+
+/**
+ * Retorna true se o usuário pode VER o nome das escolas nos registros.
+ * Apenas Secretaria Municipal (ou admin) têm esse privilégio.
+ */
+function podeVerNomeEscola(user) {
+  if (!user) return false;
+  if (user.nivel === "admin") return true;
+  return (user.escola || "").trim() === ESCOLA_VER_NOME;
 }
- function gerarSenha(tamanho = 8) {
 
-          let caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+/**
+ * Retorna o nome da escola para exibição, aplicando restrição se necessário.
+ * @param {string} nomeEscola - nome real da escola
+ * @param {object} user - usuário logado
+ * @param {boolean} isHtml - se true, retorna HTML com badge estilizado
+ */
+function exibirEscola(nomeEscola, user, isHtml) {
+  if (podeVerNomeEscola(user)) {
+    return nomeEscola || "";
+  }
+  // Se a escola do usuário for a mesma do registro, pode ver a própria escola
+  if (user && nomeEscola && (user.escola || "").trim() === nomeEscola.trim()) {
+    return nomeEscola;
+  }
+  return isHtml
+    ? '<span class="escola-restrita">🔒 Restrito</span>'
+    : "🔒 Restrito";
+}
 
-          let senha = "";
+/**
+ * Retorna true se o usuário logado tem acesso global (vê todas as escolas).
+ */
+function temAcessoGlobal(user) {
+  if (!user) return false;
+  if (user.nivel === "admin") return true;
+  return ESCOLAS_ACESSO_GLOBAL.includes((user.escola || "").trim());
+}
 
-          for (let i = 0; i < tamanho; i++) {
+// -------------------------------------------------------
+// MAPEAMENTO DE TIPIFICAÇÃO → CATEGORIA
+// -------------------------------------------------------
+const MAPA_TIPO = {
+  "Agressão Física": "fisica", "Conflito físico": "fisica",
+  "Dano físico por meio de arma de fogo": "fisica", "Esfaqueamento": "fisica",
+  "Negligência": "fisica", "Maus-tratos": "fisica", "Outro (física)": "fisica",
 
-            senha += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+  "Agressão verbal e xingamentos": "psico", "Ameaça": "psico",
+  "Chantagem": "psico", "Constrangimento": "psico", "Exploração": "psico",
+  "Exposição de criança ou adolescente a crime violento": "psico",
+  "Humilhação": "psico", "Intimidação sistemática (Bullying)": "psico",
+  "Isolamento": "psico", "Manipulação": "psico", "Perseguição": "psico",
+  "Preconceito contra a pessoa com deficiência": "psico",
+  "Vigilância constante": "psico", "Outro (psicológica)": "psico",
 
-          }
+  "Abuso Sexual": "sexual", "Assédio Sexual": "sexual", "Estupro": "sexual",
+  "Exploração Sexual": "sexual", "Importunação Sexual": "sexual",
+  "Pornografia Infantil": "sexual", "Sexting": "sexual",
+  "Tráfico Sexual de Pessoas": "sexual", "Outro (sexual)": "sexual",
 
-          return senha;
+  "Cyberbullying": "virtual", "Assédio virtual": "virtual",
+  "Invasão de dispositivo": "virtual",
 
-        }
-       function cadastrarUsuario() {
+  "Calúnia": "moral", "Difamação": "moral", "Injúria": "moral",
 
-  let nome = document.getElementById("nome").value;
-  let email = document.getElementById("email").value;
-  let nivel = document.getElementById("nivelUsuario").value;
-  let escola = document.getElementById("escola").value;
+  "Racismo": "motiv", "Intolerância Religiosa": "motiv",
+  "Sexismo": "motiv", "Diversidade de gênero": "motiv",
+  "Capacitismo": "motiv", "Outros": "motiv",
 
-  let senha = gerarSenha();
+  "Criança": "praticou", "Adolescente": "praticou", "Pai": "praticou",
+  "Mãe": "praticou", "Responsável": "praticou", "Professor": "praticou"
+};
 
-  let usuarios =
-    JSON.parse(localStorage.getItem("usuarios")) || [];
+const ICONE_TIPO = {
+  fisica: "🤜", psico: "🧠", sexual: "⚠️",
+  virtual: "💻", moral: "🗣️", motiv: "🎯", praticou: "👤"
+};
 
-  usuarios.push({
-    nome: nome,
-    email: email,
-    senha: senha,
-    nivel: nivel,
-    escola: escola,
-    status: "Ativo"
+const COR_CATEGORIA_PDF = {
+  fisica:   [183, 28, 28],
+  psico:    [245, 127, 23],
+  sexual:   [74, 20, 140],
+  virtual:  [13, 71, 161],
+  moral:    [27, 94, 32],
+  motiv:    [191, 54, 12],
+  praticou: [106, 27, 154]
+};
+
+function renderTags(tipoStr) {
+  if (!tipoStr || tipoStr.trim() === "") {
+    return '<span style="color:#999;font-size:12px;">Não informado</span>';
+  }
+  const itens = tipoStr.split(",").map(t => t.trim()).filter(t => t.length > 0);
+  if (itens.length === 0) {
+    return '<span style="color:#999;font-size:12px;">Não informado</span>';
+  }
+  return '<div class="tagsTipo">' +
+    itens.map(t => {
+      const cat = MAPA_TIPO[t] || "moral";
+      const icone = ICONE_TIPO[cat] || "•";
+      return `<span class="tagTipo ${cat}">${icone} ${t}</span>`;
+    }).join("") +
+    '</div>';
+}
+
+function renderTagsSemMotiv(tipoStr) {
+  if (!tipoStr || tipoStr.trim() === "") {
+    return '<span style="color:#999;font-size:12px;">Não informado</span>';
+  }
+  const excluir = ["Racismo","Intolerância Religiosa","Sexismo","Diversidade de gênero",
+    "Capacitismo","Outros","Criança","Adolescente","Pai","Mãe","Responsável","Professor"];
+  const itens = tipoStr.split(",").map(t => t.trim())
+    .filter(t => t.length > 0 && !excluir.includes(t));
+  if (itens.length === 0) {
+    return '<span style="color:#999;font-size:12px;">Não informado</span>';
+  }
+  return '<div class="tagsTipo">' +
+    itens.map(t => {
+      const cat = MAPA_TIPO[t] || "moral";
+      const icone = ICONE_TIPO[cat] || "•";
+      return `<span class="tagTipo ${cat}">${icone} ${t}</span>`;
+    }).join("") +
+  '</div>';
+}
+
+function parseTipos(tipoStr) {
+  if (!tipoStr || tipoStr.trim() === "") return [];
+  return tipoStr.split(",").map(t => t.trim()).filter(t => t.length > 0);
+}
+
+// -------------------------------------------------------
+// SESSÃO
+// -------------------------------------------------------
+let usuarioLogado = null;
+
+function salvarSessao(user) {
+  usuarioLogado = user;
+  sessionStorage.setItem("usuarioLogado", JSON.stringify(user));
+  sessionStorage.setItem("tipo", user.nivel);
+}
+
+function carregarSessao() {
+  const s = sessionStorage.getItem("usuarioLogado");
+  if (s) usuarioLogado = JSON.parse(s);
+  return usuarioLogado;
+}
+
+function limparSessao() {
+  usuarioLogado = null;
+  sessionStorage.removeItem("usuarioLogado");
+  sessionStorage.removeItem("tipo");
+}
+
+function getTipo() {
+  return sessionStorage.getItem("tipo") || "";
+}
+
+function gerarProtocolo(numero) {
+  return "PREV-" + String(numero).padStart(4, "0");
+}
+
+// -------------------------------------------------------
+// LOGIN / LOGOUT
+// -------------------------------------------------------
+function abrirLogin() { document.getElementById("loginModal").style.display = "flex"; }
+function fecharLogin() { document.getElementById("loginModal").style.display = "none"; }
+
+async function entrar() {
+  const email = document.getElementById("usuario").value.trim();
+  const senha = document.getElementById("senha").value.trim();
+  const { data, error } = await db.from("usuarios").select("*").eq("email", email).eq("senha", senha).single();
+  if (error || !data) { alert("Usuário ou senha inválidos!"); return; }
+  if (data.status === "Inativo") { alert("Usuário inativo! Procure o administrador."); return; }
+  salvarSessao(data);
+  alert("Login realizado!");
+  abrirPainel();
+}
+
+function sair() { limparSessao(); location.reload(); }
+
+// -------------------------------------------------------
+// PAINEL
+// -------------------------------------------------------
+function abrirPainel() {
+  const user = carregarSessao();
+  const modoPublico = document.getElementById("painel").classList.contains("modoPublicoRegistro");
+  if (!modoPublico && !user) { alert("Acesso não autorizado!"); location.reload(); return; }
+
+  document.getElementById("loginModal").style.display = "none";
+  document.getElementById("inicio").style.display = "none";
+  document.getElementById("painel").style.display = "block";
+  document.getElementById("painel").classList.remove("modoPublicoRegistro");
+
+  const sidebar = document.querySelector(".sidebar");
+  if (sidebar) sidebar.style.display = "";
+  const topo = document.querySelector(".topoAdmin");
+  if (topo) topo.style.display = "";
+  const usuarioMenuEl = document.querySelector(".usuarioMenu");
+  if (usuarioMenuEl) usuarioMenuEl.style.display = "flex";
+
+  const menuUsuarios = document.getElementById("menuUsuarios");
+  if (getTipo() !== "admin") {
+    if (menuUsuarios) menuUsuarios.style.display = "none";
+  } else {
+    if (menuUsuarios) menuUsuarios.style.display = "block";
+  }
+
+  if (user) {
+    document.getElementById("nomeUsuario").innerText = user.nome;
+    document.querySelector(".avatar").innerText = user.nome.charAt(0);
+    const sub = document.getElementById("perfilSubtitulo");
+    if (sub) sub.innerText = (user.nivel || "") + " • " + (user.escola || "");
+  }
+
+  setTimeout(() => abrirAba("dashboard"), 100);
+  atualizarBadge();
+  atualizarBotaoFlutuante();
+}
+
+// -------------------------------------------------------
+// ABAS
+// -------------------------------------------------------
+function abrirAba(nome) {
+  if (nome === "usuarios" && getTipo() !== "admin") {
+    alert("Acesso permitido apenas para administrador"); return;
+  }
+  document.querySelectorAll(".aba").forEach(a => a.style.display = "none");
+  const ativa = document.getElementById(nome);
+  if (!ativa) return;
+  ativa.style.display = "block";
+  ativa.style.animation = "none";
+  setTimeout(() => { ativa.style.animation = "fadeSlide 0.4s"; }, 10);
+
+  if (nome === "dashboard") setTimeout(() => carregarGraficos(), 100);
+  if (nome === "relatorios") carregarRelatorios();
+  if (nome === "usuarios") { carregarUsuarios(); atualizarCardsUsuarios(); }
+
+  atualizarBotaoFlutuante();
+}
+
+// -------------------------------------------------------
+// ETAPAS DO FORMULÁRIO
+// -------------------------------------------------------
+let etapaAtual = 0;
+
+function mostrarEtapa() {
+  const etapas = document.querySelectorAll(".etapa");
+  const abas   = document.querySelectorAll(".abaItem");
+  etapas.forEach((e, i) => e.style.display = i === etapaAtual ? "block" : "none");
+  abas.forEach((a, i) => a.classList.toggle("ativa", i === etapaAtual));
+}
+
+function proximo() {
+  const etapas = document.querySelectorAll(".etapa");
+  if (etapaAtual < etapas.length - 1) { etapaAtual++; mostrarEtapa(); }
+}
+
+function voltar() {
+  if (etapaAtual > 0) { etapaAtual--; mostrarEtapa(); }
+}
+
+// -------------------------------------------------------
+// SALVAR NOTIFICAÇÃO
+// -------------------------------------------------------
+async function salvarNotificacao() {
+  const user = carregarSessao() || {};
+  const tipos = [];
+
+  document.querySelectorAll('#registros input[type="checkbox"]').forEach(c => {
+    if (c.checked) {
+      if (c.id === "checkOutros") {
+        const texto = document.getElementById("outrosTexto").value.trim();
+        tipos.push(texto ? "Outros: " + texto : "Outros");
+      } else if (c.id === "checkFisicaOutro") {
+        const texto = document.getElementById("fisicaOutroTexto").value.trim();
+        tipos.push(texto ? "Outro (física): " + texto : "Outro (física)");
+      } else if (c.id === "checkPsicoOutro") {
+        const texto = document.getElementById("psicoOutroTexto").value.trim();
+        tipos.push(texto ? "Outro (psicológica): " + texto : "Outro (psicológica)");
+      } else if (c.id === "checkSexualOutro") {
+        const texto = document.getElementById("sexualOutroTexto").value.trim();
+        tipos.push(texto ? "Outro (sexual): " + texto : "Outro (sexual)");
+      } else {
+        tipos.push(c.value);
+      }
+    }
   });
 
-  localStorage.setItem(
-    "usuarios",
-    JSON.stringify(usuarios)
-  );
+  const todos = await dbSelect("relatorios");
+  const protocolo = gerarProtocolo(todos.length + 1);
 
-  alert(
-    "Usuário cadastrado!\nSenha: " + senha
-  );
-
-  carregarUsuarios();
-  atualizarCardsUsuarios();
-
-} 
-        let etapaAtual = 0;
-        function mostrarEtapa() {
-
-          let etapas = document.querySelectorAll(".etapa")
-          let abas = document.querySelectorAll(".abaItem")
-
-          etapas.forEach((etapa, index) => {
-            etapa.style.display = index === etapaAtual ? "block" : "none"
-          })
-
-          abas.forEach((aba, index) => {
-            aba.classList.toggle("ativa", index === etapaAtual)
-          })
-
-        }
-
-        function proximo() {
-
-          let etapas = document.querySelectorAll(".etapa");
-
-          if (etapaAtual < etapas.length - 1) {
-            etapaAtual++;
-            mostrarEtapa();
-          }
-        }
-
-        function voltar() {
-
-          if (etapaAtual > 0) {
-            etapaAtual--;
-            mostrarEtapa();
-          }
-
-        }
-
-function salvarNotificacao() {
-
-  let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-
-  let raca =
-    document.querySelector('input[name="raca"]:checked')?.value || "";
-
-  let sexo =
-    document.querySelector('input[name="sexo"]:checked')?.value || "";
-
-  let orientacao =
-    document.querySelector('input[name="orientacao"]:checked')?.value || "";
-
-  let tipos = [];
-
-  document
-    .querySelectorAll('#etapaTipificacao input[type="checkbox"]:checked')
-    .forEach(c => {
-      tipos.push(c.value);
-    });
-
-  let usuarioLogado =
-    JSON.parse(localStorage.getItem("usuarioLogado")) || {};
-
-  let novo = {
-
-    protocolo: gerarProtocolo(relatorios.length + 1),
-
-    escola: usuarioLogado.escola || "Pública",
-
-    data:
-      document.getElementById("dataPreenchimento").value || "",
-
-    local:
-      document.getElementById("localTipo").value || "",
-
-    localDetalhado:
-      document.getElementById("localDetalhado").value || "",
-
-    vitima:
-      document.getElementById("nomeVitima").value || "",
-
-    idade:
-      document.getElementById("idadeVitima").value || "",
-
-    sexo: sexo,
-
-    raca: raca,
-
-    orientacao: orientacao,
-
-    escolaridade:
-      document.getElementById("escolaridade").value || "",
-
-    responsavel:
-      document.getElementById("responsavel").value || "",
-
-    telefone:
-      document.getElementById("telefoneResponsavel").value || "",
-
-    parentesco:
-      document.getElementById("parentesco").value || "",
-
-    endereco:
-      document.getElementById("enderecoResponsavel").value || "",
-
-    autor:
-      document.getElementById("autor").value || "",
-
-    idadeAutor:
-      document.getElementById("idadeAutor").value || "",
-
-    relacaoAutor:
-      document.getElementById("relacaoAutor").value || "",
-
-    tipo: tipos.join(", "),
-
-    resumo:
-      document.getElementById("resumo").value || "",
-
-    encaminhamento:
-      document.getElementById("encaminhamento").value || "",
-
-    status: "Em andamento"
-
+  const novo = {
+    protocolo,
+    escola:             user.escola || "Pública",
+    data:               document.getElementById("dataPreenchimento").value || "",
+    local:              document.getElementById("localTipo").value || "",
+    local_detalhado:    document.getElementById("localDetalhado").value || "",
+    vitima: [...document.querySelectorAll(".inputVitima")].map(i => i.value.trim()).filter(Boolean).join(", ") || "",
+    idade:              document.getElementById("idadeVitima").value || "",
+    sexo:               document.querySelector('input[name="sexo"]:checked')?.value || "",
+    raca:               document.querySelector('input[name="raca"]:checked')?.value || "",
+    identidade_genero:  document.querySelector('input[name="identGenero"]:checked')?.value || "",
+    orientacao: (() => {
+      const val = document.querySelector('input[name="orientacao"]:checked')?.value || "";
+      if (val === "Outro") {
+        const txt = document.getElementById("orientacaoOutroTexto")?.value.trim();
+        return txt ? "Outro: " + txt : "Outro";
+      }
+      return val;
+    })(),
+    escolaridade:       document.getElementById("escolaridade").value || "",
+    responsavel:        document.getElementById("responsavel").value || "",
+    telefone:           document.getElementById("telefoneResponsavel").value || "",
+    parentesco:         document.getElementById("parentesco").value || "",
+    endereco:           document.getElementById("enderecoResponsavel").value || "",
+    autor:  [...document.querySelectorAll(".inputAutor")].map(i => i.value.trim()).filter(Boolean).join(", ") || "",
+    idade_autor:        document.getElementById("idadeAutor").value || "",
+    relacao_autor:      document.getElementById("relacaoAutor").value || "",
+    tipo:               tipos.join(", "),
+    resumo:             document.getElementById("resumo").value || "",
+    encaminhamento:     document.getElementById("encaminhamento").value || "",
+    status:             "Em andamento"
   };
 
-  relatorios.push(novo);
+  const res = await dbInsert("relatorios", novo);
+  if (!res) { alert("Erro ao salvar notificação!"); return; }
 
-  localStorage.setItem(
-    "relatorios",
-    JSON.stringify(relatorios)
-  );
-
-  adicionarNotificacao(
-  "Nova notificação: " + novo.vitima,
-  novo.escola
-);
-  alert(
-    "Notificação registrada!\nProtocolo: " +
-    novo.protocolo
-  );
-
+  await adicionarNotificacao("Nova notificação: " + novo.vitima, novo.escola);
+  alert("Notificação registrada!\nProtocolo: " + protocolo);
   limparFormulario();
-
-  etapaAtual = 0;
-
-  mostrarEtapa();
-
+  regGoTo(0);
 }
- function exportarPDF() {
 
-  let usuario = JSON.parse(localStorage.getItem("usuarioLogado")) || {};
+// -------------------------------------------------------
+// USUÁRIOS
+// -------------------------------------------------------
+function gerarSenha() {
+  return "12345678";
+}
 
-  let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
+async function cadastrarUsuario() {
+  const nome   = document.getElementById("nome").value;
+  const email  = document.getElementById("email").value;
+  const nivel  = document.getElementById("nivelUsuario").value;
+  const escola = document.getElementById("escola").value;
+  const senha  = gerarSenha();
+  const res = await dbInsert("usuarios", { nome, email, senha, nivel, escola, status: "Ativo" });
+  if (!res) { alert("Erro ao cadastrar (email duplicado?)"); return; }
+  alert("Usuário cadastrado!\nSenha: " + senha);
+  carregarUsuarios();
+  atualizarCardsUsuarios();
+}
 
-  // FILTRO POR ESCOLA
-  if (usuario.nivel !== "admin") {
-    relatorios = relatorios.filter(r => r.escola === usuario.escola);
+async function carregarUsuarios() {
+  const tbody = document.querySelector("#tabelaUsuarios tbody");
+  if (!tbody) return;
+  const lista = await dbSelect("usuarios");
+  tbody.innerHTML = "";
+  lista.forEach(u => {
+    const linha = tbody.insertRow();
+    linha.insertCell(0).innerText = u.nome   || "";
+    linha.insertCell(1).innerText = u.escola || "";
+    linha.insertCell(2).innerText = u.email  || "";
+    linha.insertCell(3).innerText = u.senha  || "";
+    linha.insertCell(4).innerText = u.nivel  || "";
+    linha.insertCell(5).innerHTML = `<span class="${u.status === "Ativo" ? "statusAtivo" : "statusInativo"}">${u.status || "Ativo"}</span>`;
+    linha.insertCell(6).innerHTML = `
+      <button class="botaoAcao botaoEditar"  onclick="editarUsuario(this)">Editar</button>
+      <button class="botaoAcao botaoStatus"  onclick="mudarStatus(this)">Status</button>
+      <button class="botaoAcao botaoExcluir" onclick="excluirUsuario('${u.email}')">Excluir</button>
+    `;
+  });
+}
+
+async function atualizarCardsUsuarios() {
+  const lista = await dbSelect("usuarios");
+  let total = lista.length, ativos = 0, inativos = 0, admins = 0;
+  lista.forEach(u => {
+    if (u.status === "Ativo") ativos++; else inativos++;
+    if (u.nivel === "admin") admins++;
+  });
+  const el = (id) => document.getElementById(id);
+  if (el("totalUsuarios"))    el("totalUsuarios").innerText    = total;
+  if (el("usuariosAtivos"))   el("usuariosAtivos").innerText   = ativos;
+  if (el("usuariosInativos")) el("usuariosInativos").innerText = inativos;
+  if (el("admins"))           el("admins").innerText           = admins;
+}
+
+async function excluirUsuario(email) {
+  if (!confirm("Deseja excluir este usuário?")) return;
+  await dbDelete("usuarios", { email });
+  carregarUsuarios();
+  atualizarCardsUsuarios();
+}
+
+async function mudarStatus(btn) {
+  const linha = btn.parentElement.parentElement;
+  const email = linha.children[2].innerText;
+  const statusAtual = linha.children[5].innerText.trim();
+  const novoStatus = statusAtual === "Ativo" ? "Inativo" : "Ativo";
+  await dbUpdate("usuarios", { email }, { status: novoStatus });
+  carregarUsuarios();
+}
+
+function editarUsuario(btn) {
+  const linha = btn.parentElement.parentElement;
+  document.getElementById("nome").value  = linha.children[0].innerText;
+  document.getElementById("email").value = linha.children[2].innerText;
+  linha.remove();
+}
+
+function pesquisarUsuario() {
+  const termo = document.getElementById("pesquisaUsuario")?.value.toLowerCase().trim() || "";
+  document.querySelectorAll("#tabelaUsuarios tbody tr").forEach(l => {
+    l.style.display = l.innerText.toLowerCase().includes(termo) ? "" : "none";
+  });
+}
+
+// -------------------------------------------------------
+// RELATÓRIOS
+// -------------------------------------------------------
+async function obterRelatoriosFiltrados() {
+  const user = carregarSessao() || {};
+  const lista = await dbSelect("relatorios");
+  if (temAcessoGlobal(user)) return lista;
+  return lista.filter(r => r.escola === user.escola);
+}
+
+async function carregarRelatorios() {
+  const fw = document.getElementById("filtroEscolaWrap");
+  if (fw) fw.style.display = "none";
+  const user = carregarSessao() || {};
+  const lista = await obterRelatoriosFiltrados();
+  const tbody = document.querySelector("#tabelaRelatorios tbody");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+  lista.forEach(r => renderLinhaRelatorio(tbody, r, user));
+}
+
+async function relatorioMensal() {
+  const user = carregarSessao() || {};
+  const lista = await obterRelatoriosFiltrados();
+  const mesAtual = new Date().getMonth() + 1;
+  const tbody = document.querySelector("#tabelaRelatorios tbody");
+  tbody.innerHTML = "";
+  lista.filter(r => { const d = new Date(r.data); return (d.getMonth() + 1) === mesAtual; })
+       .forEach(r => renderLinhaRelatorio(tbody, r, user));
+}
+
+async function relatorioVitimas() {
+  const user = carregarSessao() || {};
+  const lista = await obterRelatoriosFiltrados();
+  const tbody = document.querySelector("#tabelaRelatorios tbody");
+  tbody.innerHTML = "";
+  lista.forEach(r => renderLinhaRelatorio(tbody, r, user));
+}
+
+async function relatorioEscola() {
+  const user = carregarSessao() || {};
+  const lista = await obterRelatoriosFiltrados();
+  const global = temAcessoGlobal(user);
+  const podeVerNomes = podeVerNomeEscola(user);
+
+  // Só exibe o filtro de escolas para quem pode ver os nomes
+  if (podeVerNomes) {
+    const escolas = [...new Set(lista.map(r => r.escola).filter(Boolean))].sort();
+    const wrap = document.getElementById("filtroEscolaWrap");
+    const sel  = document.getElementById("selectEscolaRelatorio");
+    if (wrap && sel) {
+      sel.innerHTML = "";
+      if (global) sel.innerHTML += `<option value="">Todas as escolas</option>`;
+      escolas.forEach(e => {
+        const opt = document.createElement("option");
+        opt.value = e;
+        opt.textContent = e;
+        if (!global && e === user.escola) opt.selected = true;
+        sel.appendChild(opt);
+      });
+      wrap.style.display = "block";
+    }
+    aplicarFiltroEscola();
+  } else {
+    // Usuários sem permissão veem apenas os seus próprios registros, sem filtro de escola
+    const tbody = document.querySelector("#tabelaRelatorios tbody");
+    tbody.innerHTML = "";
+    lista.forEach(r => renderLinhaRelatorio(tbody, r, user));
   }
+}
 
-  // VERIFICA SE EXISTE REGISTRO
-  if (relatorios.length == 0) {
-    alert("Nenhum registro encontrado");
+async function aplicarFiltroEscola() {
+  const user = carregarSessao() || {};
+  const lista = await obterRelatoriosFiltrados();
+  const sel = document.getElementById("selectEscolaRelatorio");
+  const escolhida = sel ? sel.value : "";
+  const tbody = document.querySelector("#tabelaRelatorios tbody");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+  const filtrado = escolhida ? lista.filter(r => r.escola === escolhida) : lista;
+  filtrado.forEach(r => renderLinhaRelatorio(tbody, r, user));
+
+  const res = document.getElementById("resultadoRelatorio");
+  if (res) {
+    res.innerHTML = filtrado.length > 0
+      ? `<p style="font-size:13px;color:#555;margin-bottom:8px;"><strong>${filtrado.length}</strong> registro${filtrado.length > 1 ? "s" : ""} encontrado${filtrado.length > 1 ? "s" : ""}${escolhida ? " para <em>" + escolhida + "</em>" : ""}</p>`
+      : `<p style="color:#c62828;font-size:13px;">Nenhum registro encontrado para esta escola.</p>`;
+  }
+}
+
+function renderLinhaRelatorio(tabela, r, user) {
+  const linha = tabela.insertRow();
+  const proto = String(r.protocolo || "");
+
+  linha.insertCell(0).innerHTML = proto;
+  // ── ESCOLA: restrita para quem não é Secretaria ──────────
+  linha.insertCell(1).innerHTML = exibirEscola(r.escola, user, true);
+  linha.insertCell(2).innerHTML = r.data   || "";
+  linha.insertCell(3).innerHTML = r.vitima || "";
+
+  const celTipo = linha.insertCell(4);
+  celTipo.innerHTML = renderTagsSemMotiv(r.tipo);
+
+  linha.insertCell(5).innerHTML = `<button onclick="alterarStatus('${proto}')">${r.status || "Em andamento"}</button>`;
+  linha.insertCell(6).innerHTML = `
+    <button onclick="relatorioIndividual('${proto}')">PDF</button>
+    <button onclick="deletarRegistro('${proto}')" style="background:#c62828;color:white;">Excluir</button>
+  `;
+}
+
+async function alterarStatus(protocolo) {
+  const lista = await dbSelect("relatorios", { protocolo });
+  if (!lista.length) return;
+  const r = lista[0];
+  const novoStatus = r.status === "Concluído" ? "Em andamento" : "Concluído";
+  await dbUpdate("relatorios", { protocolo }, { status: novoStatus });
+  alert("Status agora é: " + novoStatus);
+  carregarRelatorios();
+}
+
+async function deletarRegistro(protocolo) {
+  if (!confirm("Deseja realmente excluir este registro?")) return;
+  await dbDelete("relatorios", { protocolo });
+  carregarRelatorios();
+}
+
+// -------------------------------------------------------
+// CONSULTA
+// -------------------------------------------------------
+async function buscarRegistro() {
+  const termo = document.getElementById("buscaProtocolo").value.trim().toLowerCase();
+  const div   = document.getElementById("resultadoConsulta");
+  const user  = carregarSessao() || {};
+
+  if (!termo) {
+    div.innerHTML = `
+      <div class="estado-vazio-novo">
+        <div class="estado-vazio-icone-novo">🔍</div>
+        <h3>Pronto para buscar</h3>
+        <p>Digite o protocolo ou nome da vítima para localizar um registro.</p>
+      </div>`;
     return;
   }
 
-  const { jsPDF } = window.jspdf;
+  div.innerHTML = `
+    <div class="search-card-novo skeleton-novo">
+      <div class="skel-block-novo" style="width:40%;height:16px"></div>
+      <div class="skel-block-novo" style="width:100%;height:80px;margin-top:8px"></div>
+    </div>`;
 
-  let doc = new jsPDF();
+  const lista = await obterRelatoriosFiltrados();
 
-  doc.setFontSize(16);
-  doc.text("RELATÓRIO GERAL - SISTEMA PREVINE", 105, 20, null, null, "center");
+  const resultados = lista.filter(r =>
+    (r.protocolo || "").toLowerCase().includes(termo) ||
+    (r.vitima    || "").toLowerCase().includes(termo)
+  );
 
-  let y = 40;
+  if (!resultados.length) {
+    div.innerHTML = `
+      <div class="estado-erro-novo">
+        <div class="estado-erro-icone-novo">❌</div>
+        <h3>Nenhum registro encontrado</h3>
+        <p>Verifique o protocolo ou tente outro nome.</p>
+      </div>`;
+    return;
+  }
 
-  doc.setFontSize(11);
+  let html = `<p class="resultados-count-novo"><strong>${resultados.length}</strong> registro${resultados.length > 1 ? "s" : ""} encontrado${resultados.length > 1 ? "s" : ""}</p>`;
 
-  relatorios.forEach(r => {
+  resultados.forEach(r => {
+    const isOk = r.status === "Concluído";
+    const dataFmt = r.data ? r.data.split("-").reverse().join("/") : "—";
+    const idSafe = (r.protocolo || "").replace(/[^a-zA-Z0-9]/g, "_");
+    // ── ESCOLA restrita na consulta ──────────────────────────
+    const escolaExibida = exibirEscola(r.escola, user, false);
 
-    doc.text(
-      "Protocolo: " + r.protocolo +
-      " | Data: " + (r.data || "") +
-      " | Vítima: " + (r.vitima || "") +
-      " | Tipo: " + (r.tipo || ""),
-      10,
-      y
-    );
+    html += `
+    <div class="card-resultado-novo">
+      <div class="card-resultado-header">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span class="protocolo-badge-novo">${r.protocolo || ""}</span>
+          <span class="escola-info-novo">
+            <i class="fi fi-sr-school"></i> ${podeVerNomeEscola(user) ? (r.escola || "") : escolaExibida}
+          </span>
+        </div>
+        <span class="${isOk ? "status-badge-concluido" : "status-badge-andamento"}">
+          ${isOk ? "✓ Concluído" : "⏳ Em andamento"}
+        </span>
+      </div>
+      <div class="card-resultado-body">
+        <div class="card-secao">
+          <div class="card-secao-titulo">📍 Ocorrência</div>
+          <div class="campo-label-novo">Data</div>
+          <div class="campo-valor-novo destaque">${dataFmt}</div>
+          <div class="campo-label-novo">Local</div>
+          <div class="campo-valor-novo">${r.local || "—"}</div>
+        </div>
+        <div class="card-secao">
+          <div class="card-secao-titulo">👤 Vítima</div>
+          <div class="campo-label-novo">Nome</div>
+          <div class="campo-valor-novo destaque">${r.vitima || "—"}</div>
+          <div class="campo-label-novo">Idade / Sexo</div>
+          <div class="campo-valor-novo">${r.idade || "—"} anos • ${r.sexo || "—"}</div>
+          <div class="campo-label-novo">Raça / Cor</div>
+          <div class="campo-valor-novo">${r.raca || "—"}</div>
+        </div>
+        <div class="card-secao">
+          <div class="card-secao-titulo">⚠️ Tipificação</div>
+          <div id="tags_consulta_${idSafe}"></div>
+          <div style="margin-top:8px">
+            <div style="font-size:10px;font-weight:600;color:#bf360c;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Motivação</div>
+            <div id="tags_motiv_${idSafe}"></div>
+          </div>
+          <div style="margin-top:8px">
+            <div style="font-size:10px;font-weight:600;color:#6a1b9a;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Quem praticou</div>
+            <div id="tags_pratic_${idSafe}"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card-resultado-footer">
+        <button class="btn-acao-novo btn-pdf-novo" onclick="relatorioIndividual('${r.protocolo}')">
+          <i class="fi fi-sr-document"></i> Ver PDF
+        </button>
+        <button class="btn-acao-novo ${isOk ? "btn-status-ok-novo" : "btn-status-and-novo"}"
+          onclick="alterarStatusConsulta('${r.protocolo}')">
+          <i class="fi fi-sr-refresh"></i> Mudar status
+        </button>
+        <button class="btn-acao-novo btn-excluir-novo"
+          onclick="if(confirm('Excluir ${r.protocolo}?')) deletarRegistro('${r.protocolo}').then(()=>buscarRegistro())">
+          <i class="fi fi-sr-trash"></i> Excluir
+        </button>
+      </div>
+    </div>`;
+  });
 
-    y += 10;
+  div.innerHTML = html;
 
-    if (y > 270) {
-      doc.addPage();
-      y = 20;
+  const MOTIV_V  = ["Racismo","Intolerância Religiosa","Sexismo","Diversidade de gênero","Capacitismo","Outros"];
+  const PRATIC_V = ["Criança","Adolescente","Pai","Mãe","Responsável","Professor"];
+
+  resultados.forEach(r => {
+    const idSafe = (r.protocolo || "").replace(/[^a-zA-Z0-9]/g, "_");
+    const todos  = parseTipos(r.tipo);
+
+    const elTipo = document.getElementById("tags_consulta_" + idSafe);
+    if (elTipo) elTipo.innerHTML = renderTagsSemMotiv(r.tipo);
+
+    const elMotiv = document.getElementById("tags_motiv_" + idSafe);
+    if (elMotiv) {
+      const itens = todos.filter(t => MOTIV_V.includes(t));
+      elMotiv.innerHTML = itens.length
+        ? '<div class="tagsTipo">' + itens.map(t => `<span class="tagTipo motiv">🎯 ${t}</span>`).join("") + '</div>'
+        : '<span style="color:#999;font-size:12px;">Não informado</span>';
     }
 
+    const elPratic = document.getElementById("tags_pratic_" + idSafe);
+    if (elPratic) {
+      const itens = todos.filter(t => PRATIC_V.includes(t) || t.startsWith("Outros"));
+      elPratic.innerHTML = itens.length
+        ? '<div class="tagsTipo">' + itens.map(t => `<span class="tagTipo praticou">👤 ${t}</span>`).join("") + '</div>'
+        : '<span style="color:#999;font-size:12px;">Não informado</span>';
+    }
+  });
+}
+
+async function alterarStatusConsulta(protocolo) {
+  await alterarStatus(protocolo);
+  buscarRegistro();
+}
+
+// -------------------------------------------------------
+// CRIAR GRÁFICO (Chart.js)
+// -------------------------------------------------------
+const _chartInstances = {};
+
+function criarGrafico(id, config) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  if (_chartInstances[id]) { _chartInstances[id].destroy(); }
+  _chartInstances[id] = new Chart(canvas, config);
+}
+
+// -------------------------------------------------------
+// GRÁFICOS
+// -------------------------------------------------------
+async function carregarGraficos() {
+  const lista  = await obterRelatoriosFiltrados();
+  const user   = carregarSessao() || {};
+  const global = temAcessoGlobal(user);
+
+  let m=0,f=0,o=0,cr=0,ad=0,au=0,and=0,conc=0;
+  const meses=Array(12).fill(0), tipos={}, escolas={};
+
+  lista.forEach(r => {
+    r.sexo==='Masculino'?m++:r.sexo==='Feminino'?f++:o++;
+    const id=parseInt(r.idade);id<=12?cr++:id<=17?ad++:au++;
+    if(r.data){const d=new Date(r.data);meses[d.getMonth()]++;}
+    r.status==='Concluído'?conc++:and++;
+    const EXCLUIR_TIPOS = [
+      "Racismo","Intolerância Religiosa","Sexismo","Diversidade de gênero","Capacitismo","Outros",
+      "Criança","Adolescente","Pai","Mãe","Responsável","Professor"
+    ];
+    if(r.tipo) r.tipo.split(',').map(t=>t.trim()).filter(Boolean)
+      .filter(t => !EXCLUIR_TIPOS.includes(t) && !t.startsWith("Outros:"))
+      .forEach(t=>{tipos[t]=(tipos[t]||0)+1;});
+    if(global&&r.escola) escolas[r.escola]=(escolas[r.escola]||0)+1;
   });
 
-  doc.save("Relatorio_Geral_PREVINE.pdf");
+  const tot=lista.length, taxa=tot>0?Math.round(conc/tot*100):0;
+  document.getElementById('totalRegistros').innerText  = tot;
+  document.getElementById('casosAndamento').innerText  = and;
+  document.getElementById('casosConcluidos').innerText = conc;
+  const txEl=document.getElementById('taxaConclusao');
+  if(txEl) txEl.innerText = taxa+'%';
 
+  function leg(id,labels,cores){
+    const el=document.getElementById(id); if(!el) return;
+    el.innerHTML=labels.map((l,i)=>
+      `<span><b style="background:${cores[i]}"></b>${l}</span>`
+    ).join('');
+  }
+
+  const tf={size:11}, gc='rgba(0,0,0,0.04)';
+
+  criarGrafico('graficoMes',{type:'line',data:{
+    labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+    datasets:[{data:meses,borderColor:'#639922',backgroundColor:'rgba(99,153,34,.07)',
+      tension:.4,fill:true,pointBackgroundColor:'#639922',pointRadius:4,pointHoverRadius:6,borderWidth:2}]
+  },options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{x:{grid:{color:gc},ticks:{font:tf}},y:{beginAtZero:true,grid:{color:gc},ticks:{stepSize:1,font:tf}}}}});
+
+  const cSex=['#378ADD','#D4537E','#B4B2A9'];
+  leg('legSexo',[`Masculino — ${m}`,`Feminino — ${f}`,`Não informou — ${o}`],cSex);
+  criarGrafico('graficoSexo',{type:'doughnut',data:{
+    labels:['Masculino','Feminino','Não informou'],
+    datasets:[{data:[m,f,o],backgroundColor:cSex,borderWidth:3,borderColor:'#fff'}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'65%'}});
+
+  const cId=['#639922','#EF9F27','#E24B4A'];
+  leg('legIdade',[`Crianças ≤12 — ${cr}`,`Adolescentes — ${ad}`,`Adultos — ${au}`],cId);
+  criarGrafico('graficoIdade',{type:'bar',data:{
+    labels:['Crianças','Adolescentes','Adultos'],
+    datasets:[{data:[cr,ad,au],backgroundColor:cId,borderRadius:6,borderWidth:0}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+    scales:{y:{beginAtZero:true,grid:{color:gc},ticks:{stepSize:1,font:tf}},x:{grid:{display:false},ticks:{font:tf}}}}});
+
+  const cSt=['#EF9F27','#639922'];
+  leg('legStatus',[`Em andamento — ${and}`,`Concluído — ${conc}`],cSt);
+  criarGrafico('graficoStatus',{type:'doughnut',data:{
+    labels:['Em andamento','Concluído'],
+    datasets:[{data:[and,conc],backgroundColor:cSt,borderWidth:3,borderColor:'#fff'}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'65%'}});
+
+  const tOrd=Object.entries(tipos).sort((a,b)=>b[1]-a[1]).slice(0,7);
+  criarGrafico('graficoTipos',{type:'bar',data:{
+    labels:tOrd.map(([k])=>k.length>20?k.slice(0,18)+'…':k),
+    datasets:[{data:tOrd.map(([,v])=>v),backgroundColor:'#97C459',borderRadius:6,borderWidth:0}]
+  },options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+    scales:{x:{beginAtZero:true,grid:{color:gc},ticks:{stepSize:1,font:tf}},y:{grid:{display:false},ticks:{font:tf}}}}});
+
+  const secEsc=document.getElementById('secaoEscolas');
+  const podeVerEscolas = podeVerNomeEscola(user);
+  if(podeVerEscolas && secEsc){
+    secEsc.style.display='block';
+    const eOrd=Object.entries(escolas).sort((a,b)=>b[1]-a[1]).slice(0,15);
+    const eL=eOrd.map(([k])=>k.length>38?k.slice(0,36)+'…':k);
+    const eD=eOrd.map(([,v])=>v);
+    const w=document.getElementById('wrapEscolas');
+    if(w) w.style.height=Math.max(300,eOrd.length*44+60)+'px';
+    const cEsc=['#27500a','#3B6D11','#639922','#97C459','#C0DD97','#185FA5','#378ADD',
+      '#85B7EB','#993556','#D4537E','#854F0B','#EF9F27','#534AB7','#7F77DD','#888780'];
+    leg('legEscolas',eL,cEsc.slice(0,eL.length));
+    criarGrafico('graficoEscolas',{type:'bar',data:{
+      labels:eL,
+      datasets:[{data:eD,backgroundColor:cEsc.slice(0,eD.length),borderRadius:6,borderWidth:0}]
+    },options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{beginAtZero:true,grid:{color:gc},ticks:{stepSize:1,font:tf}},
+        y:{grid:{display:false},ticks:{font:{size:10}}}}}});
+  } else if(secEsc){
+    secEsc.style.display='none';
+  }
 }
-        function relatorioMensal() {
-          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-          let tabela = document.querySelector("#tabelaRelatorios tbody");
-          let mesAtual = new Date().getMonth() + 1;
 
-          tabela.innerHTML = "";
-          relatorios.forEach(r => {
-            let data = new Date(r.data);
-            if ((data.getMonth() + 1) === mesAtual) {
-              renderLinhaRelatorio(tabela, r);
-            }
-          });
-        }
-        function relatorioVitimas() {
-          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-          let tabela = document.querySelector("#tabelaRelatorios tbody");
-
-          tabela.innerHTML = "";
-          relatorios.forEach(r => renderLinhaRelatorio(tabela, r));
-        }
-        function relatorioTipos() {
-          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-          let tabela = document.querySelector("#tabelaRelatorios tbody");
-
-          tabela.innerHTML = "";
-          relatorios.forEach(r => renderLinhaRelatorio(tabela, r));
-        }
-
-        function relatorioIndividual(protocolo) {
-
-          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-          let r = relatorios.find(x => x.protocolo == protocolo);
-
-          if (!r) {
-            alert("Registro não encontrado");
-            return;
-          }
-
-          const { jsPDF } = window.jspdf;
-          let doc = new jsPDF();
-
-          let y = 20;
-
-          let logo = new Image();
-          logo.src = "prefeitura.png";
-
-          logo.onload = function () {
-
-            /* ===== LOGO MAIOR ===== */
-            doc.addImage(logo, "PNG", 1, 2, 75, 40);
-
-            /* ===== CABEÇALHO ===== */
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(16);
-            doc.text("PREFEITURA MUNICIPAL", 105, 18, null, null, "center");
-
-            doc.setFontSize(12);
-            doc.text("SISTEMA DE NOTIFICAÇÃO PREVINE", 105, 26, null, null, "center");
-
-            doc.setFontSize(10);
-            doc.setFont("helvetica", "normal");
-            doc.text("RELATÓRIO INDIVIDUAL DE OCORRÊNCIA", 105, 34, null, null, "center");
-
-            /* ===== LINHA VERDE ===== */
-            doc.setDrawColor(46, 125, 50);
-            doc.setLineWidth(0.2);
-            doc.line(10, 42, 200, 42);
-
-            y = 52;
-
-            /* ===== DADOS ===== */
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(11);
-            doc.text("DADOS DA OCORRÊNCIA", 105, y, null, null, "center");
-
-            y += 6;
-
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(10);
-
-            doc.setDrawColor(46, 125, 50);
-
-            doc.rect(10, y, 190, 8);
-            doc.text("Protocolo: " + (r.protocolo || ""), 12, y + 6);
-
-            y += 10;
-
-            doc.rect(10, y, 190, 8);
-            doc.text("Data: " + (r.data || ""), 12, y + 6);
-
-            y += 14;
-
-            /* ===== VÍTIMA ===== */
-            doc.setFont("helvetica", "bold");
-            doc.text("DADOS DA VÍTIMA", 105, y, null, null, "center");
-
-            y += 6;
-
-            doc.setFont("helvetica", "normal");
-
-            doc.setDrawColor(46, 125, 50);
-
-            doc.rect(10, y, 95, 8);
-            doc.rect(105, y, 95, 8);
-            doc.text("Nome: " + (r.vitima || ""), 12, y + 6);
-            doc.text("Idade: " + (r.idade || ""), 107, y + 6);
-
-            y += 10;
-
-            doc.rect(10, y, 95, 8);
-            doc.rect(105, y, 95, 8);
-            doc.text("Sexo: " + (r.sexo || ""), 12, y + 6);
-            doc.text("CPF: " + (r.cpf || ""), 107, y + 6);
-
-            y += 14;
-
-            /* ===== LOCAL ===== */
-            doc.setFont("helvetica", "bold");
-            doc.text("LOCAL DA OCORRÊNCIA", 105, y, null, null, "center");
-
-            y += 6;
-
-            doc.setFont("helvetica", "normal");
-
-            doc.setDrawColor(46, 125, 50);
-
-            doc.rect(10, y, 95, 8);
-            doc.rect(105, y, 95, 8);
-            doc.text("Município: " + (r.municipio || ""), 12, y + 6);
-            doc.text("Estado: " + (r.estado || ""), 107, y + 6);
-
-            y += 14;
-
-            /* ===== TIPOS ===== */
-            doc.setFont("helvetica", "bold");
-            doc.text("TIPIFICAÇÃO DA VIOLÊNCIA", 105, y, null, null, "center");
-
-            y += 6;
-
-            doc.setFont("helvetica", "normal");
-
-            let tipos = doc.splitTextToSize(r.tipo || "Não informado", 180);
-
-            doc.setDrawColor(46, 125, 50);
-            doc.rect(10, y, 190, 18);
-            doc.text(tipos, 12, y + 6);
-
-            y += 22;
-
-            /* ===== RESUMO ===== */
-            doc.setFont("helvetica", "bold");
-            doc.text("RESUMO DA OCORRÊNCIA", 105, y, null, null, "center");
-
-            y += 6;
-
-            doc.setFont("helvetica", "normal");
-
-            let resumo = doc.splitTextToSize(r.resumo || "Sem resumo", 180);
-
-            doc.setDrawColor(46, 125, 50);
-            doc.rect(10, y, 190, 40);
-            doc.text(resumo, 12, y + 6);
-
-            y += 46;
-
-            /* ===== ENCAMINHAMENTO ===== */
-            doc.setFont("helvetica", "bold");
-            doc.text("ENCAMINHAMENTO", 105, y, null, null, "center");
-
-            y += 6;
-
-            doc.setFont("helvetica", "normal");
-
-            let enc = doc.splitTextToSize(r.encaminhamento || "Sem encaminhamento", 180);
-
-            doc.setDrawColor(46, 125, 50);
-            doc.rect(10, y, 190, 35);
-            doc.text(enc, 12, y + 6);
-
-            /* ===== RODAPÉ ===== */
-            doc.setFontSize(8);
-            doc.setTextColor(0);
-            doc.text("Sistema PREVINE • Documento oficial gerado automaticamente", 105, 285, null, null, "center");
-
-            doc.save("PREVINE_" + r.protocolo + ".pdf");
-
-          };
-
-        }
-        function renderLinhaRelatorio(tabela, r) {
-
-  let linha = tabela.insertRow();
-
-  let protocolo =
-    String(r.protocolo || "");
-
-  linha.insertCell(0).innerHTML =
-    protocolo;
-
-  linha.insertCell(1).innerHTML =
-    r.escola || "";
-
-  linha.insertCell(2).innerHTML =
-    r.data || "";
-
-  linha.insertCell(3).innerHTML =
-    r.vitima || "";
-
-  linha.insertCell(4).innerHTML =
-    r.tipo || "";
-
-  linha.insertCell(5).innerHTML =
-    `<button onclick="alterarStatus('${protocolo}')">
-      ${r.status || "Em andamento"}
-    </button>`;
-
-  linha.insertCell(6).innerHTML = `
-    <button onclick="relatorioIndividual('${protocolo}')">
-      PDF
-    </button>
-
-    <button
-      onclick="deletarRegistro('${protocolo}')"
-      style="background:#c62828;color:white;"
-    >
-      Excluir
-    </button>
-  `;
-
-}
-        function carregarRelatorios() {
-          relatorioGeral();
-        }
-        function exportarTodosPDF() {
-
-          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-
-          if (relatorios.length === 0) {
-            alert("Nenhum registro encontrado!");
-            return;
-          }
-
-          const { jsPDF } = window.jspdf;
-
-          let doc = new jsPDF();
-
-          let y = 20;
-
-          /* TITULO */
-
-          doc.setFont("helvetica", "bold");
-          doc.setFontSize(18);
-          doc.text("RELATÓRIO GERAL", 105, 20, null, null, "center");
-
-          doc.setFontSize(12);
-          doc.text("Sistema de Notificação PREVINE", 105, 28, null, null, "center");
-
-          /* LINHA */
-
-          doc.setDrawColor(46, 125, 50);
-          doc.line(10, 32, 200, 32);
-
-          y = 45;
-
-          /* DATA */
-
-          doc.setFontSize(10);
-          doc.text("Data de geração: " + new Date().toLocaleDateString(), 10, y);
-
-          y += 15;
-
-          /* CABEÇALHO */
-
-          doc.setFont("helvetica", "bold");
-
-          doc.text("PROTOCOLO", 10, y);
-          doc.text("DATA", 40, y);
-          doc.text("VÍTIMA", 70, y);
-          doc.text("TIPO", 140, y);
-
-          y += 5;
-
-          doc.line(10, y, 200, y);
-
-          y += 8;
-
-          /* REGISTROS */
-
-          doc.setFont("helvetica", "normal");
-
-          relatorios.forEach(r => {
-
-            if (y > 270) {
-              doc.addPage();
-              y = 20;
-            }
-
-            doc.text(String(r.protocolo || ""), 10, y);
-            doc.text(String(r.data || ""), 40, y);
-            doc.text(String(r.vitima || ""), 70, y);
-            doc.text(String(r.tipo || ""), 140, y);
-
-            y += 8;
-
-          });
-
-          /* RODAPÉ */
-
-          doc.setFontSize(9);
-          doc.text("Sistema PREVINE • Relatório automático", 105, 290, null, null, "center");
-
-          doc.save("Relatorio_Geral_PREVINE.pdf");
-
-        } function deletarRegistro(protocolo) {
-
-          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-
-          if (!confirm("Deseja realmente excluir este registro?")) {
-            return;
-          }
-
-          relatorios = relatorios.filter(r => r.protocolo != protocolo);
-
-          localStorage.setItem("relatorios", JSON.stringify(relatorios));
-
-          carregarRelatorios();
-
-        }
-
-        function alterarStatus(protocolo) {
-
-          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-
-          let r = relatorios.find(x => x.protocolo == protocolo);
-
-          if (!r) return;
-
-          if (!r.status) {
-            r.status = "Em andamento";
-          }
-
-          if (r.status == "Em andamento") {
-            r.status = "Concluído";
-          } else {
-            r.status = "Em andamento";
-          }
-
-          localStorage.setItem("relatorios", JSON.stringify(relatorios));
-
-          alert("Status agora é: " + r.status);
-
-          carregarRelatorios();
-
-        }
-        function excluirUsuario(email) {
-
-          if (!confirm("Deseja excluir este usuário?")) return
-
-          let usuarios = JSON.parse(localStorage.getItem("usuarios")) || []
-
-          usuarios = usuarios.filter(u => u.email !== email)
-
-          localStorage.setItem("usuarios", JSON.stringify(usuarios))
-
-          carregarUsuarios()
-          atualizarCardsUsuarios();
-          carregarHistorico();
-        } function mudarStatus(btn) {
-
-          let linha = btn.parentElement.parentElement
-          let email = linha.children[2].innerText
-          let statusCell = linha.children[5]
-
-          let usuarios = JSON.parse(localStorage.getItem("usuarios")) || []
-
-          usuarios = usuarios.map(u => {
-            if (u.email === email) {
-              u.status = (u.status === "Ativo") ? "Inativo" : "Ativo"
-            }
-            return u
-          })
-
-          localStorage.setItem("usuarios", JSON.stringify(usuarios))
-
-          carregarUsuarios() // PARA PODER RECARREGAR A TABELA BONEQUINHA
-        }
-
-        function editarUsuario(btn) {
-
-          let linha = btn.parentElement.parentElement
-
-          document.getElementById("nome").value = linha.children[0].innerText
-          document.getElementById("cpf").value = linha.children[1].innerText
-          document.getElementById("email").value = linha.children[2].innerText  
-
-          linha.remove()
-
-        }
-        function criarGrafico(id, config) {
-          let canvas = document.getElementById(id)
-
-          if (!canvas) return
-
-          if (canvas.chart) {
-            canvas.chart.destroy()
-          }
-
-          canvas.chart = new Chart(canvas, config)
-
-        }
-        function carregarUsuarios() {
-
-  let usuarios =
-    JSON.parse(localStorage.getItem("usuarios")) || [];
-
-  let tbody =
-    document.querySelector("#tabelaUsuarios tbody");
-
-  if (!tbody) return;
-
-  tbody.innerHTML = "";
-
-  usuarios.forEach(u => {
-
-    let linha = tbody.insertRow();
-
-    linha.insertCell(0).innerText = u.nome || "";
-    linha.insertCell(1).innerText = u.escola || "";
-    linha.insertCell(2).innerText = u.email || "";
-    linha.insertCell(3).innerText = u.senha || "";
-    linha.insertCell(4).innerText = u.nivel || "";
-
-    linha.insertCell(5).innerHTML =
-      `<span class="${
-        u.status === "Ativo"
-          ? "statusAtivo"
-          : "statusInativo"
-      }">
-        ${u.status || "Ativo"}
-      </span>`;
-
-    linha.insertCell(6).innerHTML = `
-      <button class="botaoAcao botaoEditar"
-        onclick="editarUsuario(this)">
-        Editar
-      </button>
-
-      <button class="botaoAcao botaoStatus"
-        onclick="mudarStatus(this)">
-        Status
-      </button>
-
-      <button class="botaoAcao botaoExcluir"
-        onclick="excluirUsuario('${u.email}')">
-        Excluir
-      </button>
-    `;
-
+// -------------------------------------------------------
+// NOTIFICAÇÕES
+// -------------------------------------------------------
+async function adicionarNotificacao(texto, escola) {
+  await dbInsert("notificacoes", {
+    texto, escola: escola || "Não informada",
+    data: new Date().toLocaleString(),
+    lida: false
   });
-
-}
-        function pesquisarUsuario() {
-          let termo = document.getElementById("pesquisaUsuario")?.value.toLowerCase().trim() || "";
-          let linhas = document.querySelectorAll("#tabelaUsuarios tbody tr");
-          linhas.forEach(linha => {
-            linha.style.display = linha.innerText.toLowerCase().includes(termo) ? "" : "none";
-          });
-        }
-        function carregarGraficos() {
-
-          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-
-          /* ===== CONTADORES ===== */
-
-          let masculino = 0;
-          let feminino = 0;
-          let outros = 0;
-
-          let crianca = 0;
-          let adolescente = 0;
-          let adulto = 0;
-
-          let meses = Array(12).fill(0);
-
-          let andamento = 0;
-          let concluido = 0;
-
-          /* ===== PROCESSAMENTO ===== */
-
-          relatorios.forEach(r => {
-
-            // SEXO
-            if (r.sexo === "Masculino") masculino++;
-            else if (r.sexo === "Feminino") feminino++;
-            else outros++;
-
-            // IDADE
-            let idade = parseInt(r.idade);
-            if (idade <= 12) crianca++;
-            else if (idade <= 17) adolescente++;
-            else adulto++;
-
-            // MÊS
-            if (r.data) {
-              let data = new Date(r.data);
-              let mes = data.getMonth();
-              meses[mes]++;
-            }
-
-            // STATUS
-            if (r.status === "Concluído") concluido++;
-            else andamento++;
-
-          });
-
-          /* ===== CARDS ===== */
-
-          document.getElementById("totalRegistros").innerText = relatorios.length;
-          document.getElementById("casosAndamento").innerText = andamento;
-          document.getElementById("casosConcluidos").innerText = concluido;
-
-          /* ===== GRÁFICO MÊS ===== */
-
-          criarGrafico("graficoMes", {
-            type: "line",
-            data: {
-              labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
-              datasets: [{
-                label: "Notificações",
-                data: meses,
-                borderColor: "#2e7d32",
-                backgroundColor: "rgba(46,125,50,0.1)",
-                tension: 0.4,
-                fill: true
-              }]
-            },
-            options: {
-              plugins: {
-                legend: { display: false }
-              }
-            }
-          });
-
-          /* ===== SEXO ===== */
-
-          criarGrafico("graficoSexo", {
-            type: "doughnut",
-            data: {
-              labels: ["Masculino", "Feminino", "Outros"],
-              datasets: [{
-                data: [masculino, feminino, outros],
-                backgroundColor: ["#42a5f5", "#ec407a", "#9e9e9e"]
-              }]
-            },
-            options: {
-              plugins: {
-                legend: { position: "bottom" }
-              },
-              cutout: "60%"
-            }
-          });
-
-          /* ===== IDADE ===== */
-
-          criarGrafico("graficoIdade", {
-            type: "bar",
-            data: {
-              labels: ["Crianças", "Adolescentes", "Adultos"],
-              datasets: [{
-                data: [crianca, adolescente, adulto],
-                backgroundColor: ["#66bb6a", "#ffa726", "#ef5350"]
-              }]
-            },
-            options: {
-              plugins: { legend: { display: false } },
-              scales: { y: { beginAtZero: true } }
-            }
-          });
-
-          /* ===== STATUS ===== */
-
-          criarGrafico("graficoStatus", {
-            type: "doughnut",
-            data: {
-              labels: ["Em andamento", "Concluído"],
-              datasets: [{
-                data: [andamento, concluido],
-                backgroundColor: ["#ffa726", "#66bb6a"]
-              }]
-            },
-            options: {
-              plugins: {
-                legend: { position: "bottom" }
-              },
-              cutout: "60%"
-            }
-          });
-
-        }
-        carregarUsuarios()
-        function toggleMenuUsuario() {
-          let menu = document.getElementById("dropdownUsuario")
-          menu.style.display = menu.style.display === "block" ? "none" : "block"
-        }
-
-        /* FECHAR AO CLICAR FORA */
-
-        window.addEventListener("click", function (e) {
-          let menu = document.getElementById("dropdownUsuario")
-          let usuario = document.querySelector(".usuarioMenu")
-
-          if (!usuario.contains(e.target)) {
-            menu.style.display = "none"
-          }
-        })
-
-        function abrirPerfil() {
-
-          let user = JSON.parse(localStorage.getItem("usuarioLogado"))
-
-          document.getElementById("perfilNome").value = user.nome
-          document.getElementById("perfilEmail").value = user.email
-          document.getElementById("perfilCpf").value = user.cpf || ""
-          document.getElementById("perfilNivel").value = user.nivel
-
-          document.getElementById("perfilModal").style.display = "flex"
-        }
-        function fecharPerfil() {
-          document.getElementById("perfilModal").style.display = "none"
-        }
-        function salvarSenha() {
-
-          let atual = document.getElementById("senhaAtual").value
-          let nova = document.getElementById("novaSenha").value
-          let confirmar = document.getElementById("confirmarSenha").value
-
-          let usuarios = JSON.parse(localStorage.getItem("usuarios")) || []
-          let user = JSON.parse(localStorage.getItem("usuarioLogado"))
-
-          if (atual !== user.senha) {
-            alert("Senha atual incorreta!")
-            return
-          }
-
-          if (nova !== confirmar) {
-            alert("As senhas não coincidem!")
-            return
-          }
-
-          usuarios = usuarios.map(u => {
-            if (u.email === user.email) {
-              u.senha = nova
-            }
-            return u
-          })
-
-          localStorage.setItem("usuarios", JSON.stringify(usuarios))
-
-          user.senha = nova
-          localStorage.setItem("usuarioLogado", JSON.stringify(user))
-
-          alert("Senha alterada com sucesso!")
-
-          fecharSenha()
-        }
-        function adicionarNotificacao(texto, escola) {
-
-  let notificacoes =
-    JSON.parse(localStorage.getItem("notificacoes")) || [];
-
-  notificacoes.unshift({
-
-    texto: texto,
-
-    escola: escola || "Não informada",
-
-    data: new Date().toLocaleString()
-
-  });
-
-  localStorage.setItem(
-    "notificacoes",
-    JSON.stringify(notificacoes)
-  );
-
   atualizarBadge();
-
 }
-        function atualizarBadge() {
 
-          let notificacoes = JSON.parse(localStorage.getItem("notificacoes")) || []
+async function atualizarBadge() {
+  const user = carregarSessao() || {};
+  let lista = await dbSelect("notificacoes");
+  if (!temAcessoGlobal(user)) {
+    lista = lista.filter(n => n.escola === user.escola);
+  }
+  const naoLidas = lista.filter(n => !n.lida).length;
+  const badge = document.getElementById("badgeNotif");
+  badge.innerText = naoLidas;
+  badge.style.display = naoLidas > 0 ? "flex" : "none";
+}
 
-          document.getElementById("badgeNotif").innerText = notificacoes.length
-
-        }
-        function verNotificacoes() {
-
-  let lista =
-    document.getElementById("listaNotificacoes");
-
-  if (lista.style.display === "block") {
-
-    lista.style.display = "none";
-    return;
-
+async function verNotificacoes() {
+  const lista_el = document.getElementById("listaNotificacoes");
+  if (lista_el.style.display === "block") { lista_el.style.display = "none"; return; }
+  const user = carregarSessao() || {};
+  let lista = await dbSelect("notificacoes");
+  if (!temAcessoGlobal(user)) {
+    lista = lista.filter(n => n.escola === user.escola);
   }
 
-  let notificacoes =
-    JSON.parse(localStorage.getItem("notificacoes")) || [];
-
-  let usuario =
-    JSON.parse(localStorage.getItem("usuarioLogado")) || {};
-
-  lista.innerHTML = "";
-
-  // FILTRO POR ESCOLA
-  if (usuario.nivel !== "admin") {
-
-    notificacoes = notificacoes.filter(
-      n => n.escola === usuario.escola
-    );
-
-  }
-
-  if (notificacoes.length === 0) {
-
-    lista.innerHTML =
-      "<p>Nenhuma notificação</p>";
-
+  lista_el.innerHTML = "";
+  if (lista.length === 0) {
+    lista_el.innerHTML = "<p style='padding:8px;color:#888;font-size:13px'>Nenhuma notificação</p>";
   } else {
-
-    notificacoes.forEach(n => {
-
-      lista.innerHTML += `
-
-<div style="
-border-bottom:1px solid #eee;
-padding:10px;
-margin-bottom:6px;
-">
-
-<strong>${n.texto}</strong><br>
-
-<small>
-🏫 Escola: ${n.escola}
-</small>
-
-<br>
-
-<small>
-🕒 ${n.data}
-</small>
-
-</div>
-
-`;
-
+    const naoLidas = lista.filter(n => !n.lida).length;
+    lista_el.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px 6px;border-bottom:1px solid #eee;">
+        <strong style="font-size:13px">Notificações</strong>
+        ${naoLidas > 0 ? `<button onclick="marcarTodasLidas()" style="font-size:11px;padding:3px 8px;border:1px solid #ccc;border-radius:6px;background:#f5f5f5;cursor:pointer;color:#555">Marcar todas como lidas</button>` : ''}
+      </div>`;
+    lista.forEach(n => {
+      const escolaNotif = podeVerNomeEscola(user) ? n.escola : "🔒 Restrito";
+      lista_el.innerHTML += `
+        <div style="border-bottom:1px solid #eee;padding:10px;background:${n.lida ? '#fff' : '#f0f7e6'};display:flex;flex-direction:column;gap:4px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+            <strong style="font-size:13px;flex:1">${n.texto}</strong>
+            ${!n.lida ? `<button onclick="marcarLida(${n.id})" title="Marcar como lida"
+              style="flex-shrink:0;padding:2px 7px;border:1px solid #639922;border-radius:6px;background:transparent;color:#639922;font-size:11px;cursor:pointer;white-space:nowrap">✓ Lida</button>` : '<span style="font-size:11px;color:#aaa">✓ Lida</span>'}
+          </div>
+          <small style="color:#888">🏫 ${escolaNotif}</small>
+          <small style="color:#aaa">🕒 ${n.data}</small>
+        </div>`;
     });
-
   }
-
-  lista.style.display = "block";
-
+  lista_el.style.display = "block";
 }
-        function salvarPerfil() {
-
-          let usuarios = JSON.parse(localStorage.getItem("usuarios")) || []
-          let user = JSON.parse(localStorage.getItem("usuarioLogado"))
-
-          let novoNome = document.getElementById("perfilNome").value
-          let novoCpf = document.getElementById("perfilCpf").value
-
-          usuarios = usuarios.map(u => {
-            if (u.email === user.email) {
-              u.nome = novoNome
-              u.cpf = novoCpf
-            }
-            return u
-          })
-
-          localStorage.setItem("usuarios", JSON.stringify(usuarios))
-
-          user.nome = novoNome
-          user.cpf = novoCpf
-
-          localStorage.setItem("usuarioLogado", JSON.stringify(user))
-
-          alert("Perfil atualizado!")
-
-          fecharPerfil()
-        }
-        function alterarSenha() {
-
-          document.getElementById("senhaModal").style.display = "flex"
-
-        }
-        function fecharSenha() {
-          document.getElementById("senhaModal").style.display = "none"
-        }
-        function atualizarBotaoFlutuante() {
-          let botao = document.querySelector(".botaoFlutuante");
-          if (!botao) return;
-
-          let painelVisivel = document.getElementById("painel")?.style.display === "block";
-          let logado = !!JSON.parse(localStorage.getItem("usuarioLogado") || "null");
-          botao.style.display = painelVisivel && logado ? "flex" : "none";
-        }
-        function abrirNovoRegistroAtalho() {
-          abrirAba("registros");
-          etapaAtual = 0;
-          mostrarEtapa();
-          window.scrollTo({ top: 0, behavior: "smooth" });
-          atualizarBotaoFlutuante();
-        }
-
-        function abrirRegistroPublico() {
-
-          document.getElementById("inicio").style.display = "none"
-          document.getElementById("painel").style.display = "block"
-          document.getElementById("painel").classList.add("modoPublicoRegistro")
-
-          // esconder tudo de admin
-          let sidebar = document.querySelector(".sidebar")
-          if (sidebar) sidebar.style.display = "none"
-
-          let topo = document.querySelector(".topoAdmin")
-          if (topo) topo.style.display = "none"
-
-          let usuarioMenu = document.querySelector(".usuarioMenu")
-          if (usuarioMenu) usuarioMenu.style.display = "none"
-
-          let dropdown = document.getElementById("dropdownUsuario")
-          if (dropdown) dropdown.style.display = "none"
-
-          // mostrar registro
-          abrirAba("registros")
-          atualizarBotaoFlutuante()
-
-          // melhorar layout no PC
-          if (window.innerWidth > 768) {
-            document.getElementById("registros").scrollIntoView({ behavior: "smooth" })
-          }
-
-          limparFormulario()
-
-          etapaAtual = 0
-          mostrarEtapa()
-
-        }
-        function limparFormulario() {
-
-          document.querySelectorAll("#registros input, #registros textarea, #registros select")
-            .forEach(el => {
-              el.value = ""
-            })
-
-          // limpar radios e checkboxes
-          document.querySelectorAll("#registros input[type='radio'], #registros input[type='checkbox']")
-            .forEach(el => el.checked = false)
-
-        }
-        limparFormulario()
-        etapaAtual = 0
-        mostrarEtapa()
-        window.addEventListener("resize", atualizarBotaoFlutuante)
-        window.addEventListener("load", atualizarBotaoFlutuante)
-
-        function buscarRegistro() {
-
-          let termo = document.getElementById("buscaProtocolo").value.trim().toLowerCase();
-          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-
-          let resultados = relatorios.filter(r =>
-            (r.protocolo || "").toLowerCase().includes(termo) ||
-            (r.vitima || "").toLowerCase().includes(termo)
-          );
-
-          let div = document.getElementById("resultadoConsulta");
-
-          if (resultados.length === 0) {
-            div.innerHTML = "<div class='erroConsulta'>❌ Nenhum registro encontrado.</div>";
-            return;
-          }
-
-          /* salvar histórico */
-          let historico = JSON.parse(localStorage.getItem("historicoBusca")) || [];
-          historico.unshift(termo);
-          historico = [...new Set(historico)].slice(0, 5);
-          localStorage.setItem("historicoBusca", JSON.stringify(historico));
-
-          div.innerHTML = "";
-
-          resultados.forEach(resultado => {
-
-            div.innerHTML += `
-<div class="cardResultado">
-
-<h3>📄 ${resultado.protocolo}</h3>
-
-<div class="secaoConsulta">
-<h4>📍 Ocorrência</h4>
-<p><strong>Data:</strong> ${resultado.data}</p>
-<p><strong>Local:</strong> ${resultado.local}</p>
-<p><strong>Município:</strong> ${resultado.municipio}</p>
-</div>
-
-<div class="secaoConsulta">
-<h4>👤 Vítima</h4>
-<p><strong>Nome:</strong> ${resultado.vitima}</p>
-<p><strong>Idade:</strong> ${resultado.idade}</p>
-<p><strong>Sexo:</strong> ${resultado.sexo}</p>
-</div>
-
-<div class="secaoConsulta">
-<h4>⚠️ Tipo</h4>
-<p>${resultado.tipo}</p>
-</div>
-
-<div class="secaoConsulta">
-<h4>📊 Status</h4>
-<p><strong>${resultado.status}</strong></p>
-</div>
-
-<div class="acoesConsulta">
-<button onclick="relatorioIndividual('${resultado.protocolo}')">📄 PDF</button>
-<button onclick="alterarStatusConsulta('${resultado.protocolo}')">🔄 Status</button>
-</div>
-
-</div>
-`;
-          });
-if (subtitulo) {
-  subtitulo.innerText =
-    user.nivel + " • " + (user.escola || "Sem escola");
+// -------------------------------------------------------
+// PERFIL / SENHA
+// -------------------------------------------------------
+function toggleMenuUsuario() {
+  const menu = document.getElementById("dropdownUsuario");
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
 }
-          carregarHistorico();
-        }
-        function alterarStatusConsulta(protocolo) {
 
-          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
+window.addEventListener("click", function(e) {
+  const menu = document.getElementById("dropdownUsuario");
+  const usuario = document.querySelector(".usuarioMenu");
+  if (usuario && !usuario.contains(e.target)) menu.style.display = "none";
+});
 
-          let r = relatorios.find(x => x.protocolo == protocolo);
-
-          if (!r) return;
-
-          r.status = (r.status === "Concluído") ? "Em andamento" : "Concluído";
-
-          localStorage.setItem("relatorios", JSON.stringify(relatorios));
-
-          alert("Status atualizado para: " + r.status);
-
-          buscarRegistro(); // atualiza tela
-        }
-        function carregarHistorico() {
-
-          let historico = JSON.parse(localStorage.getItem("historicoBusca")) || [];
-          let div = document.getElementById("historicoBusca");
-
-          if (!div) return;
-
-          if (historico.length === 0) {
-            div.innerHTML = "";
-            return;
-          }
-
-          div.innerHTML = "<h4>🕘 Buscas recentes:</h4>";
-
-          historico.forEach(item => {
-            div.innerHTML += `<span onclick="usarHistorico('${item}')">${item}</span>`;
-          });
-        }
-
-        function usarHistorico(valor) {
-          document.getElementById("buscaProtocolo").value = valor;
-          buscarRegistro();
-        }
-        function buscarTempoReal() {
-
-          let termo = document.getElementById("buscaProtocolo").value.toLowerCase();
-          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-
-          let sugestoesDiv = document.getElementById("sugestoes");
-
-          if (termo.length < 2) {
-            sugestoesDiv.innerHTML = "";
-            return;
-          }
-
-          let sugestoes = relatorios.filter(r =>
-            r.protocolo.toLowerCase().includes(termo) ||
-            r.vitima.toLowerCase().includes(termo)
-          ).slice(0, 5);
-
-          sugestoesDiv.innerHTML = "";
-
-          sugestoes.forEach(s => {
-            sugestoesDiv.innerHTML += `
-<div onclick="selecionarSugestao('${s.protocolo}')">
-${s.protocolo} - ${s.vitima}
-</div>
-`;
-          });
-        }
-        function selecionarSugestao(valor) {
-          document.getElementById("buscaProtocolo").value = valor;
-          document.getElementById("sugestoes").innerHTML = "";
-          buscarRegistroAvancado();
-        }
-        function buscarRegistroAvancado() {
-
-          let termo = document.getElementById("buscaProtocolo").value.toLowerCase();
-          let dataFiltro = document.getElementById("filtroData").value;
-          let statusFiltro = document.getElementById("filtroStatus").value;
-
-          let relatorios = JSON.parse(localStorage.getItem("relatorios")) || [];
-
-          let resultados = relatorios.filter(r => {
-
-            let matchTexto =
-              r.protocolo.toLowerCase().includes(termo) ||
-              r.vitima.toLowerCase().includes(termo);
-
-            let matchData = !dataFiltro || r.data === dataFiltro;
-
-            let matchStatus = !statusFiltro || r.status === statusFiltro;
-
-            return matchTexto && matchData && matchStatus;
-
-          });
-
-          let div = document.getElementById("resultadoConsulta");
-          let contador = document.getElementById("contadorResultados");
-
-          contador.innerText = `📊 ${resultados.length} resultado(s) encontrado(s)`;
-
-          if (resultados.length === 0) {
-            div.innerHTML = "<div class='erroConsulta'>Nenhum resultado encontrado</div>";
-            return;
-          }
-
-          div.innerHTML = "";
-
-          resultados.forEach(r => {
-
-            let statusClass = r.status === "Concluído" ? "statusConcluido" : "statusAndamento";
-
-            div.innerHTML += `
-<div class="cardResultado">
-
-<h3>${r.protocolo}</h3>
-
-<p><strong>Vítima:</strong> ${r.vitima}</p>
-<p><strong>Data:</strong> ${r.data}</p>
-
-<span class="statusBadge ${statusClass}">${r.status}</span>
-
-<div class="acoesConsulta">
-<button onclick="relatorioIndividual('${r.protocolo}')">📄 PDF</button>
-<button onclick="alterarStatusConsulta('${r.protocolo}')">🔄 Status</button>
-</div>
-
-</div>
-`;
-          });
-
-        }
-        let filtroData = document.getElementById("filtroData");
-        let filtroStatus = document.getElementById("filtroStatus");
-        let busca = document.getElementById("buscaProtocolo");
-
-        if (filtroData)
-          filtroData.addEventListener("change", buscarRegistroAvancado);
-
-        if (filtroStatus)
-          filtroStatus.addEventListener("change", buscarRegistroAvancado);
-
-        if (busca)
-          busca.addEventListener("keyup", buscarRegistroAvancado);
-        document.getElementById("filtroStatus").addEventListener("change", buscarRegistroAvancado);
-        document.getElementById("buscaProtocolo").addEventListener("keyup", buscarRegistroAvancado);
-        function atualizarCardsUsuarios() {
-
-          let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-
-          let total = usuarios.length;
-          let ativos = 0;
-          let inativos = 0;
-          let admins = 0;
-
-          usuarios.forEach(u => {
-
-            if (u.status === "Ativo") ativos++;
-            else inativos++;
-
-            if (u.nivel === "admin") admins++;
-
-          });
-
-          // atualizar cards
-          let elTotal = document.getElementById("totalUsuarios");
-          let elAtivos = document.getElementById("usuariosAtivos");
-          let elInativos = document.getElementById("usuariosInativos");
-          let elAdmins = document.getElementById("admins");
-
-          if (elTotal) elTotal.innerText = total;
-          if (elAtivos) elAtivos.innerText = ativos;
-          if (elInativos) elInativos.innerText = inativos;
-          if (elAdmins) elAdmins.innerText = admins;
-
-        }
-        /* ===== RECUPERAR SENHA ===== */
-
-function abrirRecuperacao() {
-
-  document.getElementById("modalRecuperar").style.display = "flex";
-
+function abrirPerfil() {
+  const user = carregarSessao();
+  if (!user) return;
+  document.getElementById("perfilNome").value = user.nome;
+  document.getElementById("emailUsuario").value = user.email;
+  const nivelSelect = document.getElementById("nivel");
+  if (nivelSelect) nivelSelect.value = user.nivel || "usuario";
+  const campoNivel = document.getElementById("campoNivel");
+  if (campoNivel) { campoNivel.style.display = user.nivel === "admin" ? "" : "none"; }
+  document.getElementById("perfilModal").style.display = "flex";
 }
+function fecharPerfil() { document.getElementById("perfilModal").style.display = "none"; }
+
+async function salvarPerfil() {
+  const user = carregarSessao();
+  const novoNome = document.getElementById("perfilNome").value;
+  await dbUpdate("usuarios", { email: user.email }, { nome: novoNome });
+  user.nome = novoNome;
+  salvarSessao(user);
+  document.getElementById("nomeUsuario").innerText = novoNome;
+  alert("Perfil atualizado!");
+  fecharPerfil();
+}
+
+function alterarSenha() { document.getElementById("senhaModal").style.display = "flex"; }
+function fecharSenha()   { document.getElementById("senhaModal").style.display = "none"; }
+
+async function salvarSenha() {
+  const atual     = document.getElementById("senhaAtual").value;
+  const nova      = document.getElementById("novaSenha").value;
+  const confirmar = document.getElementById("confirmarSenha").value;
+  const user      = carregarSessao();
+  if (atual !== user.senha)  { alert("Senha atual incorreta!"); return; }
+  if (nova !== confirmar)    { alert("As senhas não coincidem!"); return; }
+  await dbUpdate("usuarios", { email: user.email }, { senha: nova });
+  user.senha = nova;
+  salvarSessao(user);
+  alert("Senha alterada com sucesso!");
+  fecharSenha();
+}
+
+// -------------------------------------------------------
+// RECUPERAR SENHA
+// -------------------------------------------------------
+function abrirRecuperacao() { document.getElementById("modalRecuperar").style.display = "flex"; }
 
 function fecharRecuperacao() {
-
   document.getElementById("modalRecuperar").style.display = "none";
-
   document.getElementById("resultadoRecuperacao").innerHTML = "";
-
   document.getElementById("emailRecuperar").value = "";
-
 }
 
-function recuperarSenha() {
-
-  let email =
-    document.getElementById("emailRecuperar")
-    .value
-    .trim();
-
-  let usuarios =
-    JSON.parse(localStorage.getItem("usuarios")) || [];
-
-  let usuario =
-    usuarios.find(u => u.email === email);
-
-  let resultado =
-    document.getElementById("resultadoRecuperacao");
-
-  if (!usuario) {
-
+async function recuperarSenha() {
+  const email     = document.getElementById("emailRecuperar").value.trim();
+  const resultado = document.getElementById("resultadoRecuperacao");
+  const lista     = await dbSelect("usuarios", { email });
+  if (!lista.length) {
     resultado.style.color = "#c62828";
-
-    resultado.innerHTML =
-      "❌ E-mail não encontrado";
-
+    resultado.innerHTML = "❌ E-mail não encontrado";
     return;
-
   }
-
-  let novaSenha = gerarSenha(8);
-
-  usuario.senha = novaSenha;
-
-  localStorage.setItem(
-    "usuarios",
-    JSON.stringify(usuarios)
-  );
-
+  const novaSenha = gerarSenha(8);
+  await dbUpdate("usuarios", { email }, { senha: novaSenha });
   resultado.style.color = "#2e7d32";
-
-  resultado.innerHTML = `
-    ✅ Nova senha gerada:<br><br>
-    <strong>${novaSenha}</strong>
-  `;
-
+  resultado.innerHTML = `✅ Nova senha gerada:<br><br><strong>${novaSenha}</strong>`;
 }
-function obterRelatoriosFiltrados() {
 
- let relatorios = obterRelatoriosFiltrados();
+// -------------------------------------------------------
+// PDF INDIVIDUAL
+// -------------------------------------------------------
+async function relatorioIndividual(protocolo) {
+  const lista = await dbSelect("relatorios", { protocolo });
+  if (!lista.length) { alert("Registro não encontrado"); return; }
+  const r = lista[0];
+  const user = carregarSessao() || {};
 
-  let usuario =
-    JSON.parse(localStorage.getItem("usuarioLogado")) || {};
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  let y = 0;
 
-  // ADMIN VÊ TUDO
-  if (usuario.nivel === "admin") {
-    return relatorios;
+  const logo = new Image();
+  logo.src = "prefeitura.png";
+
+  const gerarPDF = function() {
+    try { doc.addImage(logo, "PNG", 10, 5, 59, 38); } catch(e) {}
+
+    doc.setFont("helvetica","bold"); doc.setFontSize(16);
+    doc.text("PREFEITURA MUNICIPAL", 105, 18, null, null, "center");
+    doc.setFontSize(11);
+    doc.text("SISTEMA DE NOTIFICAÇÃO PREVINE", 105, 26, null, null, "center");
+    doc.setFont("helvetica","normal"); doc.setFontSize(9);
+    doc.text("RELATÓRIO INDIVIDUAL DE OCORRÊNCIA", 105, 33, null, null, "center");
+    doc.setDrawColor(0); doc.setLineWidth(0.3);
+    doc.line(10, 50, 200, 50);
+    y = 60;
+
+    function secao(titulo) {
+      y += 6;
+      doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(0,0,0);
+      doc.text(titulo, 105, y, null, null, "center");
+      y += 6;
+    }
+
+    function campo(label, valor, x, w, h) {
+      h = h || 10;
+      doc.setDrawColor(180,180,180); doc.setLineWidth(0.2);
+      doc.rect(x, y, w, h);
+      doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(0,0,0);
+      doc.text((label ? label + ": " : "") + (valor || ""), x + 2, y + 6);
+    }
+
+    function campoFull(label, valor, h) {
+      campo(label, valor, 10, 190, h);
+      y += (h || 10) + 2;
+    }
+
+    function campoDuplo(label1, val1, label2, val2) {
+      campo(label1, val1, 10,  95, 10);
+      campo(label2, val2, 105, 95, 10);
+      y += 12;
+    }
+
+    function campoTexto(label, valor) {
+      const linhas = doc.splitTextToSize(valor || "Não informado.", 183);
+      const alt = Math.max(18, linhas.length * 5.5 + 6);
+      doc.setDrawColor(180,180,180); doc.setLineWidth(0.2);
+      doc.rect(10, y, 190, alt);
+      doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(0,0,0);
+      doc.text(linhas, 12, y + 6);
+      y += alt + 3;
+    }
+
+    function checkPage(space) {
+      if (y + space > 275) { doc.addPage(); y = 20; }
+    }
+
+    // ── ESCOLA: usa restrição no PDF individual ──────────────
+    const escolaPDF = podeVerNomeEscola(user) ? (r.escola || "") : "Restrito";
+
+    secao("DADOS DA OCORRÊNCIA");
+    campoFull("Protocolo", r.protocolo);
+    campoFull("Data", r.data);
+    campoFull("Local", r.local);
+    campoFull("Especificação do local", r.local_detalhado);
+
+    checkPage(60);
+    secao("DADOS DA VÍTIMA");
+    campoFull("Nome", r.vitima);
+    campoDuplo("Idade", r.idade, "Sexo", r.sexo);
+    campoDuplo("Raça / Cor", r.raca, "Orientação sexual", r.orientacao);
+    campoDuplo("Identidade de gênero", r.identidade_genero, "Escolaridade", r.escolaridade);
+
+    checkPage(55);
+    secao("RESPONSÁVEL");
+    campoFull("Nome", r.responsavel);
+    campoDuplo("Parentesco", r.parentesco, "Telefone", r.telefone);
+    campoFull("Endereço", r.endereco);
+
+    checkPage(20);
+    secao("AUTOR DA VIOLÊNCIA");
+    campoDuplo("Nome", r.autor, "Idade", r.idade_autor);
+    campoFull("Relação com a vítima", r.relacao_autor);
+
+    const todosItens = parseTipos(r.tipo);
+    const MOTIV_VALS  = ["Racismo","Intolerância Religiosa","Sexismo","Diversidade de gênero","Capacitismo","Outros"];
+    const PRATIC_VALS = ["Criança","Adolescente","Pai","Mãe","Responsável","Professor"];
+    const itensTipo   = todosItens.filter(t => !MOTIV_VALS.includes(t) && !PRATIC_VALS.includes(t) && !t.startsWith("Outros:"));
+    const itensMotiv  = todosItens.filter(t => MOTIV_VALS.includes(t) && !t.startsWith("Outros:"));
+    const itensPratic = todosItens.filter(t => PRATIC_VALS.includes(t) || t.startsWith("Outros"));
+
+    campoFull("Quem praticou", itensPratic.length ? itensPratic.join(", ") : "Não informado");
+
+    checkPage(30);
+    secao("TIPIFICAÇÃO DA VIOLÊNCIA");
+    campoFull("Tipos", itensTipo.length ? itensTipo.join(", ") : "Não informado");
+
+    checkPage(20);
+    secao("MOTIVAÇÃO DA VIOLÊNCIA");
+    campoFull("Motivação", itensMotiv.length ? itensMotiv.join(", ") : "Não informado");
+
+    checkPage(40);
+    secao("RESUMO DA OCORRÊNCIA");
+    campoTexto("", r.resumo);
+
+    checkPage(40);
+    secao("ENCAMINHAMENTO");
+    campoTexto("", r.encaminhamento);
+
+    doc.setFontSize(7); doc.setTextColor(150,150,150);
+    doc.text("Sistema PREVINE • Documento oficial gerado automaticamente", 105, 290, null, null, "center");
+
+    const nomeArquivo = (r.vitima || "Vitima").replace(/[^a-zA-Z0-9À-ÿ _-]/g, "").trim();
+    doc.save("PREVINE_" + r.protocolo + "_" + nomeArquivo + ".pdf");
+  };
+
+  logo.onload  = gerarPDF;
+  logo.onerror = gerarPDF;
+}
+
+// -------------------------------------------------------
+// PDF GERAL
+// -------------------------------------------------------
+async function exportarTodosPDF() {
+  const user = carregarSessao() || {};
+  const lista = await obterRelatoriosFiltrados();
+  if (lista.length === 0) { alert("Nenhum registro encontrado!"); return; }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: "landscape" });
+
+  const logo = new Image();
+  logo.src = "prefeitura.png";
+
+  const gerarPDF = function () {
+    try { doc.addImage(logo, "PNG", 10, 3, 59, 38); } catch (e) {}
+    doc.setFont("helvetica", "bold"); doc.setFontSize(14);
+    doc.text("PREFEITURA MUNICIPAL", 148, 15, null, null, "center");
+    doc.setFontSize(10);
+    doc.text("SISTEMA DE NOTIFICAÇÃO PREVINE", 148, 23, null, null, "center");
+    doc.setFont("helvetica", "normal"); doc.setFontSize(8);
+    doc.text("RELATÓRIO GERAL DE OCORRÊNCIAS", 148, 29, null, null, "center");
+    doc.setDrawColor(0); doc.setLineWidth(0.3);
+    doc.line(10, 38, 287, 38);
+
+    doc.setFont("helvetica", "normal"); doc.setFontSize(8); doc.setTextColor(100,100,100);
+    doc.text(
+      "Data de geração: " + new Date().toLocaleDateString("pt-BR") +
+      "   •   Total de registros: " + lista.length,
+      148, 44, null, null, "center"
+    );
+    doc.setTextColor(0, 0, 0);
+
+    let y = 52;
+
+    const cols = [
+  { label: "Protocolo", x: 10,  w: 32  },
+  { label: "Data",      x: 44,  w: 28  },
+  { label: "Vítima",   x: 74,  w: 70  },
+  { label: "Tipo",      x: 146, w: 100 },
+  { label: "Status",   x: 248, w: 29  },
+];
+
+    doc.setFillColor(60, 60, 60);
+    doc.rect(10, y, 277, 9, "F");
+    doc.setFont("helvetica", "bold"); doc.setFontSize(8); doc.setTextColor(255,255,255);
+    cols.forEach(c => doc.text(c.label, c.x + 2, y + 6));
+    doc.setTextColor(0, 0, 0);
+    y += 11;
+
+    lista.forEach((r, idx) => {
+      const EXCLUIR = [
+        "Racismo","Intolerância Religiosa","Sexismo","Diversidade de gênero",
+        "Capacitismo","Outros","Criança","Adolescente","Pai","Mãe","Responsável","Professor"
+      ];
+      const tipos = parseTipos(r.tipo)
+        .filter(t => !EXCLUIR.includes(t) && !t.startsWith("Outros:"))
+        .join(", ");
+
+      // ── ESCOLA restrita no PDF geral ─────────────────────────
+      const escolaPDF = podeVerNomeEscola(user) ? (r.escola || "") : "Restrito";
+
+      const tipoLinhas   = doc.splitTextToSize(tipos || "Não informado", 53);
+      const vitimaLinhas = doc.splitTextToSize(r.vitima || "", 48);
+      const linhaMax = Math.max(tipoLinhas.length, vitimaLinhas.length);
+      const altLinha = Math.max(9, linhaMax * 4.8 + 4);
+
+      if (y + altLinha > 195) {
+        doc.addPage();
+        y = 15;
+        doc.setFillColor(99, 153, 34);
+        doc.rect(10, y, 277, 9, "F");
+        doc.setFont("helvetica", "bold"); doc.setFontSize(8); doc.setTextColor(255,255,255);
+        cols.forEach(c => doc.text(c.label, c.x + 2, y + 6));
+        doc.setTextColor(0, 0, 0);
+        y += 11;
+      }
+
+      if (idx % 2 === 0) {
+        doc.setFillColor(245, 248, 240);
+        doc.rect(10, y, 277, altLinha, "F");
+      }
+
+      doc.setDrawColor(210, 210, 210); doc.setLineWidth(0.1);
+      doc.rect(10, y, 277, altLinha);
+
+      doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); doc.setTextColor(0,0,0);
+
+      const ty = y + 5;
+      doc.text(String(r.protocolo || ""), cols[0].x + 2, ty);
+      doc.text(String(r.data    || ""),   cols[1].x + 2, ty);
+      doc.text(vitimaLinhas,              cols[2].x + 2, ty);
+      doc.text(tipoLinhas,                cols[3].x + 2, ty);
+
+      const isOk = r.status === "Concluído";
+      doc.setTextColor(isOk ? 39 : 133, isOk ? 80 : 79, isOk ? 10 : 11);
+      doc.setFont("helvetica", "bold"); doc.setFontSize(7);
+      doc.text(r.status || "Em andamento", cols[4].x + 2, ty);
+      doc.setTextColor(0, 0, 0);
+
+      y += altLinha;
+    });
+
+    doc.setFontSize(7); doc.setTextColor(150, 150, 150);
+    doc.text("Sistema PREVINE • Documento oficial gerado automaticamente", 148, 202, null, null, "center");
+    doc.save("Relatorio_Geral_PREVINE.pdf");
+  };
+
+  logo.onload  = gerarPDF;
+  logo.onerror = gerarPDF;
+}
+
+// -------------------------------------------------------
+// UTILITÁRIOS
+// -------------------------------------------------------
+async function limparFormulario() {
+  document.querySelectorAll("#registros input, #registros textarea, #registros select")
+    .forEach(el => { if (el.type !== "radio" && el.type !== "checkbox") el.value = ""; });
+  document.querySelectorAll("#registros input[type='radio'], #registros input[type='checkbox']")
+    .forEach(el => el.checked = false);
+    const lv = document.getElementById("listaVitimas");
+if (lv) lv.innerHTML = `<div class="vitima-row" style="display:flex;gap:8px;margin-bottom:6px"><input type="text" class="inputVitima" placeholder="Nome da vítima" style="flex:1"></div>`;
+
+const la = document.getElementById("listaAutores");
+if (la) la.innerHTML = `<div class="autor-row" style="display:flex;gap:8px;margin-bottom:6px"><input type="text" class="inputAutor" placeholder="Nome (se conhecido)" style="flex:1"></div>`;
+}
+
+async function atualizarBotaoFlutuante() {
+  const botao = document.querySelector(".botaoFlutuante");
+  if (!botao) return;
+  const painelVisivel = document.getElementById("painel")?.style.display === "block";
+  const logado = !!carregarSessao();
+  botao.style.display = painelVisivel && logado ? "flex" : "none";
+}
+
+async function abrirNovoRegistroAtalho() {
+  abrirAba("registros");
+  etapaAtual = 0;
+  mostrarEtapa();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  atualizarBotaoFlutuante();
+}
+
+async function abrirRegistroPublico() {
+  document.getElementById("inicio").style.display = "none";
+  document.getElementById("painel").style.display = "block";
+  document.getElementById("painel").classList.add("modoPublicoRegistro");
+
+  const sidebar = document.querySelector(".sidebar");
+  if (sidebar) sidebar.style.display = "none";
+  const topo = document.querySelector(".topoAdmin");
+  if (topo) topo.style.display = "none";
+  const usuarioMenuEl = document.querySelector(".usuarioMenu");
+  if (usuarioMenuEl) usuarioMenuEl.style.display = "none";
+  const dropdown = document.getElementById("dropdownUsuario");
+  if (dropdown) dropdown.style.display = "none";
+
+  abrirAba("registros");
+  atualizarBotaoFlutuante();
+  if (window.innerWidth > 768)
+    document.getElementById("registros").scrollIntoView({ behavior: "smooth" });
+
+  limparFormulario();
+  etapaAtual = 0;
+  mostrarEtapa();
+}
+
+// -------------------------------------------------------
+// INIT
+// -------------------------------------------------------
+limparFormulario();
+etapaAtual = 0;
+mostrarEtapa();
+atualizarBotaoFlutuante();
+
+window.addEventListener("resize", atualizarBotaoFlutuante);
+window.addEventListener("load",   atualizarBotaoFlutuante);
+
+async function regGoTo(i) {
+  const n = 7;
+  document.querySelectorAll('.reg-etapa').forEach((el, j) => {
+    el.classList.toggle('reg-active', j === i);
+  });
+  document.querySelectorAll('.rs-step').forEach((el, j) => {
+    el.classList.remove('rs-active', 'rs-done');
+    if (j === i) el.classList.add('rs-active');
+    else if (j < i) el.classList.add('rs-done');
+  });
+  for (let j = 0; j < 6; j++) {
+    const l = document.getElementById('rl' + j);
+    if (l) l.classList.toggle('rs-done', j < i);
   }
-
-  // USUÁRIO VÊ SOMENTE A ESCOLA DELE
-  return relatorios.filter(
-    r => r.escola === usuario.escola
-  );
-
+  document.getElementById('regProgressFill').style.width = ((i + 1) / n * 100).toFixed(1) + '%';
+  document.getElementById('regStepCount').textContent = '— etapa ' + (i + 1) + ' de ' + n;
+  const wrap = document.querySelector('.reg-wrap');
+  if (wrap) wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
-      </script>
-      <div class="botaoFlutuante" title="Adicionar novo registro" onclick="abrirNovoRegistroAtalho()">
-        +
-      </div>
+
+async function toggleOutros(checkbox) {
+  const input = document.getElementById("outrosTexto");
+  input.style.display = checkbox.checked ? "block" : "none";
+  if (!checkbox.checked) input.value = "";
+}
+
+async function toggleSidebar() {
+  document.querySelector('.sidebar').classList.toggle('aberta');
+  document.querySelector('.sidebar-backdrop').classList.toggle('aberto');
+}
+async function fecharSidebar() {
+  document.querySelector('.sidebar').classList.remove('aberta');
+  document.querySelector('.sidebar-backdrop').classList.remove('aberto');
+}
+document.querySelectorAll('.sidebar button').forEach(btn => {
+  btn.addEventListener('click', fecharSidebar);
+});
+
+async function toggleOrientacaoOutro(radio) {
+  const input = document.getElementById("orientacaoOutroTexto");
+  input.style.display = radio.checked ? "inline-block" : "none";
+  if (!radio.checked) input.value = "";
+}
+document.querySelectorAll('input[name="orientacao"]').forEach(r => {
+  r.addEventListener('change', () => {
+    if (r.value !== "Outro") {
+      const input = document.getElementById("orientacaoOutroTexto");
+      if (input) { input.style.display = "none"; input.value = ""; }
+    }
+  });
+});
+
+function toggleFisicaOutro(cb) {
+  const input = document.getElementById("fisicaOutroTexto");
+  input.style.display = cb.checked ? "inline-block" : "none";
+  if (!cb.checked) input.value = "";
+}
+
+function togglePsicoOutro(cb) {
+  const input = document.getElementById("psicoOutroTexto");
+  input.style.display = cb.checked ? "inline-block" : "none";
+  if (!cb.checked) input.value = "";
+}
+
+function toggleSexualOutro(cb) {
+  const input = document.getElementById("sexualOutroTexto");
+  input.style.display = cb.checked ? "inline-block" : "none";
+  if (!cb.checked) input.value = "";
+}
+function adicionarVitima() {
+  const lista = document.getElementById("listaVitimas");
+  const row = document.createElement("div");
+  row.className = "vitima-row";
+  row.style.cssText = "display:flex;gap:8px;margin-bottom:6px";
+  row.innerHTML = `
+    <input type="text" class="inputVitima" placeholder="Nome da vítima" style="flex:1">
+    <button type="button" onclick="this.parentElement.remove()" 
+      style="padding:4px 10px;background:#fce4ec;color:#c62828;border:1px solid #ef9a9a;border-radius:8px;cursor:pointer;font-size:13px">✕</button>
+  `;
+  lista.appendChild(row);
+}
+
+function adicionarAutor() {
+  const lista = document.getElementById("listaAutores");
+  const row = document.createElement("div");
+  row.className = "autor-row";
+  row.style.cssText = "display:flex;gap:8px;margin-bottom:6px";
+  row.innerHTML = `
+    <input type="text" class="inputAutor" placeholder="Nome (se conhecido)" style="flex:1">
+    <button type="button" onclick="this.parentElement.remove()"
+      style="padding:4px 10px;background:#f3e5f5;color:#6a1b9a;border:1px solid #ce93d8;border-radius:8px;cursor:pointer;font-size:13px">✕</button>
+  `;
+  lista.appendChild(row);
+}
+
+async function marcarLida(id) {
+  await dbUpdate("notificacoes", { id }, { lida: true });
+  atualizarBadge();
+  verNotificacoes();
+  verNotificacoes(); // fecha e reabre para atualizar
+}
+
+async function marcarTodasLidas() {
+  const user = carregarSessao() || {};
+  let lista = await dbSelect("notificacoes");
+  if (!temAcessoGlobal(user)) {
+    lista = lista.filter(n => n.escola === user.escola);
+  }
+  for (const n of lista.filter(n => !n.lida)) {
+    await dbUpdate("notificacoes", { id: n.id }, { lida: true });
+  }
+  atualizarBadge();
+  verNotificacoes();
+  verNotificacoes();
+}
+</script>
 
 </body>
-
 </html>
