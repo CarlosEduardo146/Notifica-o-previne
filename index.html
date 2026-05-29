@@ -599,10 +599,32 @@
       </div>
       <div class="reg-card-body">
         <div class="reg-grid">
-          <div class="reg-field">
-            <span class="reg-label">Nome do autor</span>
-            <input type="text" id="autor" placeholder="Nome (se conhecido)">
-          </div>
+          <div class="reg-field reg-grid-full" style="margin-bottom:12px">
+  <span class="reg-label">Autores da violência</span>
+  <div id="listaAutores">
+    <div class="autor-row" style="display:grid;grid-template-columns:1fr 80px 1fr auto;gap:8px;margin-bottom:8px;align-items:end">
+      <div>
+        <span style="font-size:11px;color:#888;display:block;margin-bottom:3px">Nome</span>
+        <input type="text" class="inputAutorNome" placeholder="Nome (se conhecido)" style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;box-sizing:border-box">
+      </div>
+      <div>
+        <span style="font-size:11px;color:#888;display:block;margin-bottom:3px">Idade</span>
+        <input type="number" class="inputAutorIdade" placeholder="—" style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;box-sizing:border-box">
+      </div>
+      <div>
+        <span style="font-size:11px;color:#888;display:block;margin-bottom:3px">Relação com a vítima</span>
+        <input type="text" class="inputAutorRelacao" placeholder="Ex: colega, familiar..." style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;box-sizing:border-box">
+      </div>
+      <div style="padding-bottom:2px">
+        <!-- botão remover não aparece no primeiro (só quando há 2+) -->
+      </div>
+    </div>
+  </div>
+  <button type="button" onclick="adicionarAutor()"
+    style="margin-top:4px;padding:5px 12px;border:1px dashed #EF9F27;background:transparent;color:#854f0b;border-radius:8px;cursor:pointer;font-size:12px">
+    + Adicionar autor
+  </button>
+</div>
           <div class="reg-field">
             <span class="reg-label">Idade</span>
             <input type="number" id="idadeAutor" placeholder="Ex: 35">
@@ -1297,20 +1319,32 @@ async function salvarNotificacao() {
     }
   });
 
+  // ✅ Coletando vítimas ANTES do objeto novo
+  const vitimas = [...document.querySelectorAll('#listaVitimas .inputVitima')]
+    .map(i => i.value.trim()).filter(Boolean);
+
+  // ✅ Coletando autores ANTES do objeto novo
+  const autoresRows = document.querySelectorAll('#listaAutores .autor-row');
+  const autoresData = [...autoresRows].map(row => ({
+    nome:    row.querySelector('.inputAutorNome')?.value.trim()    || "",
+    idade:   row.querySelector('.inputAutorIdade')?.value.trim()   || "",
+    relacao: row.querySelector('.inputAutorRelacao')?.value.trim() || ""
+  })).filter(a => a.nome || a.idade || a.relacao);
+
   const todos = await dbSelect("relatorios");
   const protocolo = gerarProtocolo(todos.length + 1);
 
   const novo = {
     protocolo,
-    escola:             user.escola || "Pública",
-    data:               document.getElementById("dataPreenchimento").value || "",
-    local:              document.getElementById("localTipo").value || "",
-    local_detalhado:    document.getElementById("localDetalhado").value || "",
-    vitima:             document.getElementById("nomeVitima").value || "",
-    idade:              document.getElementById("idadeVitima").value || "",
-    sexo:               document.querySelector('input[name="sexo"]:checked')?.value || "",
-    raca:               document.querySelector('input[name="raca"]:checked')?.value || "",
-    identidade_genero:  document.querySelector('input[name="identGenero"]:checked')?.value || "",
+    escola:            user.escola || "Pública",
+    data:              document.getElementById("dataPreenchimento").value || "",
+    local:             document.getElementById("localTipo").value || "",
+    local_detalhado:   document.getElementById("localDetalhado").value || "",
+    vitima:            vitimas.join(", "),                                          // 
+    idade:             document.getElementById("idadeVitima").value || "",
+    sexo:              document.querySelector('input[name="sexo"]:checked')?.value || "",
+    raca:              document.querySelector('input[name="raca"]:checked')?.value || "",
+    identidade_genero: document.querySelector('input[name="identGenero"]:checked')?.value || "",
     orientacao: (() => {
       const val = document.querySelector('input[name="orientacao"]:checked')?.value || "";
       if (val === "Outro") {
@@ -1319,18 +1353,18 @@ async function salvarNotificacao() {
       }
       return val;
     })(),
-    escolaridade:       document.getElementById("escolaridade").value || "",
-    responsavel:        document.getElementById("responsavel").value || "",
-    telefone:           document.getElementById("telefoneResponsavel").value || "",
-    parentesco:         document.getElementById("parentesco").value || "",
-    endereco:           document.getElementById("enderecoResponsavel").value || "",
-    autor:              document.getElementById("autor").value || "",
-    idade_autor:        document.getElementById("idadeAutor").value || "",
-    relacao_autor:      document.getElementById("relacaoAutor").value || "",
-    tipo:               tipos.join(", "),
-    resumo:             document.getElementById("resumo").value || "",
-    encaminhamento:     document.getElementById("encaminhamento").value || "",
-    status:             "Em andamento"
+    escolaridade:      document.getElementById("escolaridade").value || "",
+    responsavel:       document.getElementById("responsavel").value || "",
+    telefone:          document.getElementById("telefoneResponsavel").value || "",
+    parentesco:        document.getElementById("parentesco").value || "",
+    endereco:          document.getElementById("enderecoResponsavel").value || "",
+    autor:             autoresData.map(a => a.nome).filter(Boolean).join(", "),     // 
+    idade_autor:       autoresData.map(a => a.idade).filter(Boolean).join(", "),   // 
+    relacao_autor:     autoresData.map(a => a.relacao).filter(Boolean).join(", "), // 
+    tipo:              tipos.join(", "),
+    resumo:            document.getElementById("resumo").value || "",
+    encaminhamento:    document.getElementById("encaminhamento").value || "",
+    status:            "Em andamento"
   };
 
   const res = await dbInsert("relatorios", novo);
@@ -1340,7 +1374,7 @@ async function salvarNotificacao() {
   alert("Notificação registrada!\nProtocolo: " + protocolo);
   limparFormulario();
   regGoTo(0);
-}
+} 
 
 // -------------------------------------------------------
 // USUÁRIOS
@@ -2223,6 +2257,24 @@ async function limparFormulario() {
     .forEach(el => { if (el.type !== "radio" && el.type !== "checkbox") el.value = ""; });
   document.querySelectorAll("#registros input[type='radio'], #registros input[type='checkbox']")
     .forEach(el => el.checked = false);
+
+  // Reset vítimas — mantém só o primeiro row
+  const listaV = document.getElementById("listaVitimas");
+  if (listaV) {
+    const rows = listaV.querySelectorAll(".vitima-row");
+    rows.forEach((r, i) => { if (i > 0) r.remove(); });
+    const primeiro = listaV.querySelector(".inputVitima");
+    if (primeiro) primeiro.value = "";
+  }
+
+  // Reset autores — mantém só o primeiro row
+  const listaA = document.getElementById("listaAutores");
+  if (listaA) {
+    const rows = listaA.querySelectorAll(".autor-row");
+    rows.forEach((r, i) => { if (i > 0) r.remove(); });
+    listaA.querySelectorAll("input").forEach(i => i.value = "");
+    atualizarBotoesRemoverAutor();
+  }
 }
 
 async function atualizarBotaoFlutuante() {
@@ -2344,6 +2396,88 @@ function toggleSexualOutro(cb) {
   const input = document.getElementById("sexualOutroTexto");
   input.style.display = cb.checked ? "inline-block" : "none";
   if (!cb.checked) input.value = "";
+}
+function adicionarVitima() {
+  const lista = document.getElementById("listaVitimas");
+  const div = document.createElement("div");
+  div.className = "vitima-row";
+  div.style.cssText = "display:flex;gap:8px;margin-bottom:6px;align-items:center";
+  div.innerHTML = `
+    <input type="text" class="inputVitima" placeholder="Nome da vítima" style="flex:1">
+    <button type="button" onclick="removerVitima(this)"
+      style="padding:4px 10px;border:1px solid #e57373;background:transparent;color:#c62828;border-radius:8px;cursor:pointer;font-size:13px;flex-shrink:0">
+      ✕
+    </button>
+  `;
+  lista.appendChild(div);
+}
+
+function removerVitima(btn) {
+  const lista = document.getElementById("listaVitimas");
+  if (lista.querySelectorAll(".vitima-row").length > 1) {
+    btn.parentElement.remove();
+  }
+}
+function adicionarAutor() {
+  const lista = document.getElementById("listaAutores");
+  const div = document.createElement("div");
+  div.className = "autor-row";
+  div.style.cssText = "display:grid;grid-template-columns:1fr 80px 1fr auto;gap:8px;margin-bottom:8px;align-items:end";
+  div.innerHTML = `
+    <div>
+      <span style="font-size:11px;color:#888;display:block;margin-bottom:3px">Nome</span>
+      <input type="text" class="inputAutorNome" placeholder="Nome (se conhecido)"
+        style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;box-sizing:border-box">
+    </div>
+    <div>
+      <span style="font-size:11px;color:#888;display:block;margin-bottom:3px">Idade</span>
+      <input type="number" class="inputAutorIdade" placeholder="—"
+        style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;box-sizing:border-box">
+    </div>
+    <div>
+      <span style="font-size:11px;color:#888;display:block;margin-bottom:3px">Relação com a vítima</span>
+      <input type="text" class="inputAutorRelacao" placeholder="Ex: colega, familiar..."
+        style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;box-sizing:border-box">
+    </div>
+    <div style="padding-bottom:2px">
+      <button type="button" onclick="removerAutor(this)"
+        style="padding:8px 10px;border:1px solid #e57373;background:transparent;color:#c62828;border-radius:8px;cursor:pointer;font-size:13px">
+        ✕
+      </button>
+    </div>
+  `;
+  lista.appendChild(div);
+  // Garante que o primeiro row tenha botão de remover quando há 2+
+  atualizarBotoesRemoverAutor();
+}
+
+function removerAutor(btn) {
+  const lista = document.getElementById("listaAutores");
+  if (lista.querySelectorAll(".autor-row").length > 1) {
+    btn.closest(".autor-row").remove();
+    atualizarBotoesRemoverAutor();
+  }
+}
+
+function atualizarBotoesRemoverAutor() {
+  const lista = document.getElementById("listaAutores");
+  const rows = lista.querySelectorAll(".autor-row");
+  rows.forEach((row, i) => {
+    const lastCell = row.querySelector("div:last-child");
+    if (!lastCell) return;
+    if (rows.length > 1) {
+      if (!lastCell.querySelector("button")) {
+        lastCell.innerHTML = `
+          <button type="button" onclick="removerAutor(this)"
+            style="padding:8px 10px;border:1px solid #e57373;background:transparent;color:#c62828;border-radius:8px;cursor:pointer;font-size:13px">
+            ✕
+          </button>`;
+      }
+    } else {
+      // Volta à célula vazia no único row restante
+      if (i === 0) lastCell.innerHTML = "";
+    }
+  });
 }
 </script>
 
