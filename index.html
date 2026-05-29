@@ -11,7 +11,10 @@
   <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css">
   <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css">
   <link rel="stylesheet" href="./styles.css">
+<<<<<<< HEAD
   
+=======
+>>>>>>> cc0f5f3d05dfa0a6506030fbacf953b227121bee
   <style>
     .tagsTipo {
       display: flex;
@@ -36,8 +39,11 @@
     .tagTipo.moral    { background: #e8f5e9; color: #1b5e20; border: 1px solid #a5d6a7; }
     .tagTipo.motiv    { background: #fff3e0; color: #bf360c; border: 1px solid #ffcc80; }
     .tagTipo.praticou { background: #f3e5f5; color: #6a1b9a; border: 1px solid #ce93d8; }
+<<<<<<< HEAD
     .escola-restrita  { background:#f5f5f5; color:#999; font-style:italic; font-size:12px;
                         padding:2px 8px; border-radius:4px; border:1px dashed #ccc; }
+=======
+>>>>>>> cc0f5f3d05dfa0a6506030fbacf953b227121bee
   </style>
 </head>
 <body>
@@ -85,7 +91,12 @@
       <div class="topoMarca">
         <img src="previne.png">
         <div class="topoTexto">
+<<<<<<< HEAD
           <strong>Sistema de Notificação</strong>
+=======
+          <strong>Previne</strong>
+          <span>Sistema de Notificação</span>
+>>>>>>> cc0f5f3d05dfa0a6506030fbacf953b227121bee
         </div>
       </div>
       <button class="botaoArea" onclick="abrirLogin()">
@@ -171,12 +182,20 @@
 
 <!-- PAINEL -->
 <div class="painel" id="painel">
+<<<<<<< HEAD
   <button class="sidebar-toggle" onclick="toggleSidebar()">&#8942;</button>
   <div class="sidebar-backdrop" onclick="fecharSidebar()"></div>
   <div class="sidebar">
     <div class="sidebarBrand">
       <img src="previne.png" alt="Previne">
       <div><strong>Sistema de Notificação</strong></div>
+=======
+
+  <div class="sidebar">
+    <div class="sidebarBrand">
+      <img src="previne.png" alt="Previne">
+      <div><strong>Previne</strong><small>Sistema de Notificação</small></div>
+>>>>>>> cc0f5f3d05dfa0a6506030fbacf953b227121bee
     </div>
     <button onclick="abrirAba('dashboard')"><i class="fi fi-br-stats"></i> Dashboard</button>
     <button onclick="abrirAba('registros')"><i class="fi fi-sr-document"></i> Registros</button>
@@ -208,11 +227,16 @@
                   <input id="perfilNome">
                 </div>
                 <div class="linha">
+<<<<<<< HEAD
                   <div class="campo" style="flex:1 1 100%;">
                     <label>Email</label>
                     <input id="emailUsuario" readonly style="width:100%;box-sizing:border-box;">
                   </div>
                   <div class="campo" id="campoNivel">
+=======
+                  <div class="campo"><label>Email</label><input id="emailUsuario" readonly></div>
+                  <div class="campo">
+>>>>>>> cc0f5f3d05dfa0a6506030fbacf953b227121bee
                     <label>Nível</label>
                     <select id="nivel">
                       <option value="usuario">Usuário</option>
@@ -220,6 +244,16 @@
                     </select>
                   </div>
                 </div>
+<<<<<<< HEAD
+=======
+                <label>Escola</label>
+                <select id="escolaUsuario">
+                  <option value="">Selecione</option>
+                  <option value="CEI Francisca Monteiro">CEI Francisca Monteiro</option>
+                  <option value="CEI Maria José">CEI Maria José</option>
+                  <option value="Escola Paulo Freire">Escola Paulo Freire</option>
+                </select>
+>>>>>>> cc0f5f3d05dfa0a6506030fbacf953b227121bee
               </div>
               <button class="botaoSalvar" onclick="salvarPerfil()">Salvar Alterações</button>
             </div>
@@ -256,6 +290,7 @@
       </div>
     </div>
 
+<<<<<<< HEAD
    <!-- DASHBOARD -->
 <div id="dashboard" class="aba">
   <h2>Dashboard</h2>
@@ -439,12 +474,64 @@
           </div>
           <div class="reg-field">
             <span class="reg-label">Onde ocorreu</span>
+=======
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="aba">
+      <h2>Dashboard</h2>
+      <div class="filtrosDashboard">
+        <select id="filtroMes">
+          <option value="">Todos os meses</option>
+          <option value="0">Jan</option><option value="1">Fev</option>
+          <option value="2">Mar</option><option value="3">Abr</option>
+          <option value="4">Mai</option><option value="5">Jun</option>
+          <option value="6">Jul</option><option value="7">Ago</option>
+          <option value="8">Set</option><option value="9">Out</option>
+          <option value="10">Nov</option><option value="11">Dez</option>
+        </select>
+        <input type="number" id="filtroAno" placeholder="Ano">
+        <input type="text" id="filtroTipo" placeholder="Tipo de violência">
+        <button onclick="carregarGraficos()">Filtrar</button>
+      </div>
+      <div class="cardsDashboard">
+        <div class="cardDash"><h3 id="totalRegistros">0</h3><p>Notificações Registradas</p></div>
+        <div class="cardDash"><h3 id="casosAndamento">0</h3><p>Casos em Andamento</p></div>
+        <div class="cardDash"><h3 id="casosConcluidos">0</h3><p>Casos Concluídos</p></div>
+      </div>
+      <div class="graficos">
+        <div class="grafico"><h3>Notificações por Mês</h3><canvas id="graficoMes"></canvas></div>
+        <div class="grafico"><h3>Distribuição por Sexo</h3><canvas id="graficoSexo"></canvas></div>
+        <div class="grafico"><h3>Distribuição por Idade</h3><canvas id="graficoIdade"></canvas></div>
+        <div class="grafico"><h3>Status dos Casos</h3><canvas id="graficoStatus"></canvas></div>
+      </div>
+    </div>
+
+    <!-- REGISTROS -->
+    <div id="registros" class="aba">
+      <h2>Registro de Notificação</h2>
+      <div class="abasTopo">
+        <div class="abaItem ativa">1 Ocorrência</div>
+        <div class="abaItem">2 Vítima</div>
+        <div class="abaItem">3 Responsável</div>
+        <div class="abaItem">4 Autor</div>
+        <div class="abaItem">5 Tipificação</div>
+        <div class="abaItem">6 Resumo</div>
+        <div class="abaItem">7 Encaminhamento</div>
+      </div>
+
+      <!-- ETAPA 1 -->
+      <div class="etapa ativa">
+        <h3>Dados da Ocorrência</h3>
+        <div class="linha">
+          <div class="campo">Data de preenchimento<input type="date" id="dataPreenchimento"></div>
+          <div class="campo">Onde ocorreu?
+>>>>>>> cc0f5f3d05dfa0a6506030fbacf953b227121bee
             <select id="localTipo">
               <option>Na escola</option>
               <option>No âmbito familiar</option>
               <option>Outros</option>
             </select>
           </div>
+<<<<<<< HEAD
           <div class="reg-field reg-grid-full">
             <span class="reg-label">Especificação do local</span>
             <input type="text" id="localDetalhado" placeholder="Ex: Pátio da escola, corredor, sala de aula...">
@@ -1825,12 +1912,1010 @@ async function adicionarNotificacao(texto, escola) {
     data: new Date().toLocaleString(),
     lida: false
   });
+=======
+        </div>
+        <div class="campo">Especifique o local (se necessário)<input type="text" id="localDetalhado"></div>
+        <button class="botaoProximo" onclick="proximo()">Próximo</button>
+      </div>
+
+      <!-- ETAPA 2 -->
+      <div class="etapa">
+        <h3>Dados da Vítima</h3>
+        <input type="text" id="nomeVitima" placeholder="Nome">
+        <input type="number" id="idadeVitima" placeholder="Idade">
+        <h4>Raça/Cor</h4>
+        <label><input type="radio" name="raca" value="Branca"> Branca</label>
+        <label><input type="radio" name="raca" value="Preta"> Preta</label>
+        <label><input type="radio" name="raca" value="Parda"> Parda</label>
+        <label><input type="radio" name="raca" value="Indígena"> Indígena</label>
+        <label><input type="radio" name="raca" value="Amarela"> Amarela</label>
+        <h4>Sexo</h4>
+        <label><input type="radio" name="sexo" value="Feminino"> Feminino</label>
+        <label><input type="radio" name="sexo" value="Masculino"> Masculino</label>
+        <label><input type="radio" name="sexo" value="Não informou"> Não informou</label>
+        <h4>Orientação Sexual</h4>
+        <label><input type="radio" name="orientacao" value="Heterossexual"> Heterossexual</label>
+        <label><input type="radio" name="orientacao" value="Homossexual"> Homossexual</label>
+        <label><input type="radio" name="orientacao" value="Bissexual"> Bissexual</label>
+        <label><input type="radio" name="orientacao" value="Ignorado"> Ignorado</label>
+        <h4>Escolaridade</h4>
+        <select id="escolaridade">
+          <option>Creche</option><option>Pré-Escola</option>
+          <option>1º ano</option><option>2º ano</option><option>3º ano</option>
+          <option>4º ano</option><option>5º ano</option><option>6º ano</option>
+          <option>7º ano</option><option>8º ano</option><option>9º ano</option>
+          <option>Ensino Médio</option>
+        </select>
+        <div class="botoesEtapa">
+          <button class="botaoVoltar" onclick="voltar()">Voltar</button>
+          <button class="botaoProximo" onclick="proximo()">Próximo</button>
+        </div>
+      </div>
+
+      <!-- ETAPA 3 -->
+      <div class="etapa">
+        <h3>Responsável</h3>
+        <div class="linha">
+          <div class="campo">Nome do responsável<input type="text" id="responsavel"></div>
+          <div class="campo">Parentesco<input type="text" id="parentesco"></div>
+        </div>
+        <div class="linha">
+          <div class="campo">Telefone<input type="text" id="telefoneResponsavel"></div>
+          <div class="campo">Endereço<input type="text" id="enderecoResponsavel"></div>
+        </div>
+        <button class="botaoVoltar" onclick="voltar()">Voltar</button>
+        <button class="botaoProximo" onclick="proximo()">Próximo</button>
+      </div>
+
+      <!-- ETAPA 4 -->
+      <div class="etapa">
+        <h3>Autor</h3>
+        <div class="linha">
+          <div class="campo">Nome do autor<input type="text" id="autor"></div>
+          <div class="campo">Idade<input type="number" id="idadeAutor"></div>
+        </div>
+        <div class="linha">
+          <div class="campo">Relação com a vítima<input type="text" id="relacaoAutor"></div>
+        </div>
+        <div class="botoesEtapa">
+          <button class="botaoVoltar" onclick="voltar()">Voltar</button>
+          <button class="botaoProximo" onclick="proximo()">Próximo</button>
+        </div>
+      </div>
+
+      <!-- ETAPA 5 -->
+      <div class="etapa" id="etapaTipificacao">
+        <h3>Tipificação da Violência</h3>
+        <h4>Violência Física</h4>
+        <label><input type="checkbox" value="Agressão Física"> Agressão Física</label>
+        <label><input type="checkbox" value="Conflito físico"> Conflito físico</label>
+        <label><input type="checkbox" value="Maus-tratos"> Maus-tratos</label>
+        <label><input type="checkbox" value="Negligência"> Negligência</label>
+        <h4>Violência Psicológica</h4>
+        <label><input type="checkbox" value="Ameaça"> Ameaça</label>
+        <label><input type="checkbox" value="Humilhação"> Humilhação</label>
+        <label><input type="checkbox" value="Bullying"> Bullying</label>
+        <label><input type="checkbox" value="Chantagem"> Chantagem</label>
+        <h4>Violência Sexual</h4>
+        <label><input type="checkbox" value="Abuso Sexual"> Abuso Sexual</label>
+        <label><input type="checkbox" value="Assédio Sexual"> Assédio Sexual</label>
+        <label><input type="checkbox" value="Exploração Sexual"> Exploração Sexual</label>
+        <label><input type="checkbox" value="Estupro"> Estupro</label>
+        <h4>Violência Virtual</h4>
+        <label><input type="checkbox" value="Cyberbullying"> Cyberbullying</label>
+        <label><input type="checkbox" value="Assédio virtual"> Assédio virtual</label>
+        <label><input type="checkbox" value="Invasão de dispositivo"> Invasão de dispositivo</label>
+        <h4>Violência Moral</h4>
+        <label><input type="checkbox" value="Calúnia"> Calúnia</label>
+        <label><input type="checkbox" value="Difamação"> Difamação</label>
+        <label><input type="checkbox" value="Injúria"> Injúria</label>
+        <hr>
+        <h3>Motivação da Violência</h3>
+        <label><input type="checkbox" value="Racismo"> Racismo</label>
+        <label><input type="checkbox" value="Intolerância Religiosa"> Intolerância Religiosa</label>
+        <label><input type="checkbox" value="Sexismo"> Sexismo</label>
+        <label><input type="checkbox" value="Diversidade de gênero"> Diversidade de gênero</label>
+        <label><input type="checkbox" value="Capacitismo"> Capacitismo</label>
+        <label><input type="checkbox" value="Outros"> Outros</label>
+        <hr>
+        <h3>Quem praticou a violência?</h3>
+        <label><input type="checkbox" value="Criança"> Criança</label>
+        <label><input type="checkbox" value="Adolescente"> Adolescente</label>
+        <label><input type="checkbox" value="Pai"> Pai</label>
+        <label><input type="checkbox" value="Mãe"> Mãe</label>
+        <label><input type="checkbox" value="Responsável"> Responsável</label>
+        <label><input type="checkbox" value="Professor"> Professor</label>
+        <div class="botoesEtapa">
+          <button class="botaoVoltar" onclick="voltar()">Voltar</button>
+          <button class="botaoProximo" onclick="proximo()">Próximo</button>
+        </div>
+      </div>
+
+      <!-- ETAPA 6 -->
+      <div class="etapa">
+        <h3>Resumo da Ocorrência</h3>
+        <textarea id="resumo" placeholder="Descreva resumidamente o que aconteceu..." rows="5"></textarea>
+        <div class="botoesEtapa">
+          <button class="botaoVoltar" onclick="voltar()">Voltar</button>
+          <button class="botaoProximo" onclick="proximo()">Próximo</button>
+        </div>
+      </div>
+
+      <!-- ETAPA 7 -->
+      <div class="etapa">
+        <h3>Encaminhamento</h3>
+        <textarea id="encaminhamento" placeholder="Descreva quais ações serão tomadas..." rows="5"></textarea>
+        <div class="botoesEtapa">
+          <button class="botaoVoltar" onclick="voltar()">Voltar</button>
+          <button class="btnSalvarnotificação" onclick="salvarNotificacao()">Salvar Notificação</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATÓRIOS -->
+    <div id="relatorios" class="aba">
+      <h2>Menu de Relatórios</h2>
+      <div class="cardsRelatorio">
+        <div class="cardRelatorio" onclick="relatorioMensal()"><h3>Relatório Mensal</h3><p>Notificações por mês</p></div>
+        <div class="cardRelatorio" onclick="relatorioVitimas()"><h3>Relatório de Vítimas</h3><p>Lista de vítimas registradas</p></div>
+        <div class="cardRelatorio" onclick="relatorioTipos()"><h3>Relatório por Tipo</h3><p>Tipos de violência registrados</p></div>
+        <div class="cardRelatorio" onclick="exportarTodosPDF()"><h3>Exportar Relatório Geral</h3><p>Gerar relatório completo em PDF</p></div>
+      </div>
+      <div id="resultadoRelatorio"></div>
+      <table id="tabelaRelatorios">
+        <thead>
+          <tr>
+            <th>Protocolo</th><th>Escola</th><th>Data</th>
+            <th>Vítima</th><th>Tipo</th><th>Status</th><th>Ações</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- CONSULTA -->
+<div id="consulta" class="aba">
+
+  <style>
+    .header-consulta { margin-bottom: 2rem; }
+    .header-consulta h2 { font-size: 22px; font-weight: 600; color: #1b1b1b; display: flex; align-items: center; gap: 10px; }
+    .header-consulta p { font-size: 14px; color: #666; margin-top: 4px; }
+    .header-icon { width: 40px; height: 40px; background: #eaf3de; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+
+    .search-card-novo { background: #fff; border: 0.5px solid #e4e2da; border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .search-label-novo { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; display: block; }
+    .search-row-novo { display: flex; gap: 10px; align-items: stretch; }
+    .search-input-wrap-novo { flex: 1; position: relative; }
+    .search-input-wrap-novo .icone-busca { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 18px; color: #aaa; pointer-events: none; }
+    .search-input-novo { width: 100%; height: 48px; border: 1.5px solid #e4e2da; border-radius: 12px; padding: 0 16px 0 44px; font-size: 15px; color: #2c2c2a; background: #fff; transition: border-color .2s, box-shadow .2s; outline: none; }
+    .search-input-novo:focus { border-color: #97c459; box-shadow: 0 0 0 3px rgba(99,153,34,.12); }
+    .search-input-novo::placeholder { color: #aaa; }
+
+    .btn-buscar-novo { height: 48px; padding: 0 24px; background: #27500a; color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background .15s, transform .1s; white-space: nowrap; }
+    .btn-buscar-novo:hover { background: #1b3d07; }
+    .btn-buscar-novo:active { transform: scale(0.97); }
+
+    .search-hints-novo { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
+    .hint-chip-novo { font-size: 12px; color: #3b6d11; background: #eaf3de; border: 1px solid #c0dd97; border-radius: 20px; padding: 3px 10px; cursor: pointer; transition: background .15s; }
+    .hint-chip-novo:hover { background: #c0dd97; }
+
+    .estado-vazio-novo { text-align: center; padding: 4rem 2rem; }
+    .estado-vazio-icone-novo { width: 80px; height: 80px; background: #eaf3de; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; font-size: 32px; }
+    .estado-vazio-novo h3 { font-size: 17px; font-weight: 500; color: #2c2c2a; margin-bottom: 6px; }
+    .estado-vazio-novo p { font-size: 14px; color: #666; max-width: 300px; margin: 0 auto; }
+
+    .estado-erro-novo { text-align: center; padding: 3rem 2rem; }
+    .estado-erro-icone-novo { width: 64px; height: 64px; background: #fcebeb; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 28px; }
+    .estado-erro-novo h3 { font-size: 16px; font-weight: 500; color: #2c2c2a; margin-bottom: 4px; }
+    .estado-erro-novo p { font-size: 13px; color: #666; }
+
+    .resultados-count-novo { font-size: 13px; color: #666; margin-bottom: 1rem; }
+    .resultados-count-novo strong { color: #3b6d11; }
+
+    .card-resultado-novo { background: #fff; border: 0.5px solid #e4e2da; border-radius: 16px; margin-bottom: 1rem; overflow: hidden; transition: box-shadow .2s, transform .15s; }
+    .card-resultado-novo:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-1px); }
+
+    .card-resultado-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 0.5px solid #e4e2da; background: #f8f9f7; flex-wrap: wrap; gap: 8px; }
+    .protocolo-badge-novo { background: #eaf3de; border: 1px solid #c0dd97; color: #3b6d11; font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 20px; font-family: monospace; }
+    .escola-info-novo { font-size: 13px; color: #666; display: flex; align-items: center; gap: 5px; }
+    .status-badge-andamento { font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 20px; background: #faeeda; color: #854f0b; border: 1px solid #fac775; white-space: nowrap; }
+    .status-badge-concluido { font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 20px; background: #eaf3de; color: #3b6d11; border: 1px solid #c0dd97; white-space: nowrap; }
+
+    .card-resultado-body { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+    .card-secao { padding: 1rem 1.25rem; border-right: 0.5px solid #e4e2da; }
+    .card-secao:last-child { border-right: none; }
+    .card-secao-titulo { font-size: 11px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
+    .campo-label-novo { font-size: 11px; color: #aaa; margin-bottom: 1px; }
+    .campo-valor-novo { font-size: 14px; color: #2c2c2a; margin-bottom: 8px; }
+    .campo-valor-novo.destaque { font-weight: 600; }
+
+    .card-resultado-footer { padding: .875rem 1.25rem; border-top: 0.5px solid #e4e2da; display: flex; gap: 8px; background: #f8f9f7; flex-wrap: wrap; }
+    .btn-acao-novo { height: 36px; padding: 0 16px; border-radius: 10px; font-size: 13px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background .15s, transform .1s; border: 1px solid transparent; }
+    .btn-acao-novo:active { transform: scale(0.97); }
+    .btn-pdf-novo { background: #fff; border-color: #e4e2da; color: #2c2c2a; }
+    .btn-pdf-novo:hover { background: #f1f0eb; }
+    .btn-status-and-novo { background: #faeeda; border-color: #fac775; color: #854f0b; }
+    .btn-status-and-novo:hover { background: #fef3c7; }
+    .btn-status-ok-novo { background: #eaf3de; border-color: #c0dd97; color: #3b6d11; }
+    .btn-status-ok-novo:hover { background: #d4edba; }
+    .btn-excluir-novo { background: #fcebeb; border-color: #f7c1c1; color: #a32d2d; }
+    .btn-excluir-novo:hover { background: #fdd; }
+
+    .skeleton-novo { animation: pulse-novo 1.5s ease-in-out infinite; }
+    @keyframes pulse-novo { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .skel-block-novo { background: #e4e2da; border-radius: 8px; margin-bottom: 8px; }
+
+    @media(max-width:640px) {
+      .card-resultado-body { grid-template-columns: 1fr; }
+      .card-secao { border-right: none; border-bottom: 0.5px solid #e4e2da; }
+      .card-secao:last-child { border-bottom: none; }
+      .search-row-novo { flex-direction: column; }
+    }
+  </style>
+
+  <div class="header-consulta">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="header-icon">🔍</div>
+      <div>
+        <h2>Consultar registro</h2>
+        <p>Busque notificações por protocolo ou nome da vítima</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-card-novo">
+    <span class="search-label-novo">Busca</span>
+    <div class="search-row-novo">
+      <div class="search-input-wrap-novo">
+        <i class="fi fi-br-search icone-busca"></i>
+        <input class="search-input-novo" id="buscaProtocolo" type="text"
+          placeholder="Ex: PREV-0001 ou nome da vítima..."
+          onkeyup="if(event.key==='Enter') buscarRegistro()">
+      </div>
+      <button class="btn-buscar-novo" onclick="buscarRegistro()">
+        <i class="fi fi-br-search"></i> Buscar
+      </button>
+    </div>
+    <div class="search-hints-novo">
+      <span style="font-size:12px;color:#aaa">Exemplos:</span>
+      <span class="hint-chip-novo" onclick="document.getElementById('buscaProtocolo').value='PREV-0001';buscarRegistro()">PREV-0001</span>
+      <span class="hint-chip-novo" onclick="document.getElementById('buscaProtocolo').value='PREV-0002';buscarRegistro()">PREV-0002</span>
+    </div>
+  </div>
+
+  <div id="resultadoConsulta"></div>
+
+</div>
+    <!-- USUÁRIOS -->
+    <div id="usuarios" class="aba">
+      <div class="topoUsuarios"><h2>Gerenciamento de Usuários</h2></div>
+      <div class="cardsUsuarios">
+        <div class="cardUsuario"><h3 id="totalUsuarios">0</h3><p>Total de Usuários</p></div>
+        <div class="cardUsuario"><h3 id="usuariosAtivos">0</h3><p>Usuários Ativos</p></div>
+        <div class="cardUsuario"><h3 id="usuariosInativos">0</h3><p>Usuários Inativos</p></div>
+        <div class="cardUsuario"><h3 id="admins">0</h3><p>Administradores</p></div>
+      </div>
+      <input id="pesquisaUsuario" placeholder="🔍 Pesquisar usuário..." onkeyup="pesquisarUsuario()">
+      <div class="formUsuario">
+        <div class="linha">
+          <div class="campo"><label>Nome</label><input id="nome"></div>
+          <div class="campo">
+            <label>Escola</label>
+            <select id="escola">
+              <option value="CEJAH">CEJAH</option>
+              <option value="CACE">CACE</option>
+              <option value="SECRETARA MUNICIPAL DE EDUCAÇÃO DE HORIZONTE">SECRETARA MUNICIPAL DE EDUCAÇÃO DE HORIZONTE</option>
+              <option value="CONSELHO TUTELAR DE HORIZONTE">CONSELHO TUTELAR DE HORIZONTE</option>
+              <option value="EMEF. DEPUTADO ULISSES GUIMARÃES">EMEF. DEPUTADO ULISSES GUIMARÃES</option>
+              <option value="EMEF. DIONÍZIA ROCHA DE MORAIS">EMEF. DIONÍZIA ROCHA DE MORAIS</option>
+              <option value="EMEF. DOMITILIA ASSUNÇÃO DE MENEZES">EMEF. DOMITILIA ASSUNÇÃO DE MENEZES</option>
+              <option value="EMEF. EUCLIDIA PEREIRA DE AZEVEDO">EMEF. EUCLIDIA PEREIRA DE AZEVEDO</option>
+              <option value="EMEFQ. FERNANDO AUGUSTO NOGUEIRA">EMEFQ. FERNANDO AUGUSTO NOGUEIRA</option>
+              <option value="EMEF. FRANCISCA GADELHA PIRES">EMEF. FRANCISCA GADELHA PIRES</option>
+              <option value="EMEF. FRANCISCA MONTEIRO DE OLIVEIRA">EMEF. FRANCISCA MONTEIRO DE OLIVEIRA</option>
+              <option value="EMEF. FRANCISCO XAVIER DE FREITAS">EMEF. FRANCISCO XAVIER DE FREITAS</option>
+              <option value="EMEF. GEOVÂNIA ALBANO DE ALMEIDA">EMEF. GEOVÂNIA ALBANO DE ALMEIDA</option>
+              <option value="EMEF. JOÃO ANTÔNIO DA SILVA">EMEF. JOÃO ANTÔNIO DA SILVA</option>
+              <option value="EMEF. JOAQUIM ANTONIO DA SILVA">EMEF. JOAQUIM ANTONIO DA SILVA</option>
+              <option value="EMEF. JOSÉ ALDEMIR DA SILVA">EMEF. JOSÉ ALDEMIR DA SILVA</option>
+              <option value="EMEF. JORGE PEREIRA DA ROCHA">EMEF. JORGE PEREIRA DA ROCHA</option>
+              <option value="EMEF. MARIA PINHEIRO DA SILVA">EMEF. MARIA PINHEIRO DA SILVA</option>
+              <option value="EMEF. MANOEL FELIPE DOS SANTOS">EMEF. MANOEL FELIPE DOS SANTOS</option>
+              <option value="EMEF. MARIA JOSÉ DE SOUSA">EMEF. MARIA JOSÉ DE SOUSA</option>
+              <option value="EMEF. MARIA LUIZA BARBOZA CHAVES">EMEF. MARIA LUIZA BARBOZA CHAVES</option>
+              <option value="EMEF. MARIA REGIANA DA SILVA">EMEF. MARIA REGIANA DA SILVA</option>
+              <option value="EMEF. MARINA FERREIRA DE ALMEIDA">EMEF. MARINA FERREIRA DE ALMEIDA</option>
+              <option value="EMEF. MILTON NOGUEIRA NERIS">EMEF. MILTON NOGUEIRA NERIS</option>
+              <option value="EMEFQ. MARIA TEODORA EVANGELISTA COSTA">EMEFQ. MARIA TEODORA EVANGELISTA COSTA</option>
+              <option value="EMEFQ. OLÍMPIO NOGUEIRA LOPES">EMEFQ. OLÍMPIO NOGUEIRA LOPES</option>
+              <option value="EMEF. PROFESSORA RAIMUNDA DUARTE TEXEIRA">EMEF. PROFESSORA RAIMUNDA DUARTE TEXEIRA</option>
+              <option value="EMEF. PROFESSORA DIONE MARIA BEZERRA PESSOA">EMEF. PROFESSORA DIONE MARIA BEZERRA PESSOA</option>
+              <option value="EMEF. RAIMUNDO DOMINGOS DE SOUSA">EMEF. RAIMUNDO DOMINGOS DE SOUSA</option>
+              <option value="EMEF. SEBASTIÃO LOPES DE OLIVEIRA">EMEF. SEBASTIÃO LOPES DE OLIVEIRA</option>
+              <option value="EMEF. CEI ADÍLIA FERREIRA LIMA">EMEF. CEI ADÍLIA FERREIRA LIMA</option>
+              <option value="CEI ALDA DE CARVALHO BENTO">CEI ALDA DE CARVALHO BENTO</option>
+              <option value="CEI ANNA REBECA SOUSA PEREIRA">CEI ANNA REBECA SOUSA PEREIRA</option>
+              <option value="CEI CLEONICE PIRES DE SOUSA">CEI CLEONICE PIRES DE SOUSA</option>
+              <option value="CEI DONA SINHÁ">CEI DONA SINHÁ</option>
+              <option value="CEI DR. WALDEMAR GONÇALVES DE SOUSA">CEI DR. WALDEMAR GONÇALVES DE SOUSA</option>
+              <option value="CEI EUFRAZINA MARTINS DOS SANTOS">CEI EUFRAZINA MARTINS DOS SANTOS</option>
+              <option value="CEI FRANCISCA ERMIRA KOHLER">CEI FRANCISCA ERMIRA KOHLER</option>
+              <option value="CEI JOSÉ ANTONIO DA SILVA - PROF SENA">CEI JOSÉ ANTONIO DA SILVA - PROF SENA</option>
+              <option value="CEI MARIA CARMEN LUCIA DA SILVA">CEI MARIA CARMEN LUCIA DA SILVA</option>
+              <option value="CEI MARIA DO CARMO DE OLIVEIRA">CEI MARIA DO CARMO DE OLIVEIRA</option>
+              <option value="CEI MARIA ELIZIETE MARTINS CARNEIRO">CEI MARIA ELIZIETE MARTINS CARNEIRO</option>
+              <option value="CEI MARIA JAYCEGLAB NOBRE RABELO">CEI MARIA JAYCEGLAB NOBRE RABELO</option>
+              <option value="MARIA JOSÉ ALVES DA SILVA">MARIA JOSÉ ALVES DA SILVA</option>
+              <option value="CEI NARA RICARDO DE LINO">CEI NARA RICARDO DE LINO</option>
+              <option value="CEI NELSA NAVILHA GRENDENE BARTELLE">CEI NELSA NAVILHA GRENDENE BARTELLE</option>
+              <option value="CEI PEDRO NOGUEIRA DE QUEIROZ">CEI PEDRO NOGUEIRA DE QUEIROZ</option>
+              <option value="CEI STELA MARIA NASPOLINI">CEI STELA MARIA NASPOLINI</option>
+              <option value="CEI VICENTE XAVIER DA SILVA">CEI VICENTE XAVIER DA SILVA</option>
+            </select>
+          </div>
+        </div>
+        <div class="linha">
+          <div class="campo"><label>Email</label><input id="email"></div>
+          <div class="campo">
+            <label>Nível</label>
+            <select id="nivelUsuario">
+              <option value="usuario">Usuário</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+        </div>
+        <button class="botaoSalvar" onclick="cadastrarUsuario()">Cadastrar Usuário</button>
+      </div>
+
+      <table id="tabelaUsuarios">
+        <thead>
+          <tr>
+            <th>Nome</th><th>Escola</th><th>Email</th>
+            <th>Senha</th><th>Nível</th><th>Status</th><th>Ações</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<div class="botaoFlutuante" title="Adicionar novo registro" onclick="abrirNovoRegistroAtalho()">+</div>
+
+<script>
+// -------------------------------------------------------
+// CONTROLE DE ACESSO — instituições com visão global
+// -------------------------------------------------------
+
+/**
+ * Instituições que têm acesso a TODOS os registros de todas as escolas.
+ * Qualquer usuário cadastrado em uma dessas instituições verá tudo,
+ * independentemente do nível (admin ou usuário comum).
+ */
+const ESCOLAS_ACESSO_GLOBAL = [
+  "SECRETARA MUNICIPAL DE EDUCAÇÃO DE HORIZONTE",
+  "CONSELHO TUTELAR DE HORIZONTE"
+];
+
+/**
+ * Retorna true se o usuário logado tem acesso global (vê todas as escolas).
+ * Critérios: nível admin  OU  escola pertence à lista de acesso global.
+ */
+function temAcessoGlobal(user) {
+  if (!user) return false;
+  if (user.nivel === "admin") return true;
+  return ESCOLAS_ACESSO_GLOBAL.includes((user.escola || "").trim());
+}
+
+// -------------------------------------------------------
+// MAPEAMENTO DE TIPIFICAÇÃO → CATEGORIA
+// -------------------------------------------------------
+const MAPA_TIPO = {
+  "Agressão Física": "fisica", "Conflito físico": "fisica",
+  "Maus-tratos": "fisica", "Negligência": "fisica",
+  "Ameaça": "psico", "Humilhação": "psico",
+  "Bullying": "psico", "Chantagem": "psico",
+  "Abuso Sexual": "sexual", "Assédio Sexual": "sexual",
+  "Exploração Sexual": "sexual", "Estupro": "sexual",
+  "Cyberbullying": "virtual", "Assédio virtual": "virtual",
+  "Invasão de dispositivo": "virtual",
+  "Calúnia": "moral", "Difamação": "moral", "Injúria": "moral",
+  "Racismo": "motiv", "Intolerância Religiosa": "motiv",
+  "Sexismo": "motiv", "Diversidade de gênero": "motiv",
+  "Capacitismo": "motiv", "Outros": "motiv",
+  "Criança": "praticou", "Adolescente": "praticou", "Pai": "praticou",
+  "Mãe": "praticou", "Responsável": "praticou", "Professor": "praticou"
+};
+
+const ICONE_TIPO = {
+  fisica: "🤜", psico: "🧠", sexual: "⚠️",
+  virtual: "💻", moral: "🗣️", motiv: "🎯", praticou: "👤"
+};
+
+const COR_CATEGORIA_PDF = {
+  fisica:   [183, 28, 28],
+  psico:    [245, 127, 23],
+  sexual:   [74, 20, 140],
+  virtual:  [13, 71, 161],
+  moral:    [27, 94, 32],
+  motiv:    [191, 54, 12],
+  praticou: [106, 27, 154]
+};
+
+function renderTags(tipoStr) {
+  if (!tipoStr || tipoStr.trim() === "") {
+    return '<span style="color:#999;font-size:12px;">Não informado</span>';
+  }
+  const itens = tipoStr.split(",").map(t => t.trim()).filter(t => t.length > 0);
+  if (itens.length === 0) {
+    return '<span style="color:#999;font-size:12px;">Não informado</span>';
+  }
+  return '<div class="tagsTipo">' +
+    itens.map(t => {
+      const cat = MAPA_TIPO[t] || "moral";
+      const icone = ICONE_TIPO[cat] || "•";
+      return `<span class="tagTipo ${cat}">${icone} ${t}</span>`;
+    }).join("") +
+    '</div>';
+}
+
+function parseTipos(tipoStr) {
+  if (!tipoStr || tipoStr.trim() === "") return [];
+  return tipoStr.split(",").map(t => t.trim()).filter(t => t.length > 0);
+}
+
+// -------------------------------------------------------
+// SESSÃO
+// -------------------------------------------------------
+let usuarioLogado = null;
+
+function salvarSessao(user) {
+  usuarioLogado = user;
+  sessionStorage.setItem("usuarioLogado", JSON.stringify(user));
+  sessionStorage.setItem("tipo", user.nivel);
+}
+
+function carregarSessao() {
+  const s = sessionStorage.getItem("usuarioLogado");
+  if (s) usuarioLogado = JSON.parse(s);
+  return usuarioLogado;
+}
+
+function limparSessao() {
+  usuarioLogado = null;
+  sessionStorage.removeItem("usuarioLogado");
+  sessionStorage.removeItem("tipo");
+}
+
+function getTipo() {
+  return sessionStorage.getItem("tipo") || "";
+}
+
+function gerarProtocolo(numero) {
+  return "PREV-" + String(numero).padStart(4, "0");
+}
+
+// -------------------------------------------------------
+// LOGIN / LOGOUT
+// -------------------------------------------------------
+function abrirLogin() { document.getElementById("loginModal").style.display = "flex"; }
+function fecharLogin() { document.getElementById("loginModal").style.display = "none"; }
+
+async function entrar() {
+  const email = document.getElementById("usuario").value.trim();
+  const senha = document.getElementById("senha").value.trim();
+  const { data, error } = await db.from("usuarios").select("*").eq("email", email).eq("senha", senha).single();
+  if (error || !data) { alert("Usuário ou senha inválidos!"); return; }
+  if (data.status === "Inativo") { alert("Usuário inativo! Procure o administrador."); return; }
+  salvarSessao(data);
+  alert("Login realizado!");
+  abrirPainel();
+}
+
+function sair() { limparSessao(); location.reload(); }
+
+// -------------------------------------------------------
+// PAINEL
+// -------------------------------------------------------
+function abrirPainel() {
+  const user = carregarSessao();
+  const modoPublico = document.getElementById("painel").classList.contains("modoPublicoRegistro");
+  if (!modoPublico && !user) { alert("Acesso não autorizado!"); location.reload(); return; }
+
+  document.getElementById("loginModal").style.display = "none";
+  document.getElementById("inicio").style.display = "none";
+  document.getElementById("painel").style.display = "block";
+  document.getElementById("painel").classList.remove("modoPublicoRegistro");
+
+  const sidebar = document.querySelector(".sidebar");
+  if (sidebar) sidebar.style.display = "";
+  const topo = document.querySelector(".topoAdmin");
+  if (topo) topo.style.display = "";
+  const usuarioMenuEl = document.querySelector(".usuarioMenu");
+  if (usuarioMenuEl) usuarioMenuEl.style.display = "flex";
+
+  const menuUsuarios = document.getElementById("menuUsuarios");
+  if (getTipo() !== "admin") {
+    if (menuUsuarios) menuUsuarios.style.display = "none";
+  } else {
+    if (menuUsuarios) menuUsuarios.style.display = "block";
+  }
+
+  if (user) {
+    document.getElementById("nomeUsuario").innerText = user.nome;
+    document.querySelector(".avatar").innerText = user.nome.charAt(0);
+    const sub = document.getElementById("perfilSubtitulo");
+    if (sub) sub.innerText = (user.nivel || "") + " • " + (user.escola || "");
+  }
+
+  setTimeout(() => abrirAba("dashboard"), 100);
+  atualizarBadge();
+  atualizarBotaoFlutuante();
+}
+
+// -------------------------------------------------------
+// ABAS
+// -------------------------------------------------------
+function abrirAba(nome) {
+  if (nome === "usuarios" && getTipo() !== "admin") {
+    alert("Acesso permitido apenas para administrador"); return;
+  }
+  document.querySelectorAll(".aba").forEach(a => a.style.display = "none");
+  const ativa = document.getElementById(nome);
+  if (!ativa) return;
+  ativa.style.display = "block";
+  ativa.style.animation = "none";
+  setTimeout(() => { ativa.style.animation = "fadeSlide 0.4s"; }, 10);
+
+  if (nome === "dashboard") setTimeout(() => carregarGraficos(), 100);
+  if (nome === "relatorios") carregarRelatorios();
+  if (nome === "usuarios") { carregarUsuarios(); atualizarCardsUsuarios(); }
+
+  atualizarBotaoFlutuante();
+}
+
+// -------------------------------------------------------
+// ETAPAS DO FORMULÁRIO
+// -------------------------------------------------------
+let etapaAtual = 0;
+
+function mostrarEtapa() {
+  const etapas = document.querySelectorAll(".etapa");
+  const abas   = document.querySelectorAll(".abaItem");
+  etapas.forEach((e, i) => e.style.display = i === etapaAtual ? "block" : "none");
+  abas.forEach((a, i) => a.classList.toggle("ativa", i === etapaAtual));
+}
+
+function proximo() {
+  const etapas = document.querySelectorAll(".etapa");
+  if (etapaAtual < etapas.length - 1) { etapaAtual++; mostrarEtapa(); }
+}
+
+function voltar() {
+  if (etapaAtual > 0) { etapaAtual--; mostrarEtapa(); }
+}
+
+// -------------------------------------------------------
+// SALVAR NOTIFICAÇÃO
+// -------------------------------------------------------
+async function salvarNotificacao() {
+  const user = carregarSessao() || {};
+  const tipos = [];
+  document.querySelectorAll('#etapaTipificacao input[type="checkbox"]:checked')
+    .forEach(c => tipos.push(c.value));
+
+  const todos = await dbSelect("relatorios");
+  const protocolo = gerarProtocolo(todos.length + 1);
+
+  const novo = {
+    protocolo,
+    escola:          user.escola || "Pública",
+    data:            document.getElementById("dataPreenchimento").value || "",
+    local:           document.getElementById("localTipo").value || "",
+    local_detalhado: document.getElementById("localDetalhado").value || "",
+    vitima:          document.getElementById("nomeVitima").value || "",
+    idade:           document.getElementById("idadeVitima").value || "",
+    sexo:            document.querySelector('input[name="sexo"]:checked')?.value || "",
+    raca:            document.querySelector('input[name="raca"]:checked')?.value || "",
+    orientacao:      document.querySelector('input[name="orientacao"]:checked')?.value || "",
+    escolaridade:    document.getElementById("escolaridade").value || "",
+    responsavel:     document.getElementById("responsavel").value || "",
+    telefone:        document.getElementById("telefoneResponsavel").value || "",
+    parentesco:      document.getElementById("parentesco").value || "",
+    endereco:        document.getElementById("enderecoResponsavel").value || "",
+    autor:           document.getElementById("autor").value || "",
+    idade_autor:     document.getElementById("idadeAutor").value || "",
+    relacao_autor:   document.getElementById("relacaoAutor").value || "",
+    tipo:            tipos.join(", "),
+    resumo:          document.getElementById("resumo").value || "",
+    encaminhamento:  document.getElementById("encaminhamento").value || "",
+    status:          "Em andamento"
+  };
+
+  const res = await dbInsert("relatorios", novo);
+  if (!res) { alert("Erro ao salvar notificação!"); return; }
+
+  await adicionarNotificacao("Nova notificação: " + novo.vitima, novo.escola);
+  alert("Notificação registrada!\nProtocolo: " + protocolo);
+  limparFormulario();
+  etapaAtual = 0;
+  mostrarEtapa();
+}
+
+// -------------------------------------------------------
+// USUÁRIOS
+// -------------------------------------------------------
+function gerarSenha(tamanho = 8) {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let s = "";
+  for (let i = 0; i < tamanho; i++) s += chars.charAt(Math.floor(Math.random() * chars.length));
+  return s;
+}
+
+async function cadastrarUsuario() {
+  const nome   = document.getElementById("nome").value;
+  const email  = document.getElementById("email").value;
+  const nivel  = document.getElementById("nivelUsuario").value;
+  const escola = document.getElementById("escola").value;
+  const senha  = gerarSenha();
+  const res = await dbInsert("usuarios", { nome, email, senha, nivel, escola, status: "Ativo" });
+  if (!res) { alert("Erro ao cadastrar (email duplicado?)"); return; }
+  alert("Usuário cadastrado!\nSenha: " + senha);
+  carregarUsuarios();
+  atualizarCardsUsuarios();
+}
+
+async function carregarUsuarios() {
+  const tbody = document.querySelector("#tabelaUsuarios tbody");
+  if (!tbody) return;
+  const lista = await dbSelect("usuarios");
+  tbody.innerHTML = "";
+  lista.forEach(u => {
+    const linha = tbody.insertRow();
+    linha.insertCell(0).innerText = u.nome   || "";
+    linha.insertCell(1).innerText = u.escola || "";
+    linha.insertCell(2).innerText = u.email  || "";
+    linha.insertCell(3).innerText = u.senha  || "";
+    linha.insertCell(4).innerText = u.nivel  || "";
+    linha.insertCell(5).innerHTML = `<span class="${u.status === "Ativo" ? "statusAtivo" : "statusInativo"}">${u.status || "Ativo"}</span>`;
+    linha.insertCell(6).innerHTML = `
+      <button class="botaoAcao botaoEditar"  onclick="editarUsuario(this)">Editar</button>
+      <button class="botaoAcao botaoStatus"  onclick="mudarStatus(this)">Status</button>
+      <button class="botaoAcao botaoExcluir" onclick="excluirUsuario('${u.email}')">Excluir</button>
+    `;
+  });
+}
+
+async function atualizarCardsUsuarios() {
+  const lista = await dbSelect("usuarios");
+  let total = lista.length, ativos = 0, inativos = 0, admins = 0;
+  lista.forEach(u => {
+    if (u.status === "Ativo") ativos++; else inativos++;
+    if (u.nivel === "admin") admins++;
+  });
+  const el = (id) => document.getElementById(id);
+  if (el("totalUsuarios"))    el("totalUsuarios").innerText    = total;
+  if (el("usuariosAtivos"))   el("usuariosAtivos").innerText   = ativos;
+  if (el("usuariosInativos")) el("usuariosInativos").innerText = inativos;
+  if (el("admins"))           el("admins").innerText           = admins;
+}
+
+async function excluirUsuario(email) {
+  if (!confirm("Deseja excluir este usuário?")) return;
+  await dbDelete("usuarios", { email });
+  carregarUsuarios();
+  atualizarCardsUsuarios();
+}
+
+async function mudarStatus(btn) {
+  const linha = btn.parentElement.parentElement;
+  const email = linha.children[2].innerText;
+  const statusAtual = linha.children[5].innerText.trim();
+  const novoStatus = statusAtual === "Ativo" ? "Inativo" : "Ativo";
+  await dbUpdate("usuarios", { email }, { status: novoStatus });
+  carregarUsuarios();
+}
+
+function editarUsuario(btn) {
+  const linha = btn.parentElement.parentElement;
+  document.getElementById("nome").value  = linha.children[0].innerText;
+  document.getElementById("email").value = linha.children[2].innerText;
+  linha.remove();
+}
+
+function pesquisarUsuario() {
+  const termo = document.getElementById("pesquisaUsuario")?.value.toLowerCase().trim() || "";
+  document.querySelectorAll("#tabelaUsuarios tbody tr").forEach(l => {
+    l.style.display = l.innerText.toLowerCase().includes(termo) ? "" : "none";
+  });
+}
+
+// -------------------------------------------------------
+// RELATÓRIOS
+// -------------------------------------------------------
+
+/**
+ * Retorna os relatórios filtrados conforme o nível de acesso do usuário:
+ *  - Admin, Secretaria ou Conselho Tutelar → todos os registros
+ *  - Demais usuários → apenas registros da própria escola
+ */
+async function obterRelatoriosFiltrados() {
+  const user = carregarSessao() || {};
+  const lista = await dbSelect("relatorios");
+
+  // Acesso global: admin, Secretaria Municipal ou Conselho Tutelar
+  if (temAcessoGlobal(user)) return lista;
+
+  // Acesso restrito: apenas registros da escola do usuário
+  return lista.filter(r => r.escola === user.escola);
+}
+
+async function carregarRelatorios() {
+  const lista = await obterRelatoriosFiltrados();
+  const tbody = document.querySelector("#tabelaRelatorios tbody");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+  lista.forEach(r => renderLinhaRelatorio(tbody, r));
+}
+
+async function relatorioMensal() {
+  const lista = await obterRelatoriosFiltrados();
+  const mesAtual = new Date().getMonth() + 1;
+  const tbody = document.querySelector("#tabelaRelatorios tbody");
+  tbody.innerHTML = "";
+  lista.filter(r => { const d = new Date(r.data); return (d.getMonth() + 1) === mesAtual; })
+       .forEach(r => renderLinhaRelatorio(tbody, r));
+}
+
+async function relatorioVitimas() {
+  const lista = await obterRelatoriosFiltrados();
+  const tbody = document.querySelector("#tabelaRelatorios tbody");
+  tbody.innerHTML = "";
+  lista.forEach(r => renderLinhaRelatorio(tbody, r));
+}
+
+async function relatorioTipos() { await relatorioVitimas(); }
+
+function renderLinhaRelatorio(tabela, r) {
+  const linha = tabela.insertRow();
+  const proto = String(r.protocolo || "");
+
+  linha.insertCell(0).innerHTML = proto;
+  linha.insertCell(1).innerHTML = r.escola || "";
+  linha.insertCell(2).innerHTML = r.data   || "";
+  linha.insertCell(3).innerHTML = r.vitima || "";
+
+  const celTipo = linha.insertCell(4);
+  celTipo.innerHTML = renderTags(r.tipo);
+
+  linha.insertCell(5).innerHTML = `<button onclick="alterarStatus('${proto}')">${r.status || "Em andamento"}</button>`;
+  linha.insertCell(6).innerHTML = `
+    <button onclick="relatorioIndividual('${proto}')">PDF</button>
+    <button onclick="deletarRegistro('${proto}')" style="background:#c62828;color:white;">Excluir</button>
+  `;
+}
+
+async function alterarStatus(protocolo) {
+  const lista = await dbSelect("relatorios", { protocolo });
+  if (!lista.length) return;
+  const r = lista[0];
+  const novoStatus = r.status === "Concluído" ? "Em andamento" : "Concluído";
+  await dbUpdate("relatorios", { protocolo }, { status: novoStatus });
+  alert("Status agora é: " + novoStatus);
+  carregarRelatorios();
+}
+
+async function deletarRegistro(protocolo) {
+  if (!confirm("Deseja realmente excluir este registro?")) return;
+  await dbDelete("relatorios", { protocolo });
+  carregarRelatorios();
+}
+
+// -------------------------------------------------------
+// CONSULTA
+// -------------------------------------------------------
+async function buscarRegistro() {
+  const termo = document.getElementById("buscaProtocolo").value.trim().toLowerCase();
+  const div   = document.getElementById("resultadoConsulta");
+
+  if (!termo) {
+    div.innerHTML = `
+      <div class="estado-vazio-novo">
+        <div class="estado-vazio-icone-novo">🔍</div>
+        <h3>Pronto para buscar</h3>
+        <p>Digite o protocolo ou nome da vítima para localizar um registro.</p>
+      </div>`;
+    return;
+  }
+
+  div.innerHTML = `
+    <div class="search-card-novo skeleton-novo">
+      <div class="skel-block-novo" style="width:40%;height:16px"></div>
+      <div class="skel-block-novo" style="width:100%;height:80px;margin-top:8px"></div>
+    </div>`;
+
+  // obterRelatoriosFiltrados() já aplica o controle de acesso correto
+  const lista = await obterRelatoriosFiltrados();
+
+  const resultados = lista.filter(r =>
+    (r.protocolo || "").toLowerCase().includes(termo) ||
+    (r.vitima    || "").toLowerCase().includes(termo)
+  );
+
+  if (!resultados.length) {
+    div.innerHTML = `
+      <div class="estado-erro-novo">
+        <div class="estado-erro-icone-novo">❌</div>
+        <h3>Nenhum registro encontrado</h3>
+        <p>Verifique o protocolo ou tente outro nome.</p>
+      </div>`;
+    return;
+  }
+
+  let html = `<p class="resultados-count-novo"><strong>${resultados.length}</strong> registro${resultados.length > 1 ? "s" : ""} encontrado${resultados.length > 1 ? "s" : ""}</p>`;
+
+  resultados.forEach(r => {
+    const isOk = r.status === "Concluído";
+
+    const dataFmt = r.data
+      ? r.data.split("-").reverse().join("/")
+      : "—";
+
+    const idSafe = (r.protocolo || "").replace(/[^a-zA-Z0-9]/g, "_");
+
+    html += `
+    <div class="card-resultado-novo">
+
+      <div class="card-resultado-header">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span class="protocolo-badge-novo">${r.protocolo || ""}</span>
+          <span class="escola-info-novo">
+            <i class="fi fi-sr-school"></i> ${r.escola || ""}
+          </span>
+        </div>
+        <span class="${isOk ? "status-badge-concluido" : "status-badge-andamento"}">
+          ${isOk ? "✓ Concluído" : "⏳ Em andamento"}
+        </span>
+      </div>
+
+      <div class="card-resultado-body">
+
+        <div class="card-secao">
+          <div class="card-secao-titulo">📍 Ocorrência</div>
+          <div class="campo-label-novo">Data</div>
+          <div class="campo-valor-novo destaque">${dataFmt}</div>
+          <div class="campo-label-novo">Local</div>
+          <div class="campo-valor-novo">${r.local || "—"}</div>
+        </div>
+
+        <div class="card-secao">
+          <div class="card-secao-titulo">👤 Vítima</div>
+          <div class="campo-label-novo">Nome</div>
+          <div class="campo-valor-novo destaque">${r.vitima || "—"}</div>
+          <div class="campo-label-novo">Idade / Sexo</div>
+          <div class="campo-valor-novo">${r.idade || "—"} anos • ${r.sexo || "—"}</div>
+          <div class="campo-label-novo">Raça / Cor</div>
+          <div class="campo-valor-novo">${r.raca || "—"}</div>
+        </div>
+
+        <div class="card-secao">
+          <div class="card-secao-titulo">⚠️ Tipificação</div>
+          <div id="tags_consulta_${idSafe}"></div>
+        </div>
+
+      </div>
+
+      <div class="card-resultado-footer">
+        <button class="btn-acao-novo btn-pdf-novo"
+          onclick="relatorioIndividual('${r.protocolo}')">
+          <i class="fi fi-sr-document"></i> Ver PDF
+        </button>
+        <button class="btn-acao-novo ${isOk ? "btn-status-ok-novo" : "btn-status-and-novo"}"
+          onclick="alterarStatusConsulta('${r.protocolo}')">
+          <i class="fi fi-sr-refresh"></i> Mudar status
+        </button>
+        <button class="btn-acao-novo btn-excluir-novo"
+          onclick="if(confirm('Excluir ${r.protocolo}?')) deletarRegistro('${r.protocolo}').then(()=>buscarRegistro())">
+          <i class="fi fi-sr-trash"></i> Excluir
+        </button>
+      </div>
+
+    </div>`;
+  });
+
+  div.innerHTML = html;
+
+  resultados.forEach(r => {
+    const idSafe = (r.protocolo || "").replace(/[^a-zA-Z0-9]/g, "_");
+    const el = document.getElementById("tags_consulta_" + idSafe);
+    if (el) el.innerHTML = renderTags(r.tipo);
+  });
+}
+
+async function alterarStatusConsulta(protocolo) {
+  await alterarStatus(protocolo);
+  buscarRegistro();
+}
+
+// -------------------------------------------------------
+// GRÁFICOS
+// -------------------------------------------------------
+async function carregarGraficos() {
+  const lista = await obterRelatoriosFiltrados();
+  let masculino = 0, feminino = 0, outros = 0;
+  let crianca = 0, adolescente = 0, adulto = 0;
+  let meses = Array(12).fill(0);
+  let andamento = 0, concluido = 0;
+
+  lista.forEach(r => {
+    if (r.sexo === "Masculino") masculino++;
+    else if (r.sexo === "Feminino") feminino++;
+    else outros++;
+
+    const idade = parseInt(r.idade);
+    if (idade <= 12) crianca++;
+    else if (idade <= 17) adolescente++;
+    else adulto++;
+
+    if (r.data) { const d = new Date(r.data); meses[d.getMonth()]++; }
+    if (r.status === "Concluído") concluido++; else andamento++;
+  });
+
+  document.getElementById("totalRegistros").innerText  = lista.length;
+  document.getElementById("casosAndamento").innerText  = andamento;
+  document.getElementById("casosConcluidos").innerText = concluido;
+
+  criarGrafico("graficoMes", {
+    type: "line",
+    data: {
+      labels: ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],
+      datasets: [{ label: "Notificações", data: meses, borderColor: "#2e7d32", backgroundColor: "rgba(46,125,50,0.1)", tension: 0.4, fill: true }]
+    },
+    options: { plugins: { legend: { display: false } } }
+  });
+
+  criarGrafico("graficoSexo", {
+    type: "doughnut",
+    data: { labels: ["Masculino","Feminino","Outros"], datasets: [{ data: [masculino, feminino, outros], backgroundColor: ["#42a5f5","#ec407a","#9e9e9e"] }] },
+    options: { plugins: { legend: { position: "bottom" } }, cutout: "60%" }
+  });
+
+  criarGrafico("graficoIdade", {
+    type: "bar",
+    data: { labels: ["Crianças","Adolescentes","Adultos"], datasets: [{ data: [crianca, adolescente, adulto], backgroundColor: ["#66bb6a","#ffa726","#ef5350"] }] },
+    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+  });
+
+  criarGrafico("graficoStatus", {
+    type: "doughnut",
+    data: { labels: ["Em andamento","Concluído"], datasets: [{ data: [andamento, concluido], backgroundColor: ["#ffa726","#66bb6a"] }] },
+    options: { plugins: { legend: { position: "bottom" } }, cutout: "60%" }
+  });
+}
+
+function criarGrafico(id, config) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  if (canvas.chart) canvas.chart.destroy();
+  canvas.chart = new Chart(canvas, config);
+}
+
+// -------------------------------------------------------
+// NOTIFICAÇÕES
+// -------------------------------------------------------
+async function adicionarNotificacao(texto, escola) {
+  await dbInsert("notificacoes", {
+    texto, escola: escola || "Não informada", data: new Date().toLocaleString()
+  });
+>>>>>>> cc0f5f3d05dfa0a6506030fbacf953b227121bee
   atualizarBadge();
 }
 
 async function atualizarBadge() {
   const user = carregarSessao() || {};
   let lista = await dbSelect("notificacoes");
+<<<<<<< HEAD
   if (!temAcessoGlobal(user)) {
     lista = lista.filter(n => n.escola === user.escola);
   }
@@ -1845,10 +2930,15 @@ async function verNotificacoes() {
   if (lista_el.style.display === "block") { lista_el.style.display = "none"; return; }
   const user = carregarSessao() || {};
   let lista = await dbSelect("notificacoes");
+=======
+
+  // Secretaria e Conselho Tutelar veem notificações de todas as escolas
+>>>>>>> cc0f5f3d05dfa0a6506030fbacf953b227121bee
   if (!temAcessoGlobal(user)) {
     lista = lista.filter(n => n.escola === user.escola);
   }
 
+<<<<<<< HEAD
   lista_el.innerHTML = "";
   if (lista.length === 0) {
     lista_el.innerHTML = "<p style='padding:8px;color:#888;font-size:13px'>Nenhuma notificação</p>";
@@ -1871,10 +2961,40 @@ async function verNotificacoes() {
           <small style="color:#888">🏫 ${escolaNotif}</small>
           <small style="color:#aaa">🕒 ${n.data}</small>
         </div>`;
+=======
+  document.getElementById("badgeNotif").innerText = lista.length;
+}
+
+async function verNotificacoes() {
+  const lista_el = document.getElementById("listaNotificacoes");
+  if (lista_el.style.display === "block") { lista_el.style.display = "none"; return; }
+  const user = carregarSessao() || {};
+  let lista = await dbSelect("notificacoes");
+
+  // Secretaria e Conselho Tutelar veem notificações de todas as escolas
+  if (!temAcessoGlobal(user)) {
+    lista = lista.filter(n => n.escola === user.escola);
+  }
+
+  lista_el.innerHTML = "";
+  if (lista.length === 0) {
+    lista_el.innerHTML = "<p>Nenhuma notificação</p>";
+  } else {
+    lista.forEach(n => {
+      lista_el.innerHTML += `<div style="border-bottom:1px solid #eee;padding:10px;margin-bottom:6px;">
+        <strong>${n.texto}</strong><br>
+        <small>🏫 Escola: ${n.escola}</small><br>
+        <small>🕒 ${n.data}</small>
+      </div>`;
+>>>>>>> cc0f5f3d05dfa0a6506030fbacf953b227121bee
     });
   }
   lista_el.style.display = "block";
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> cc0f5f3d05dfa0a6506030fbacf953b227121bee
 // -------------------------------------------------------
 // PERFIL / SENHA
 // -------------------------------------------------------
@@ -1894,12 +3014,50 @@ function abrirPerfil() {
   if (!user) return;
   document.getElementById("perfilNome").value = user.nome;
   document.getElementById("emailUsuario").value = user.email;
+<<<<<<< HEAD
   const nivelSelect = document.getElementById("nivel");
   if (nivelSelect) nivelSelect.value = user.nivel || "usuario";
   const campoNivel = document.getElementById("campoNivel");
   if (campoNivel) { campoNivel.style.display = user.nivel === "admin" ? "" : "none"; }
+=======
+>>>>>>> cc0f5f3d05dfa0a6506030fbacf953b227121bee
   document.getElementById("perfilModal").style.display = "flex";
 }
+function fecharPerfil() { document.getElementById("perfilModal").style.display = "none"; }
+
+async function salvarPerfil() {
+  const user = carregarSessao();
+  const novoNome = document.getElementById("perfilNome").value;
+  await dbUpdate("usuarios", { email: user.email }, { nome: novoNome });
+  user.nome = novoNome;
+  salvarSessao(user);
+  document.getElementById("nomeUsuario").innerText = novoNome;
+  alert("Perfil atualizado!");
+  fecharPerfil();
+}
+
+function alterarSenha() { document.getElementById("senhaModal").style.display = "flex"; }
+function fecharSenha()   { document.getElementById("senhaModal").style.display = "none"; }
+
+async function salvarSenha() {
+  const atual     = document.getElementById("senhaAtual").value;
+  const nova      = document.getElementById("novaSenha").value;
+  const confirmar = document.getElementById("confirmarSenha").value;
+  const user      = carregarSessao();
+  if (atual !== user.senha)  { alert("Senha atual incorreta!"); return; }
+  if (nova !== confirmar)    { alert("As senhas não coincidem!"); return; }
+  await dbUpdate("usuarios", { email: user.email }, { senha: nova });
+  user.senha = nova;
+  salvarSessao(user);
+  alert("Senha alterada com sucesso!");
+  fecharSenha();
+}
+
+// -------------------------------------------------------
+// RECUPERAR SENHA
+// -------------------------------------------------------
+function abrirRecuperacao() { document.getElementById("modalRecuperar").style.display = "flex"; }
+
 function fecharPerfil() { document.getElementById("perfilModal").style.display = "none"; }
 
 async function salvarPerfil() {
@@ -1963,16 +3121,24 @@ async function relatorioIndividual(protocolo) {
   const lista = await dbSelect("relatorios", { protocolo });
   if (!lista.length) { alert("Registro não encontrado"); return; }
   const r = lista[0];
+<<<<<<< HEAD
   const user = carregarSessao() || {};
 
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   let y = 0;
+=======
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  let y = 20;
+>>>>>>> cc0f5f3d05dfa0a6506030fbacf953b227121bee
 
   const logo = new Image();
   logo.src = "prefeitura.png";
 
   const gerarPDF = function() {
+<<<<<<< HEAD
     try { doc.addImage(logo, "PNG", 10, 5, 59, 38); } catch(e) {}
 
     doc.setFont("helvetica","bold"); doc.setFontSize(16);
@@ -2381,6 +3547,265 @@ async function marcarTodasLidas() {
   verNotificacoes();
   verNotificacoes();
 }
+=======
+    try {
+      doc.addImage(logo, "PNG", 1, 2, 75, 40);
+    } catch(e) {}
+
+    doc.setFont("helvetica", "bold"); doc.setFontSize(16);
+    doc.text("PREFEITURA MUNICIPAL", 105, 18, null, null, "center");
+    doc.setFontSize(12);
+    doc.text("SISTEMA DE NOTIFICAÇÃO PREVINE", 105, 26, null, null, "center");
+    doc.setFontSize(10); doc.setFont("helvetica", "normal");
+    doc.text("RELATÓRIO INDIVIDUAL DE OCORRÊNCIA", 105, 34, null, null, "center");
+    doc.setDrawColor(46,125,50); doc.setLineWidth(0.2); doc.line(10, 42, 200, 42);
+    y = 52;
+
+    doc.setFont("helvetica","bold"); doc.setFontSize(11);
+    doc.text("DADOS DA OCORRÊNCIA", 105, y, null, null, "center"); y += 6;
+    doc.setFont("helvetica","normal"); doc.setFontSize(10);
+    doc.setDrawColor(46,125,50);
+    doc.rect(10, y, 190, 8); doc.text("Protocolo: " + (r.protocolo||""), 12, y+6); y += 10;
+    doc.rect(10, y, 190, 8); doc.text("Data: " + (r.data||""), 12, y+6); y += 14;
+
+    doc.setFont("helvetica","bold"); doc.text("DADOS DA VÍTIMA", 105, y, null, null, "center"); y += 6;
+    doc.setFont("helvetica","normal");
+    doc.rect(10,y,95,8); doc.rect(105,y,95,8);
+    doc.text("Nome: "+(r.vitima||""), 12, y+6); doc.text("Idade: "+(r.idade||""), 107, y+6); y += 10;
+    doc.rect(10,y,95,8); doc.rect(105,y,95,8);
+    doc.text("Sexo: "+(r.sexo||""), 12, y+6);
+    doc.text("Raça/Cor: "+(r.raca||""), 107, y+6); y += 14;
+
+    doc.setFont("helvetica","bold"); doc.setFontSize(11);
+    doc.text("TIPIFICAÇÃO DA VIOLÊNCIA", 105, y, null, null, "center"); y += 6;
+
+    const itens = parseTipos(r.tipo);
+
+    if (itens.length === 0) {
+      doc.setFont("helvetica","italic"); doc.setFontSize(10);
+      doc.setTextColor(150,150,150);
+      doc.rect(10, y, 190, 10);
+      doc.text("Não informado", 12, y+7);
+      doc.setTextColor(0,0,0);
+      y += 14;
+    } else {
+      const tagW = 58;
+      const tagH = 8;
+      const tagPad = 3;
+      const colMax = 3;
+      const linhas = Math.ceil(itens.length / colMax);
+      const alturaBloco = linhas * (tagH + tagPad) + 8;
+
+      doc.setDrawColor(200,200,200);
+      doc.setFillColor(250,250,250);
+      doc.rect(10, y, 190, alturaBloco, "FD");
+
+      let tagX = 13, tagY = y + 4;
+      let colAtual = 0;
+
+      itens.forEach((item) => {
+        const cat = MAPA_TIPO[item] || "moral";
+        const cor = COR_CATEGORIA_PDF[cat] || [100,100,100];
+
+        doc.setFillColor(cor[0], cor[1], cor[2]);
+        doc.setDrawColor(cor[0], cor[1], cor[2]);
+        doc.roundedRect(tagX, tagY, tagW, tagH, 2, 2, "F");
+
+        doc.setFont("helvetica","bold");
+        doc.setFontSize(7.5);
+        doc.setTextColor(255,255,255);
+        const label = item.length > 22 ? item.substring(0,20)+"…" : item;
+        doc.text(label, tagX + tagW/2, tagY + 5.5, null, null, "center");
+
+        colAtual++;
+        if (colAtual >= colMax) {
+          colAtual = 0;
+          tagX = 13;
+          tagY += tagH + tagPad;
+        } else {
+          tagX += tagW + tagPad;
+        }
+      });
+
+      doc.setTextColor(0,0,0);
+      y += alturaBloco + 6;
+    }
+
+    doc.setFont("helvetica","bold"); doc.setFontSize(11);
+    doc.text("RESUMO DA OCORRÊNCIA", 105, y, null, null, "center"); y += 6;
+    doc.setFont("helvetica","normal"); doc.setFontSize(10);
+    const resumoTexto = doc.splitTextToSize(r.resumo || "Sem resumo informado.", 183);
+    const altResumo = Math.max(20, resumoTexto.length * 6 + 8);
+    doc.setDrawColor(46,125,50);
+    doc.rect(10,y,190,altResumo);
+    doc.text(resumoTexto, 12, y+6);
+    y += altResumo + 6;
+
+    if (y > 240) { doc.addPage(); y = 20; }
+    doc.setFont("helvetica","bold"); doc.setFontSize(11);
+    doc.text("ENCAMINHAMENTO", 105, y, null, null, "center"); y += 6;
+    doc.setFont("helvetica","normal"); doc.setFontSize(10);
+    const encTexto = doc.splitTextToSize(r.encaminhamento || "Sem encaminhamento informado.", 183);
+    const altEnc = Math.max(20, encTexto.length * 6 + 8);
+    doc.rect(10,y,190,altEnc);
+    doc.text(encTexto, 12, y+6);
+
+    doc.setFontSize(8); doc.setTextColor(120,120,120);
+    doc.text("Sistema PREVINE • Documento oficial gerado automaticamente", 105, 285, null, null, "center");
+    doc.save("PREVINE_" + r.protocolo + ".pdf");
+  };
+
+  logo.onload = gerarPDF;
+  logo.onerror = gerarPDF;
+}
+
+// -------------------------------------------------------
+// PDF GERAL
+// -------------------------------------------------------
+async function exportarTodosPDF() {
+  const lista = await obterRelatoriosFiltrados();
+  if (lista.length === 0) { alert("Nenhum registro encontrado!"); return; }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  let y = 20;
+
+  doc.setFont("helvetica","bold"); doc.setFontSize(18);
+  doc.text("RELATÓRIO GERAL", 105, 20, null, null, "center");
+  doc.setFontSize(12);
+  doc.text("Sistema de Notificação PREVINE", 105, 28, null, null, "center");
+  doc.setDrawColor(46,125,50); doc.line(10, 32, 200, 32);
+  y = 40;
+  doc.setFontSize(10); doc.setFont("helvetica","normal");
+  doc.text("Data de geração: " + new Date().toLocaleDateString("pt-BR"), 10, y); y += 10;
+
+  doc.setFont("helvetica","bold"); doc.setFontSize(9);
+  doc.setFillColor(46,125,50); doc.setTextColor(255,255,255);
+  doc.rect(10, y, 190, 8, "F");
+  doc.text("PROTOCOLO", 12, y+5.5);
+  doc.text("DATA", 48, y+5.5);
+  doc.text("VÍTIMA", 75, y+5.5);
+  doc.text("TIPIFICAÇÃO", 125, y+5.5);
+  doc.setTextColor(0,0,0);
+  y += 10;
+
+  lista.forEach((r, idx) => {
+    const itens = parseTipos(r.tipo);
+    const linhasTipo = Math.ceil(itens.length / 2) || 1;
+    const altLinha = Math.max(10, linhasTipo * 7 + 5);
+
+    if (y + altLinha > 270) { doc.addPage(); y = 20; }
+
+    if (idx % 2 === 0) {
+      doc.setFillColor(245,245,245);
+      doc.rect(10, y, 190, altLinha, "F");
+    }
+
+    doc.setFont("helvetica","normal"); doc.setFontSize(8.5);
+    doc.setTextColor(0,0,0);
+    doc.text(String(r.protocolo||""), 12, y + 6);
+    doc.text(String(r.data||""), 48, y + 6);
+    doc.text(String(r.vitima||"").substring(0, 18), 75, y + 6);
+
+    if (itens.length === 0) {
+      doc.setTextColor(180,180,180);
+      doc.text("Não informado", 125, y + 6);
+      doc.setTextColor(0,0,0);
+    } else {
+      let tx = 125, ty = y + 2;
+      itens.forEach((item, i) => {
+        const cat = MAPA_TIPO[item] || "moral";
+        const cor = COR_CATEGORIA_PDF[cat] || [100,100,100];
+        const label = item.length > 13 ? item.substring(0,11)+"…" : item;
+
+        doc.setFillColor(cor[0], cor[1], cor[2]);
+        doc.setDrawColor(cor[0], cor[1], cor[2]);
+        doc.roundedRect(tx, ty, 35, 5, 1, 1, "F");
+
+        doc.setFont("helvetica","bold"); doc.setFontSize(6);
+        doc.setTextColor(255,255,255);
+        doc.text(label, tx + 17.5, ty + 3.6, null, null, "center");
+
+        doc.setTextColor(0,0,0);
+        doc.setFont("helvetica","normal"); doc.setFontSize(8.5);
+
+        if ((i + 1) % 2 === 0) { tx = 125; ty += 7; }
+        else { tx += 37; }
+      });
+    }
+
+    doc.setDrawColor(220,220,220);
+    doc.line(10, y + altLinha, 200, y + altLinha);
+
+    y += altLinha;
+  });
+
+  doc.setFontSize(8); doc.setTextColor(120,120,120);
+  doc.text("Sistema PREVINE • Relatório gerado automaticamente em " + new Date().toLocaleDateString("pt-BR"), 105, 290, null, null, "center");
+  doc.save("Relatorio_Geral_PREVINE.pdf");
+}
+
+// -------------------------------------------------------
+// UTILITÁRIOS
+// -------------------------------------------------------
+function limparFormulario() {
+  document.querySelectorAll("#registros input, #registros textarea, #registros select")
+    .forEach(el => { el.value = ""; });
+  document.querySelectorAll("#registros input[type='radio'], #registros input[type='checkbox']")
+    .forEach(el => el.checked = false);
+}
+
+function atualizarBotaoFlutuante() {
+  const botao = document.querySelector(".botaoFlutuante");
+  if (!botao) return;
+  const painelVisivel = document.getElementById("painel")?.style.display === "block";
+  const logado = !!carregarSessao();
+  botao.style.display = painelVisivel && logado ? "flex" : "none";
+}
+
+function abrirNovoRegistroAtalho() {
+  abrirAba("registros");
+  etapaAtual = 0;
+  mostrarEtapa();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  atualizarBotaoFlutuante();
+}
+
+function abrirRegistroPublico() {
+  document.getElementById("inicio").style.display = "none";
+  document.getElementById("painel").style.display = "block";
+  document.getElementById("painel").classList.add("modoPublicoRegistro");
+
+  const sidebar = document.querySelector(".sidebar");
+  if (sidebar) sidebar.style.display = "none";
+  const topo = document.querySelector(".topoAdmin");
+  if (topo) topo.style.display = "none";
+  const usuarioMenuEl = document.querySelector(".usuarioMenu");
+  if (usuarioMenuEl) usuarioMenuEl.style.display = "none";
+  const dropdown = document.getElementById("dropdownUsuario");
+  if (dropdown) dropdown.style.display = "none";
+
+  abrirAba("registros");
+  atualizarBotaoFlutuante();
+  if (window.innerWidth > 768)
+    document.getElementById("registros").scrollIntoView({ behavior: "smooth" });
+
+  limparFormulario();
+  etapaAtual = 0;
+  mostrarEtapa();
+}
+
+// -------------------------------------------------------
+// INIT
+// -------------------------------------------------------
+limparFormulario();
+etapaAtual = 0;
+mostrarEtapa();
+atualizarBotaoFlutuante();
+
+window.addEventListener("resize", atualizarBotaoFlutuante);
+window.addEventListener("load",   atualizarBotaoFlutuante);
+>>>>>>> cc0f5f3d05dfa0a6506030fbacf953b227121bee
 </script>
 
 </body>
