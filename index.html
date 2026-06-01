@@ -38,6 +38,65 @@
     .tagTipo.praticou { background: #f3e5f5; color: #6a1b9a; border: 1px solid #ce93d8; }
     .escola-restrita  { background:#f5f5f5; color:#999; font-style:italic; font-size:12px;
                         padding:2px 8px; border-radius:4px; border:1px dashed #ccc; }
+
+    /* ── CARD DE VÍTIMA ── */
+    .vitima-card {
+      background: #f9fdf4;
+      border: 1.5px solid #c8e6a0;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+      position: relative;
+    }
+    .vitima-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .vitima-card-titulo {
+      font-weight: 700;
+      font-size: 13px;
+      color: #27500a;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .vitima-card-titulo span {
+      background: #639922;
+      color: #fff;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+    .btn-remover-vitima {
+      padding: 4px 10px;
+      border: 1px solid #e57373;
+      background: transparent;
+      color: #c62828;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: background .2s;
+    }
+    .btn-remover-vitima:hover { background: #fce4ec; }
+    .vitima-divider {
+      border: none;
+      border-top: 1px solid #dcedc8;
+      margin: 12px 0;
+    }
+    .vitima-group-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #639922;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 8px;
+    }
   </style>
 </head>
 <body>
@@ -49,9 +108,12 @@
   const { createClient } = supabase;
   const db = createClient(SUPABASE_URL, SUPABASE_ANON);
 
-  async function dbSelect(tabela, filtros = {}) {
+  async function dbSelect(tabela, filtros) {
+    filtros = filtros || {};
     let query = db.from(tabela).select("*");
-    for (let [col, val] of Object.entries(filtros)) query = query.eq(col, val);
+    for (var col in filtros) {
+      if (filtros.hasOwnProperty(col)) query = query.eq(col, filtros[col]);
+    }
     const { data, error } = await query;
     if (error) { console.error("dbSelect", error); return []; }
     return data || [];
@@ -60,19 +122,23 @@
   async function dbInsert(tabela, obj) {
     const { data, error } = await db.from(tabela).insert([obj]).select();
     if (error) { console.error("dbInsert", error); return null; }
-    return data?.[0] || null;
+    return (data && data[0]) ? data[0] : null;
   }
 
   async function dbUpdate(tabela, filtro, changes) {
     let query = db.from(tabela).update(changes);
-    for (let [col, val] of Object.entries(filtro)) query = query.eq(col, val);
+    for (var col in filtro) {
+      if (filtro.hasOwnProperty(col)) query = query.eq(col, filtro[col]);
+    }
     const { error } = await query;
     if (error) console.error("dbUpdate", error);
   }
 
   async function dbDelete(tabela, filtro) {
     let query = db.from(tabela).delete();
-    for (let [col, val] of Object.entries(filtro)) query = query.eq(col, val);
+    for (var col in filtro) {
+      if (filtro.hasOwnProperty(col)) query = query.eq(col, filtro[col]);
+    }
     const { error } = await query;
     if (error) console.error("dbDelete", error);
   }
@@ -126,9 +192,9 @@
       <section class="comoFunciona">
         <h2>Como funciona</h2>
         <div class="passos">
-          <div class="passoItem"><span>1.</span><p>Você registra a denúncia</p></div>
+          <div class="passoItem"><span>1.</span><p>Você registra a notificação</p></div>
           <div class="passoItem"><span>2.</span><p>O sistema protege sua identidade</p></div>
-          <div class="passoItem"><span>3.</span><p>A administração analisa o caso</p></div>
+          <div class="passoItem"><span>3.</span><p>A rede acolhe e protege</p></div>
         </div>
       </section>
     </div>
@@ -348,7 +414,6 @@
     </div>
   </div>
 
-  <!-- Visível apenas para Secretaria e Conselho Tutelar -->
   <div id="secaoEscolas" style="display:none; margin-top:14px;">
     <div class="grafico">
       <h3>
@@ -363,6 +428,7 @@
   </div>
 
 </div>
+
    <!-- FORMULÁRIO DE REGISTRO DE NOTIFICAÇÃO -->
 <div id="registros" class="aba">
 
@@ -385,290 +451,220 @@
       <div class="reg-progress-fill" id="regProgressFill" style="width:14.28%"></div>
     </div>
   
-    <div class="reg-stepper" id="regStepper">
-      <div class="rs-step rs-active" data-ri="0">
-        <div class="rs-circle"><span>1</span></div>
-        <div class="rs-label">Ocorrência</div>
-      </div>
-      <div class="rs-line" id="rl0"></div>
-      <div class="rs-step" data-ri="1">
-        <div class="rs-circle"><span>2</span></div>
-        <div class="rs-label">Vítima</div>
-      </div>
-      <div class="rs-line" id="rl1"></div>
-      <div class="rs-step" data-ri="2">
-        <div class="rs-circle"><span>3</span></div>
-        <div class="rs-label">Responsável</div>
-      </div>
-      <div class="rs-line" id="rl2"></div>
-      <div class="rs-step" data-ri="3">
-        <div class="rs-circle"><span>4</span></div>
-        <div class="rs-label">Autor</div>
-      </div>
-      <div class="rs-line" id="rl3"></div>
-      <div class="rs-step" data-ri="4">
-        <div class="rs-circle"><span>5</span></div>
-        <div class="rs-label">Tipificação</div>
-      </div>
-      <div class="rs-line" id="rl4"></div>
-      <div class="rs-step" data-ri="5">
-        <div class="rs-circle"><span>6</span></div>
-        <div class="rs-label">Resumo</div>
-      </div>
-      <div class="rs-line" id="rl5"></div>
-      <div class="rs-step" data-ri="6">
-        <div class="rs-circle"><span>7</span></div>
-        <div class="rs-label">Encaminh.</div>
-      </div>
-    </div>
-  
-    <!-- ETAPA 1 — OCORRÊNCIA -->
-    <div class="reg-etapa reg-active reg-card" id="re0">
-      <div class="reg-card-top">
-        <div class="reg-card-icon green"><i class="fi fi-sr-calendar"></i></div>
-        <div>
-          <div class="reg-card-title">Dados da ocorrência</div>
-          <div class="reg-card-sub">Quando e onde aconteceu</div>
-        </div>
-      </div>
-      <div class="reg-card-body">
-        <div class="reg-grid">
-          <div class="reg-field">
-            <span class="reg-label">Data de preenchimento</span>
-            <input type="date" id="dataPreenchimento">
-          </div>
-          <div class="reg-field">
-            <span class="reg-label">Onde ocorreu</span>
-            <select id="localTipo">
-              <option>Na escola</option>
-              <option>No âmbito familiar</option>
-              <option>Outros</option>
-            </select>
-          </div>
-          <div class="reg-field reg-grid-full">
-            <span class="reg-label">Especificação do local</span>
-            <input type="text" id="localDetalhado" placeholder="Ex: Pátio da escola, corredor, sala de aula...">
-          </div>
-        </div>
-      </div>
-      <div class="reg-card-footer">
-        <span></span>
-        <button class="reg-btn reg-btn-next" onclick="regGoTo(1)">
-          <i class="fi fi-br-arrow-right"></i> Próximo
-        </button>
-      </div>
-    </div>
-  
-    <!-- ETAPA 2 — VÍTIMA -->
-    <div class="reg-etapa reg-card" id="re1">
-      <div class="reg-card-top">
-        <div class="reg-card-icon green"><i class="fi fi-sr-user"></i></div>
-        <div>
-          <div class="reg-card-title">Dados da vítima</div>
-          <div class="reg-card-sub">Informações sobre a pessoa afetada</div>
-        </div>
-      </div>
-      <div class="reg-card-body">
-        <div class="reg-grid" style="margin-bottom:12px">
-          <div class="reg-field reg-grid-full">
-  <span class="reg-label">Nomes das vítimas</span>
-  <div id="listaVitimas">
-    <div class="vitima-row" style="display:flex;gap:8px;margin-bottom:6px">
-      <input type="text" class="inputVitima" placeholder="Nome da vítima" style="flex:1">
+   <!-- STEPPER -->
+<div class="reg-stepper" id="regStepper">
+  <div class="rs-step rs-active" data-ri="0">
+    <div class="rs-circle"><span>1</span></div>
+    <div class="rs-label">Ocorrência</div>
+  </div>
+  <div class="rs-line" id="rl0"></div>
+  <div class="rs-step" data-ri="1">
+    <div class="rs-circle"><span>2</span></div>
+    <div class="rs-label">Vítima</div>
+  </div>
+  <div class="rs-line" id="rl1"></div>
+  <div class="rs-step" data-ri="2">
+    <div class="rs-circle"><span>3</span></div>
+    <div class="rs-label">Responsável</div>
+  </div>
+  <div class="rs-line" id="rl2"></div>
+  <div class="rs-step" data-ri="3">
+    <div class="rs-circle"><span>4</span></div>
+    <div class="rs-label">Autor</div>
+  </div>
+  <div class="rs-line" id="rl3"></div>
+  <div class="rs-step" data-ri="4">
+    <div class="rs-circle"><span>5</span></div>
+    <div class="rs-label">Tipificação</div>
+  </div>
+  <div class="rs-line" id="rl4"></div>
+  <div class="rs-step" data-ri="5">
+    <div class="rs-circle"><span>6</span></div>
+    <div class="rs-label">Resumo</div>
+  </div>
+  <div class="rs-line" id="rl5"></div>
+  <div class="rs-step" data-ri="6">
+    <div class="rs-circle"><span>7</span></div>
+    <div class="rs-label">Denúncia</div>
+  </div>
+  <div class="rs-line" id="rl6"></div>
+  <div class="rs-step" data-ri="7">
+    <div class="rs-circle"><span>8</span></div>
+    <div class="rs-label">Encaminh.</div>
+  </div>
+</div>
+
+<!-- ETAPA 1 — OCORRÊNCIA -->
+<div class="reg-etapa reg-active reg-card" id="re0">
+  <div class="reg-card-top">
+    <div class="reg-card-icon green"><i class="fi fi-sr-calendar"></i></div>
+    <div>
+      <div class="reg-card-title">Dados da ocorrência</div>
+      <div class="reg-card-sub">Quando e onde aconteceu</div>
     </div>
   </div>
-  <button type="button" onclick="adicionarVitima()" style="margin-top:4px;padding:5px 12px;border:1px dashed #639922;background:transparent;color:#639922;border-radius:8px;cursor:pointer;font-size:12px">
-    + Adicionar vítima
-  </button>
-</div>
-          <div class="reg-field">
-            <span class="reg-label">Idade</span>
-            <input type="number" id="idadeVitima" placeholder="Ex: 12">
-          </div>
-          <div class="reg-field reg-grid-full">
-            <span class="reg-label">Escolaridade</span>
-            <select id="escolaridade">
-              <option>Creche</option><option>Pré-Escola</option>
-              <option>1º ano</option><option>2º ano</option><option>3º ano</option>
-              <option>4º ano</option><option>5º ano</option><option>6º ano</option>
-              <option>7º ano</option><option>8º ano</option><option>9º ano</option>
-              <option>Ensino Médio</option>
-            </select>
-          </div>
-        </div>
-        <div class="reg-divider"></div>
-        <div class="reg-group-label">Raça / cor</div>
-        <div class="reg-pill-row" style="margin-bottom:1rem">
-          <label class="reg-pill"><input type="radio" name="raca" value="Branca"><span class="reg-dot"></span>Branca</label>
-          <label class="reg-pill"><input type="radio" name="raca" value="Preta"><span class="reg-dot"></span>Preta</label>
-          <label class="reg-pill"><input type="radio" name="raca" value="Parda"><span class="reg-dot"></span>Parda</label>
-          <label class="reg-pill"><input type="radio" name="raca" value="Indígena"><span class="reg-dot"></span>Indígena</label>
-          <label class="reg-pill"><input type="radio" name="raca" value="Amarela"><span class="reg-dot"></span>Amarela</label>
-        </div>
-        <div class="reg-divider"></div>
-        <div class="reg-group-label">Sexo</div>
-        <div class="reg-pill-row" style="margin-bottom:1rem">
-          <label class="reg-pill"><input type="radio" name="sexo" value="Feminino"><span class="reg-dot"></span>Feminino</label>
-          <label class="reg-pill"><input type="radio" name="sexo" value="Masculino"><span class="reg-dot"></span>Masculino</label>
-          <label class="reg-pill"><input type="radio" name="sexo" value="Não informou"><span class="reg-dot"></span>Não informou</label>
-        </div>
-        <div class="reg-divider"></div>
-        <div class="reg-group-label">Identidade de gênero</div>
-        <div class="reg-pill-row" style="margin-bottom:1rem">
-          <label class="reg-pill"><input type="radio" name="identGenero" value="Homem Cisgênero"><span class="reg-dot"></span>Homem Cisgênero</label>
-          <label class="reg-pill"><input type="radio" name="identGenero" value="Mulher Cisgênero"><span class="reg-dot"></span>Mulher Cisgênero</label>
-          <label class="reg-pill"><input type="radio" name="identGenero" value="Homem Transexual"><span class="reg-dot"></span>Homem Transexual</label>
-          <label class="reg-pill"><input type="radio" name="identGenero" value="Mulher Transexual"><span class="reg-dot"></span>Mulher Transexual</label>
-          <label class="reg-pill"><input type="radio" name="identGenero" value="Travesti"><span class="reg-dot"></span>Travesti</label>
-          <label class="reg-pill"><input type="radio" name="identGenero" value="Ignorado"><span class="reg-dot"></span>Ignorado</label>
-          <label class="reg-pill"><input type="radio" name="identGenero" value="Não se aplica"><span class="reg-dot"></span>Não se aplica</label>
-        </div>
-        <div class="reg-divider"></div>
-        <div class="reg-group-label">Orientação sexual</div>
-        <div class="reg-pill-row" style="flex-wrap:wrap;align-items:center;">
-          <label class="reg-pill"><input type="radio" name="orientacao" value="Heterossexual"><span class="reg-dot"></span>Heterossexual</label>
-          <label class="reg-pill"><input type="radio" name="orientacao" value="Homossexual"><span class="reg-dot"></span>Homossexual</label>
-          <label class="reg-pill"><input type="radio" name="orientacao" value="Bissexual"><span class="reg-dot"></span>Bissexual</label>
-          <label class="reg-pill"><input type="radio" name="orientacao" value="Não se aplica"><span class="reg-dot"></span>Não se aplica</label>
-          <label class="reg-pill"><input type="radio" name="orientacao" value="Ignorado"><span class="reg-dot"></span>Ignorado</label>
-          <label class="reg-pill" style="align-items:center;gap:6px">
-            <input type="radio" name="orientacao" value="Outro" id="orientacaoOutro" onchange="toggleOrientacaoOutro(this)">
-            <span class="reg-dot"></span>Outro:
-            <input type="text" id="orientacaoOutroTexto" placeholder="Especifique..."
-              style="display:none;padding:4px 8px;border:1px solid #ce93d8;border-radius:8px;font-size:12px;outline:none;background:#fdf6ff;width:130px">
-          </label>
-        </div>
+  <div class="reg-card-body">
+    <div class="reg-grid">
+      <div class="reg-field">
+        <span class="reg-label">Data de preenchimento</span>
+        <input type="date" id="dataPreenchimento">
       </div>
-      <div class="reg-card-footer">
-        <button class="reg-btn reg-btn-ghost" onclick="regGoTo(0)">
-          <i class="fi fi-br-arrow-left"></i> Voltar
-        </button>
-        <button class="reg-btn reg-btn-next" onclick="regGoTo(2)">
-          <i class="fi fi-br-arrow-right"></i> Próximo
-        </button>
+      <div class="reg-field">
+        <span class="reg-label">Onde ocorreu</span>
+        <select id="localTipo">
+          <option>Na escola</option>
+          <option>No âmbito familiar</option>
+          <option>Outros</option>
+        </select>
       </div>
-    </div>
-  
-    <!-- ETAPA 3 — RESPONSÁVEL -->
-    <div class="reg-etapa reg-card" id="re2">
-      <div class="reg-card-top">
-        <div class="reg-card-icon green"><i class="fi fi-sr-users"></i></div>
-        <div>
-          <div class="reg-card-title">Responsável</div>
-          <div class="reg-card-sub">Dados do responsável pela vítima</div>
-        </div>
-      </div>
-      <div class="reg-card-body">
-        <div class="reg-grid">
-          <div class="reg-field">
-            <span class="reg-label">Nome do responsável</span>
-            <input type="text" id="responsavel" placeholder="Nome completo">
-          </div>
-          <div class="reg-field">
-            <span class="reg-label">Parentesco</span>
-            <input type="text" id="parentesco" placeholder="Ex: Mãe, Pai, Avó...">
-          </div>
-          <div class="reg-field">
-            <span class="reg-label">Telefone</span>
-            <input type="text" id="telefoneResponsavel" placeholder="(00) 00000-0000">
-          </div>
-          <div class="reg-field">
-            <span class="reg-label">Endereço</span>
-            <input type="text" id="enderecoResponsavel" placeholder="Rua, número, bairro">
-          </div>
-        </div>
-      </div>
-      <div class="reg-card-footer">
-        <button class="reg-btn reg-btn-ghost" onclick="regGoTo(1)">
-          <i class="fi fi-br-arrow-left"></i> Voltar
-        </button>
-        <button class="reg-btn reg-btn-next" onclick="regGoTo(3)">
-          <i class="fi fi-br-arrow-right"></i> Próximo
-        </button>
-      </div>
-    </div>
-  
-    <!-- ETAPA 4 — AUTOR -->
-    <div class="reg-etapa reg-card" id="re3">
-      <div class="reg-card-top">
-        <div class="reg-card-icon amber"><i class="fi fi-sr-user-slash"></i></div>
-        <div>
-          <div class="reg-card-title">Autor da violência</div>
-          <div class="reg-card-sub">Dados de quem praticou o ato</div>
-        </div>
-      </div>
-      <div class="reg-card-body">
-        <div class="reg-grid">
-          <div class="reg-field reg-grid-full" style="margin-bottom:12px">
-  <span class="reg-label">Autores da violência</span>
-  <div id="listaAutores">
-    <div class="autor-row" style="display:grid;grid-template-columns:1fr 80px 1fr auto;gap:8px;margin-bottom:8px;align-items:end">
-      <div>
-        <span style="font-size:11px;color:#888;display:block;margin-bottom:3px">Nome</span>
-        <input type="text" class="inputAutorNome" placeholder="Nome (se conhecido)" style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;box-sizing:border-box">
-      </div>
-      <div>
-        <span style="font-size:11px;color:#888;display:block;margin-bottom:3px">Idade</span>
-        <input type="number" class="inputAutorIdade" placeholder="—" style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;box-sizing:border-box">
-      </div>
-      <div>
-        <span style="font-size:11px;color:#888;display:block;margin-bottom:3px">Relação com a vítima</span>
-        <input type="text" class="inputAutorRelacao" placeholder="Ex: colega, familiar..." style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;box-sizing:border-box">
-      </div>
-      <div style="padding-bottom:2px">
-        <!-- botão remover não aparece no primeiro (só quando há 2+) -->
+      <div class="reg-field reg-grid-full">
+        <span class="reg-label">Especificação do local</span>
+        <input type="text" id="localDetalhado" placeholder="Ex: Pátio da escola, corredor, sala de aula...">
       </div>
     </div>
   </div>
-  <button type="button" onclick="adicionarAutor()"
-    style="margin-top:4px;padding:5px 12px;border:1px dashed #EF9F27;background:transparent;color:#854f0b;border-radius:8px;cursor:pointer;font-size:12px">
-    + Adicionar autor
-  </button>
+  <div class="reg-card-footer">
+    <span></span>
+    <button class="reg-btn reg-btn-next" onclick="regGoTo(1)">
+      <i class="fi fi-br-arrow-right"></i> Próximo
+    </button>
+  </div>
 </div>
-          <div class="reg-field">
-            <span class="reg-label">Idade</span>
-            <input type="number" id="idadeAutor" placeholder="Ex: 35">
-          </div>
-          <div class="reg-field reg-grid-full">
-            <span class="reg-label">Relação com a vítima</span>
-            <input type="text" id="relacaoAutor" placeholder="Ex: Colega de escola, familiar, desconhecido...">
-          </div>
-        </div>
 
-        <div class="reg-divider"></div>
-        <div class="reg-group-label">Quem praticou</div>
-        <div class="reg-pill-row">
-          <label class="reg-pill"><input type="checkbox" value="Criança"><span class="reg-dot"></span>Criança</label>
-          <label class="reg-pill"><input type="checkbox" value="Adolescente"><span class="reg-dot"></span>Adolescente</label>
-          <label class="reg-pill"><input type="checkbox" value="Pai"><span class="reg-dot"></span>Pai</label>
-          <label class="reg-pill"><input type="checkbox" value="Mãe"><span class="reg-dot"></span>Mãe</label>
-          <label class="reg-pill"><input type="checkbox" value="Responsável"><span class="reg-dot"></span>Responsável</label>
-          <label class="reg-pill"><input type="checkbox" value="Professor"><span class="reg-dot"></span>Professor</label>
-        </div>
+<!-- ETAPA 2 — VÍTIMA -->
+<div class="reg-etapa reg-card" id="re1">
+  <div class="reg-card-top">
+    <div class="reg-card-icon green"><i class="fi fi-sr-user"></i></div>
+    <div>
+      <div class="reg-card-title">Dados da(s) vítima(s)</div>
+      <div class="reg-card-sub">Informações sobre cada pessoa afetada</div>
+    </div>
+  </div>
+  <div class="reg-card-body">
+    <div id="listaVitimas"></div>
+    <button type="button" onclick="adicionarVitima()"
+      style="margin-top:8px;padding:8px 16px;border:1.5px dashed #639922;background:transparent;color:#639922;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;transition:background .2s;"
+      onmouseover="this.style.background='#f0f7e6'" onmouseout="this.style.background='transparent'">
+      <i class="fi fi-br-plus"></i> Adicionar outra vítima
+    </button>
+  </div>
+  <div class="reg-card-footer">
+    <button class="reg-btn reg-btn-ghost" onclick="regGoTo(0)">
+      <i class="fi fi-br-arrow-left"></i> Voltar
+    </button>
+    <button class="reg-btn reg-btn-next" onclick="regGoTo(2)">
+      <i class="fi fi-br-arrow-right"></i> Próximo
+    </button>
+  </div>
+</div>
 
-        <div class="reg-divider"></div>
-        <div class="reg-group-label">Outros — especifique</div>
-        <div class="reg-pill-row" style="align-items:center;">
-          <label class="reg-pill">
-            <input type="checkbox" id="checkOutros" value="Outros" onchange="toggleOutros(this)">
-            <span class="reg-dot"></span>Outros
-          </label>
-        </div>
-        <input type="text" id="outrosTexto" placeholder="Especifique quem praticou..."
-          style="display:none;margin-top:8px;width:100%;padding:8px 12px;border:1px solid #ce93d8;border-radius:8px;font-size:13px;outline:none;background:#fdf6ff;box-sizing:border-box;">
+<!-- ETAPA 3 — RESPONSÁVEL -->
+<div class="reg-etapa reg-card" id="re2">
+  <div class="reg-card-top">
+    <div class="reg-card-icon green"><i class="fi fi-sr-users"></i></div>
+    <div>
+      <div class="reg-card-title">Responsável</div>
+      <div class="reg-card-sub">Dados do responsável pela vítima</div>
+    </div>
+  </div>
+  <div class="reg-card-body">
+    <div class="reg-grid">
+      <div class="reg-field">
+        <span class="reg-label">Nome do responsável</span>
+        <input type="text" id="responsavel" placeholder="Nome completo">
       </div>
-      <div class="reg-card-footer">
-        <button class="reg-btn reg-btn-ghost" onclick="regGoTo(2)">
-          <i class="fi fi-br-arrow-left"></i> Voltar
-        </button>
-        <button class="reg-btn reg-btn-next" onclick="regGoTo(4)">
-          <i class="fi fi-br-arrow-right"></i> Próximo
+      <div class="reg-field">
+        <span class="reg-label">Parentesco</span>
+        <input type="text" id="parentesco" placeholder="Ex: Mãe, Pai, Avó...">
+      </div>
+      <div class="reg-field">
+        <span class="reg-label">Telefone</span>
+        <input type="text" id="telefoneResponsavel" placeholder="(00) 00000-0000">
+      </div>
+      <div class="reg-field">
+        <span class="reg-label">Endereço</span>
+        <input type="text" id="enderecoResponsavel" placeholder="Rua, número, bairro">
+      </div>
+    </div>
+  </div>
+  <div class="reg-card-footer">
+    <button class="reg-btn reg-btn-ghost" onclick="regGoTo(1)">
+      <i class="fi fi-br-arrow-left"></i> Voltar
+    </button>
+    <button class="reg-btn reg-btn-next" onclick="regGoTo(3)">
+      <i class="fi fi-br-arrow-right"></i> Próximo
+    </button>
+  </div>
+</div>
+
+<!-- ETAPA 4 — AUTOR -->
+<div class="reg-etapa reg-card" id="re3">
+  <div class="reg-card-top">
+    <div class="reg-card-icon amber"><i class="fi fi-sr-user-slash"></i></div>
+    <div>
+      <div class="reg-card-title">Autor da violência</div>
+      <div class="reg-card-sub">Dados de quem praticou o ato</div>
+    </div>
+  </div>
+  <div class="reg-card-body">
+    <div class="reg-grid">
+      <div class="reg-field reg-grid-full" style="margin-bottom:12px">
+        <span class="reg-label">Autores da violência</span>
+        <div id="listaAutores">
+          <div class="autor-row" style="display:grid;grid-template-columns:1fr 80px 1fr auto;gap:8px;margin-bottom:8px;align-items:end">
+            <div>
+              <span style="font-size:11px;color:#888;display:block;margin-bottom:3px">Nome</span>
+              <input type="text" class="inputAutorNome" placeholder="Nome (se conhecido)" style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;box-sizing:border-box">
+            </div>
+            <div>
+              <span style="font-size:11px;color:#888;display:block;margin-bottom:3px">Idade</span>
+              <input type="number" class="inputAutorIdade" placeholder="—" style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;box-sizing:border-box">
+            </div>
+            <div>
+              <span style="font-size:11px;color:#888;display:block;margin-bottom:3px">Relação com a vítima</span>
+              <input type="text" class="inputAutorRelacao" placeholder="Ex: colega, familiar..." style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;box-sizing:border-box">
+            </div>
+            <div style="padding-bottom:2px"></div>
+          </div>
+        </div>
+        <button type="button" onclick="adicionarAutor()"
+          style="margin-top:4px;padding:5px 12px;border:1px dashed #EF9F27;background:transparent;color:#854f0b;border-radius:8px;cursor:pointer;font-size:12px">
+          + Adicionar autor
         </button>
       </div>
     </div>
-  
-    <!-- ETAPA 5 — TIPIFICAÇÃO -->
-    <!-- ETAPA 5 — TIPIFICAÇÃO -->
+    <div class="reg-divider"></div>
+    <div class="reg-group-label">Quem praticou</div>
+    <div class="reg-pill-row">
+      <label class="reg-pill"><input type="checkbox" value="Criança"><span class="reg-dot"></span>Criança</label>
+      <label class="reg-pill"><input type="checkbox" value="Adolescente"><span class="reg-dot"></span>Adolescente</label>
+      <label class="reg-pill"><input type="checkbox" value="Pai"><span class="reg-dot"></span>Pai</label>
+      <label class="reg-pill"><input type="checkbox" value="Mãe"><span class="reg-dot"></span>Mãe</label>
+      <label class="reg-pill"><input type="checkbox" value="Responsável"><span class="reg-dot"></span>Responsável</label>
+      <label class="reg-pill"><input type="checkbox" value="Professor"><span class="reg-dot"></span>Professor</label>
+    </div>
+    <div class="reg-divider"></div>
+    <div class="reg-group-label">Outros — especifique</div>
+    <div class="reg-pill-row" style="align-items:center;">
+      <label class="reg-pill">
+        <input type="checkbox" id="checkOutros" value="Outros" onchange="toggleOutros(this)">
+        <span class="reg-dot"></span>Outros
+      </label>
+    </div>
+    <input type="text" id="outrosTexto" placeholder="Especifique quem praticou..."
+      style="display:none;margin-top:8px;width:100%;padding:8px 12px;border:1px solid #ce93d8;border-radius:8px;font-size:13px;outline:none;background:#fdf6ff;box-sizing:border-box;">
+  </div>
+  <div class="reg-card-footer">
+    <button class="reg-btn reg-btn-ghost" onclick="regGoTo(2)">
+      <i class="fi fi-br-arrow-left"></i> Voltar
+    </button>
+    <button class="reg-btn reg-btn-next" onclick="regGoTo(4)">
+      <i class="fi fi-br-arrow-right"></i> Próximo
+    </button>
+  </div>
+</div>
+
+<!-- ETAPA 5 — TIPIFICAÇÃO -->
 <div class="reg-etapa reg-card" id="re4">
   <div class="reg-card-top">
     <div class="reg-card-icon red"><i class="fi fi-sr-shield-exclamation"></i></div>
@@ -690,7 +686,7 @@
         <label class="reg-tag fisica"><input type="checkbox" value="Maus-tratos">Maus-tratos</label>
         <label class="reg-tag fisica" style="align-items:center;gap:6px">
           <input type="checkbox" id="checkFisicaOutro" onchange="toggleFisicaOutro(this)">
-          <span class="reg-dot"></span>Outro:
+          <span class="reg-dot"></span>Outros
           <input type="text" id="fisicaOutroTexto" placeholder="Especifique..."
             style="display:none;padding:3px 7px;border:1px solid #ef9a9a;border-radius:8px;font-size:12px;outline:none;background:#fff5f5;width:130px">
         </label>
@@ -717,7 +713,7 @@
         <label class="reg-tag psico"><input type="checkbox" value="Vigilância constante">Vigilância constante</label>
         <label class="reg-tag psico" style="align-items:center;gap:6px">
           <input type="checkbox" id="checkPsicoOutro" onchange="togglePsicoOutro(this)">
-          <span class="reg-dot"></span>Outro:
+          <span class="reg-dot"></span>Outros
           <input type="text" id="psicoOutroTexto" placeholder="Especifique..."
             style="display:none;padding:3px 7px;border:1px solid #ffe082;border-radius:8px;font-size:12px;outline:none;background:#fffdf0;width:130px">
         </label>
@@ -739,7 +735,7 @@
         <label class="reg-tag sexual"><input type="checkbox" value="Tráfico Sexual de Pessoas">Tráfico Sexual de Pessoas</label>
         <label class="reg-tag sexual" style="align-items:center;gap:6px">
           <input type="checkbox" id="checkSexualOutro" onchange="toggleSexualOutro(this)">
-          <span class="reg-dot"></span>Outro:
+          <span class="reg-dot"></span>Outros
           <input type="text" id="sexualOutroTexto" placeholder="Especifique..."
             style="display:none;padding:3px 7px;border:1px solid #ce93d8;border-radius:8px;font-size:12px;outline:none;background:#fdf6ff;width:130px">
         </label>
@@ -771,14 +767,60 @@
     <div class="reg-divider"></div>
 
     <div class="reg-tipo-section">
+      <div class="reg-tipo-head">Violência autoprovocada</div>
+      <div class="reg-pill-row">
+        <label class="reg-tag sexual"><input type="checkbox" value="Automutilação">Automutilação</label>
+        <label class="reg-tag sexual"><input type="checkbox" value="Ideação suicida">Ideação suicida</label>
+        <label class="reg-tag sexual"><input type="checkbox" value="Suicídio consumado">Suicídio consumado</label>
+        <label class="reg-tag sexual"><input type="checkbox" value="Tentativa de suicídio">Tentativa de suicídio</label>
+        <label class="reg-tag sexual" style="align-items:center;gap:6px">
+          <input type="checkbox" id="checkAutoOutro" onchange="toggleAutoOutro(this)">
+          <span class="reg-dot"></span>Outros
+          <input type="text" id="autoOutroTexto" placeholder="Especifique..."
+            style="display:none;padding:3px 7px;border:1px solid #ce93d8;border-radius:8px;font-size:12px;outline:none;background:#fdf6ff;width:130px">
+        </label>
+      </div>
+    </div>
+
+    <div class="reg-divider"></div>
+
+    <div class="reg-tipo-section">
+      <div class="reg-tipo-head">Outras violações dos direitos da criança e do adolescente</div>
+      <div class="reg-pill-row">
+        <label class="reg-tag virtual"><input type="checkbox" value="Abandono escolar">Abandono escolar</label>
+        <label class="reg-tag virtual"><input type="checkbox" value="Evasão escolar">Evasão escolar</label>
+        <label class="reg-tag virtual"><input type="checkbox" value="Gravidez na adolescência">Gravidez na adolescência</label>
+        <label class="reg-tag virtual"><input type="checkbox" value="Trabalho Infantil">Trabalho Infantil</label>
+        <label class="reg-tag virtual"><input type="checkbox" value="Ingestão de bebida alcoólica">Ingestão de bebida alcoólica</label>
+        <label class="reg-tag virtual"><input type="checkbox" value="Porte ilegal de arma">Porte ilegal de arma</label>
+        <label class="reg-tag virtual" style="align-items:center;gap:6px">
+          <input type="checkbox" id="checkViolacaoOutro" onchange="toggleViolacaoOutro(this)">
+          <span class="reg-dot"></span>Outros
+          <input type="text" id="violacaoOutroTexto" placeholder="Especifique..."
+            style="display:none;padding:3px 7px;border:1px solid #90caf9;border-radius:8px;font-size:12px;outline:none;background:#e3f2fd;width:130px">
+        </label>
+      </div>
+    </div>
+
+    <div class="reg-divider"></div>
+
+    <div class="reg-tipo-section">
       <div class="reg-tipo-head">Motivação</div>
       <div class="reg-pill-row">
+        <label class="reg-tag motiv"><input type="checkbox" value="Etarismo">Etarismo <small style="font-weight:400;opacity:.75">(em razão de idade)</small></label>
+        <label class="reg-tag motiv"><input type="checkbox" value="Gordofobia">Gordofobia <small style="font-weight:400;opacity:.75">(em razão do excesso de peso ou obesidade)</small></label>
+        <label class="reg-tag motiv"><input type="checkbox" value="Intolerância Religiosa">Intolerância Religiosa <small style="font-weight:400;opacity:.75">(discriminação em razão de crenças, rituais e práticas religiosas)</small></label>
         <label class="reg-tag motiv"><input type="checkbox" value="Racismo">Racismo</label>
-        <label class="reg-tag motiv"><input type="checkbox" value="Intolerância Religiosa">Intolerância religiosa</label>
-        <label class="reg-tag motiv"><input type="checkbox" value="Sexismo">Sexismo</label>
-        <label class="reg-tag motiv"><input type="checkbox" value="Diversidade de gênero">Diversidade de gênero</label>
-        <label class="reg-tag motiv"><input type="checkbox" value="Capacitismo">Capacitismo</label>
-        <label class="reg-tag motiv"><input type="checkbox" value="Outros">Outros</label>
+        <label class="reg-tag motiv"><input type="checkbox" value="Capacitismo">Capacitismo <small style="font-weight:400;opacity:.75">(ser pessoa com deficiência: visual, auditiva, motora, intelectual, múltipla, TEA, transtornos de aprendizagem)</small></label>
+        <label class="reg-tag motiv"><input type="checkbox" value="Sexismo">Sexismo <small style="font-weight:400;opacity:.75">(preconceitos baseados no sexo ou orientação sexual)</small></label>
+        <label class="reg-tag motiv"><input type="checkbox" value="Violências às diversidades sexuais e de gênero">Violências às diversidades sexuais e de gênero <small style="font-weight:400;opacity:.75">(ex: homofobia, transfobia)</small></label>
+        <label class="reg-tag motiv"><input type="checkbox" value="Xenofobia">Xenofobia <small style="font-weight:400;opacity:.75">(hostilidade contra pessoas de outras origens nacionais ou regionais)</small></label>
+        <label class="reg-tag motiv" style="align-items:center;gap:6px">
+          <input type="checkbox" id="checkMotivOutro" onchange="toggleMotivOutro(this)">
+          <span class="reg-dot"></span>Outros
+          <input type="text" id="motivOutroTexto" placeholder="Especifique..."
+            style="display:none;padding:3px 7px;border:1px solid #ffcc80;border-radius:8px;font-size:12px;outline:none;background:#fff8e1;width:130px">
+        </label>
       </div>
     </div>
 
@@ -793,67 +835,98 @@
   </div>
 </div>
 
-    <!-- ETAPA 6 — RESUMO -->
-    <div class="reg-etapa reg-card" id="re5">
-      <div class="reg-card-top">
-        <div class="reg-card-icon green"><i class="fi fi-sr-document"></i></div>
-        <div>
-          <div class="reg-card-title">Resumo da ocorrência</div>
-          <div class="reg-card-sub">Descreva o que aconteceu</div>
-        </div>
-      </div>
-      <div class="reg-card-body">
-        <div class="reg-field">
-          <span class="reg-label">Descrição dos fatos</span>
-          <textarea id="resumo" placeholder="Relate os detalhes relevantes de forma objetiva e clara. Inclua contexto, pessoas envolvidas e circunstâncias."></textarea>
-        </div>
-      </div>
-      <div class="reg-card-footer">
-        <button class="reg-btn reg-btn-ghost" onclick="regGoTo(4)">
-          <i class="fi fi-br-arrow-left"></i> Voltar
-        </button>
-        <button class="reg-btn reg-btn-next" onclick="regGoTo(6)">
-          <i class="fi fi-br-arrow-right"></i> Próximo
-        </button>
-      </div>
+<!-- ETAPA 6 — RESUMO -->
+<div class="reg-etapa reg-card" id="re5">
+  <div class="reg-card-top">
+    <div class="reg-card-icon green"><i class="fi fi-sr-document"></i></div>
+    <div>
+      <div class="reg-card-title">Resumo da ocorrência</div>
+      <div class="reg-card-sub">Descreva o que aconteceu</div>
     </div>
-  
-    <!-- ETAPA 7 — ENCAMINHAMENTO -->
-    <div class="reg-etapa reg-card" id="re6">
-      <div class="reg-card-top">
-        <div class="reg-card-icon green"><i class="fi fi-sr-paper-plane"></i></div>
-        <div>
-          <div class="reg-card-title">Encaminhamento</div>
-          <div class="reg-card-sub">Ações e providências a adotar</div>
-        </div>
-      </div>
-      <div class="reg-card-body">
-        <div class="reg-field" style="margin-bottom:1.25rem">
-          <span class="reg-label">Descrição das ações</span>
-          <textarea id="encaminhamento" placeholder="Descreva os encaminhamentos e providências que serão adotadas a partir desta notificação..."></textarea>
-        </div>
-        <div class="reg-notice">
-          <i class="fi fi-sr-shield-check"></i>
-          <div>
-            <div class="reg-notice-title">Pronto para salvar</div>
-            <div class="reg-notice-sub">Verifique as informações antes de confirmar. Um número de protocolo será gerado automaticamente ao salvar.</div>
-          </div>
-        </div>
-      </div>
-      <div class="reg-card-footer">
-        <button class="reg-btn reg-btn-ghost" onclick="regGoTo(5)">
-          <i class="fi fi-br-arrow-left"></i> Voltar
-        </button>
-        <button class="reg-btn reg-btn-save btnSalvarnotificação" onclick="salvarNotificacao()">
-          <i class="fi fi-sr-disk"></i> Salvar notificação
-        </button>
-      </div>
+  </div>
+  <div class="reg-card-body">
+    <div class="reg-field">
+      <span class="reg-label">Descrição dos fatos</span>
+      <textarea id="resumo" placeholder="Relate os detalhes relevantes de forma objetiva e clara. Inclua contexto, pessoas envolvidas e circunstâncias."></textarea>
     </div>
-  
   </div>
-  
+  <div class="reg-card-footer">
+    <button class="reg-btn reg-btn-ghost" onclick="regGoTo(4)">
+      <i class="fi fi-br-arrow-left"></i> Voltar
+    </button>
+    <button class="reg-btn reg-btn-next" onclick="regGoTo(6)">
+      <i class="fi fi-br-arrow-right"></i> Próximo
+    </button>
   </div>
+</div>
 
+<!-- ETAPA 7 — COMO A DENÚNCIA CHEGOU -->
+<div class="reg-etapa reg-card" id="re6">
+  <div class="reg-card-top">
+    <div class="reg-card-icon green"><i class="fi fi-sr-megaphone"></i></div>
+    <div>
+      <div class="reg-card-title">Como a denúncia chegou à CPPVCA</div>
+      <div class="reg-card-sub">Selecione a forma como a denúncia chegou ao conhecimento</div>
+    </div>
+  </div>
+  <div class="reg-card-body">
+    <div class="reg-pill-row">
+      <label class="reg-pill"><input type="checkbox" value="Denúncia espontânea"><span class="reg-dot"></span>Denúncia espontânea</label>
+      <label class="reg-pill"><input type="checkbox" value="Suspeita por observação"><span class="reg-dot"></span>Suspeita por observação</label>
+      <label class="reg-pill"><input type="checkbox" value="Relato de outros alunos"><span class="reg-dot"></span>Relato de outros alunos</label>
+      <label class="reg-pill"><input type="checkbox" value="Familiares"><span class="reg-dot"></span>Familiares</label>
+      <label class="reg-pill"><input type="checkbox" value="Comunidade"><span class="reg-dot"></span>Comunidade</label>
+      <label class="reg-pill" style="align-items:center;gap:6px">
+        <input type="checkbox" id="checkDenunciaOutro" onchange="toggleDenunciaOutro(this)">
+        <span class="reg-dot"></span>Outro
+        <input type="text" id="denunciaOutroTexto" placeholder="Especifique..."
+          style="display:none;padding:4px 8px;border:1px solid #c8e6a0;border-radius:8px;font-size:12px;outline:none;background:#f9fdf4;width:180px">
+      </label>
+    </div>
+  </div>
+  <div class="reg-card-footer">
+    <button class="reg-btn reg-btn-ghost" onclick="regGoTo(5)">
+      <i class="fi fi-br-arrow-left"></i> Voltar
+    </button>
+    <button class="reg-btn reg-btn-next" onclick="regGoTo(7)">
+      <i class="fi fi-br-arrow-right"></i> Próximo
+    </button>
+  </div>
+</div>
+
+<!-- ETAPA 8 — ENCAMINHAMENTO -->
+<div class="reg-etapa reg-card" id="re7">
+  <div class="reg-card-top">
+    <div class="reg-card-icon green"><i class="fi fi-sr-paper-plane"></i></div>
+    <div>
+      <div class="reg-card-title">Encaminhamento</div>
+      <div class="reg-card-sub">Ações e providências a adotar</div>
+    </div>
+  </div>
+  <div class="reg-card-body">
+    <div class="reg-field" style="margin-bottom:1.25rem">
+      <span class="reg-label">Descrição das ações</span>
+      <textarea id="encaminhamento" placeholder="Descreva os encaminhamentos e providências que serão adotadas a partir desta notificação..."></textarea>
+    </div>
+    <div class="reg-notice">
+      <i class="fi fi-sr-shield-check"></i>
+      <div>
+        <div class="reg-notice-title">Pronto para salvar</div>
+        <div class="reg-notice-sub">Verifique as informações antes de confirmar. Um número de protocolo será gerado automaticamente ao salvar.</div>
+      </div>
+    </div>
+  </div>
+  <div class="reg-card-footer">
+    <button class="reg-btn reg-btn-ghost" onclick="regGoTo(6)">
+      <i class="fi fi-br-arrow-left"></i> Voltar
+    </button>
+    <button class="reg-btn reg-btn-save btnSalvarnotificação" onclick="salvarNotificacao()">
+      <i class="fi fi-sr-disk"></i> Salvar notificação
+    </button>
+  </div>
+</div>
+</div> 
+  </div> 
     <!-- RELATÓRIOS -->
     <div id="relatorios" class="aba">
       <h2>Menu de Relatórios</h2>
@@ -872,11 +945,13 @@
       </div>
       <table id="tabelaRelatorios">
         <thead>
-          <tr>
-            <th>Protocolo</th><th>Escola</th><th>Data</th>
-            <th>Vítima</th><th>Tipo</th><th>Status</th><th>Ações</th>
-          </tr>
-        </thead>
+  <tr>
+    <th>Protocolo</th><th>Escola</th><th>Data</th>
+    <th>Vítima</th><th>Tipo</th>
+    <th>Status Secretaria</th><th>Status Conselho</th>
+    <th>Ações</th>
+  </tr>
+</thead>
         <tbody></tbody>
       </table>
     </div>
@@ -934,7 +1009,7 @@
             <select id="escola">
               <option value="CEJAH">CEJAH</option>
               <option value="CACE">CACE</option>
-              <option value="SECRETARA MUNICIPAL DE EDUCAÇÃO DE HORIZONTE">SECRETARA MUNICIPAL DE EDUCAÇÃO DE HORIZONTE</option>
+              <option value="SECRETARIA MUNICIPAL DE EDUCAÇÃO DE HORIZONTE">SECRETARA MUNICIPAL DE EDUCAÇÃO DE HORIZONTE</option>
               <option value="CONSELHO TUTELAR DE HORIZONTE">CONSELHO TUTELAR DE HORIZONTE</option>
               <option value="EMEF. DEPUTADO ULISSES GUIMARÃES">EMEF. DEPUTADO ULISSES GUIMARÃES</option>
               <option value="EMEF. DIONÍZIA ROCHA DE MORAIS">EMEF. DIONÍZIA ROCHA DE MORAIS</option>
@@ -962,7 +1037,7 @@
               <option value="EMEF. PROFESSORA DIONE MARIA BEZERRA PESSOA">EMEF. PROFESSORA DIONE MARIA BEZERRA PESSOA</option>
               <option value="EMEF. RAIMUNDO DOMINGOS DE SOUSA">EMEF. RAIMUNDO DOMINGOS DE SOUSA</option>
               <option value="EMEF. SEBASTIÃO LOPES DE OLIVEIRA">EMEF. SEBASTIÃO LOPES DE OLIVEIRA</option>
-              <option value="EMEF. CEI ADÍLIA FERREIRA LIMA">EMEF. CEI ADÍLIA FERREIRA LIMA</option>
+              <option value="CEI ADÍLIA FERREIRA LIMA">EMEF. CEI ADÍLIA FERREIRA LIMA</option>
               <option value="CEI ALDA DE CARVALHO BENTO">CEI ALDA DE CARVALHO BENTO</option>
               <option value="CEI ANNA REBECA SOUSA PEREIRA">CEI ANNA REBECA SOUSA PEREIRA</option>
               <option value="CEI CLEONICE PIRES DE SOUSA">CEI CLEONICE PIRES DE SOUSA</option>
@@ -975,7 +1050,7 @@
               <option value="CEI MARIA DO CARMO DE OLIVEIRA">CEI MARIA DO CARMO DE OLIVEIRA</option>
               <option value="CEI MARIA ELIZIETE MARTINS CARNEIRO">CEI MARIA ELIZIETE MARTINS CARNEIRO</option>
               <option value="CEI MARIA JAYCEGLAB NOBRE RABELO">CEI MARIA JAYCEGLAB NOBRE RABELO</option>
-              <option value="MARIA JOSÉ ALVES DA SILVA">MARIA JOSÉ ALVES DA SILVA</option>
+              <option value="CEI MARIA JOSÉ ALVES DA SILVA">CEI MARIA JOSÉ ALVES DA SILVA</option>
               <option value="CEI NARA RICARDO DE LINO">CEI NARA RICARDO DE LINO</option>
               <option value="CEI NELSA NAVILHA GRENDENE BARTELLE">CEI NELSA NAVILHA GRENDENE BARTELLE</option>
               <option value="CEI PEDRO NOGUEIRA DE QUEIROZ">CEI PEDRO NOGUEIRA DE QUEIROZ</option>
@@ -1015,55 +1090,26 @@
 
 <script>
 // -------------------------------------------------------
-// CONTROLE DE ACESSO — ESCOLA VISÍVEL
+// CONTROLE DE ACESSO
 // -------------------------------------------------------
-
-/**
- * ÚNICA instituição que pode VER o nome da escola nos registros.
- * Todas as outras verão "🔒 Restrito".
- */
-const ESCOLA_VER_NOME = "SECRETARA MUNICIPAL DE EDUCAÇÃO DE HORIZONTE";
-
-/**
- * Instituições com acesso global (veem todos os registros de todas as escolas).
- */
-const ESCOLAS_ACESSO_GLOBAL = [
+var ESCOLA_VER_NOME = "SECRETARA MUNICIPAL DE EDUCAÇÃO DE HORIZONTE";
+var ESCOLAS_ACESSO_GLOBAL = [
   "SECRETARA MUNICIPAL DE EDUCAÇÃO DE HORIZONTE",
   "CONSELHO TUTELAR DE HORIZONTE"
 ];
 
-/**
- * Retorna true se o usuário pode VER o nome das escolas nos registros.
- * Apenas Secretaria Municipal (ou admin) têm esse privilégio.
- */
 function podeVerNomeEscola(user) {
   if (!user) return false;
   if (user.nivel === "admin") return true;
   return (user.escola || "").trim() === ESCOLA_VER_NOME;
 }
 
-/**
- * Retorna o nome da escola para exibição, aplicando restrição se necessário.
- * @param {string} nomeEscola - nome real da escola
- * @param {object} user - usuário logado
- * @param {boolean} isHtml - se true, retorna HTML com badge estilizado
- */
 function exibirEscola(nomeEscola, user, isHtml) {
-  if (podeVerNomeEscola(user)) {
-    return nomeEscola || "";
-  }
-  // Se a escola do usuário for a mesma do registro, pode ver a própria escola
-  if (user && nomeEscola && (user.escola || "").trim() === nomeEscola.trim()) {
-    return nomeEscola;
-  }
-  return isHtml
-    ? '<span class="escola-restrita">🔒 Restrito</span>'
-    : "🔒 Restrito";
+  if (podeVerNomeEscola(user)) return nomeEscola || "";
+  if (user && nomeEscola && (user.escola || "").trim() === nomeEscola.trim()) return nomeEscola;
+  return isHtml ? '<span class="escola-restrita">🔒 Restrito</span>' : "🔒 Restrito";
 }
 
-/**
- * Retorna true se o usuário logado tem acesso global (vê todas as escolas).
- */
 function temAcessoGlobal(user) {
   if (!user) return false;
   if (user.nivel === "admin") return true;
@@ -1071,13 +1117,12 @@ function temAcessoGlobal(user) {
 }
 
 // -------------------------------------------------------
-// MAPEAMENTO DE TIPIFICAÇÃO → CATEGORIA
+// MAPEAMENTO TIPIFICAÇÃO
 // -------------------------------------------------------
-const MAPA_TIPO = {
+var MAPA_TIPO = {
   "Agressão Física": "fisica", "Conflito físico": "fisica",
   "Dano físico por meio de arma de fogo": "fisica", "Esfaqueamento": "fisica",
   "Negligência": "fisica", "Maus-tratos": "fisica", "Outro (física)": "fisica",
-
   "Agressão verbal e xingamentos": "psico", "Ameaça": "psico",
   "Chantagem": "psico", "Constrangimento": "psico", "Exploração": "psico",
   "Exposição de criança ou adolescente a crime violento": "psico",
@@ -1085,86 +1130,72 @@ const MAPA_TIPO = {
   "Isolamento": "psico", "Manipulação": "psico", "Perseguição": "psico",
   "Preconceito contra a pessoa com deficiência": "psico",
   "Vigilância constante": "psico", "Outro (psicológica)": "psico",
-
   "Abuso Sexual": "sexual", "Assédio Sexual": "sexual", "Estupro": "sexual",
   "Exploração Sexual": "sexual", "Importunação Sexual": "sexual",
   "Pornografia Infantil": "sexual", "Sexting": "sexual",
   "Tráfico Sexual de Pessoas": "sexual", "Outro (sexual)": "sexual",
-
+  "Automutilação": "sexual", "Ideação suicida": "sexual",
+  "Suicídio consumado": "sexual", "Tentativa de suicídio": "sexual",
+  "Outro (autoprovocada)": "sexual",
   "Cyberbullying": "virtual", "Assédio virtual": "virtual",
   "Invasão de dispositivo": "virtual",
-
+  "Abandono escolar": "virtual", "Evasão escolar": "virtual",
+  "Gravidez na adolescência": "virtual", "Trabalho Infantil": "virtual",
+  "Ingestão de bebida alcoólica": "virtual", "Porte ilegal de arma": "virtual",
+  "Outro (violação de direitos)": "virtual",
   "Calúnia": "moral", "Difamação": "moral", "Injúria": "moral",
-
-  "Racismo": "motiv", "Intolerância Religiosa": "motiv",
-  "Sexismo": "motiv", "Diversidade de gênero": "motiv",
-  "Capacitismo": "motiv", "Outros": "motiv",
-
+  "Etarismo": "motiv", "Gordofobia": "motiv", "Racismo": "motiv",
+  "Intolerância Religiosa": "motiv", "Capacitismo": "motiv",
+  "Sexismo": "motiv", "Violências às diversidades sexuais e de gênero": "motiv",
+  "Xenofobia": "motiv", "Outros": "motiv",
   "Criança": "praticou", "Adolescente": "praticou", "Pai": "praticou",
   "Mãe": "praticou", "Responsável": "praticou", "Professor": "praticou"
 };
 
-const ICONE_TIPO = {
+var ICONE_TIPO = {
   fisica: "🤜", psico: "🧠", sexual: "⚠️",
   virtual: "💻", moral: "🗣️", motiv: "🎯", praticou: "👤"
 };
 
-const COR_CATEGORIA_PDF = {
-  fisica:   [183, 28, 28],
-  psico:    [245, 127, 23],
-  sexual:   [74, 20, 140],
-  virtual:  [13, 71, 161],
-  moral:    [27, 94, 32],
-  motiv:    [191, 54, 12],
-  praticou: [106, 27, 154]
+var COR_CATEGORIA_PDF = {
+  fisica:[183,28,28],psico:[245,127,23],sexual:[74,20,140],
+  virtual:[13,71,161],moral:[27,94,32],motiv:[191,54,12],praticou:[106,27,154]
 };
 
 function renderTags(tipoStr) {
-  if (!tipoStr || tipoStr.trim() === "") {
-    return '<span style="color:#999;font-size:12px;">Não informado</span>';
-  }
-  const itens = tipoStr.split(",").map(t => t.trim()).filter(t => t.length > 0);
-  if (itens.length === 0) {
-    return '<span style="color:#999;font-size:12px;">Não informado</span>';
-  }
+  if (!tipoStr || tipoStr.trim() === "") return '<span style="color:#999;font-size:12px;">Não informado</span>';
+  var itens = tipoStr.split(",").map(function(t){ return t.trim(); }).filter(function(t){ return t.length > 0; });
+  if (itens.length === 0) return '<span style="color:#999;font-size:12px;">Não informado</span>';
   return '<div class="tagsTipo">' +
-    itens.map(t => {
-      const cat = MAPA_TIPO[t] || "moral";
-      const icone = ICONE_TIPO[cat] || "•";
-      return `<span class="tagTipo ${cat}">${icone} ${t}</span>`;
-    }).join("") +
-    '</div>';
+    itens.map(function(t) {
+      var cat = MAPA_TIPO[t] || "moral";
+      return '<span class="tagTipo ' + cat + '">' + (ICONE_TIPO[cat]||"•") + ' ' + t + '</span>';
+    }).join("") + '</div>';
 }
 
 function renderTagsSemMotiv(tipoStr) {
-  if (!tipoStr || tipoStr.trim() === "") {
-    return '<span style="color:#999;font-size:12px;">Não informado</span>';
-  }
-  const excluir = ["Racismo","Intolerância Religiosa","Sexismo","Diversidade de gênero",
+  if (!tipoStr || tipoStr.trim() === "") return '<span style="color:#999;font-size:12px;">Não informado</span>';
+  var excluir = ["Racismo","Intolerância Religiosa","Sexismo","Diversidade de gênero",
     "Capacitismo","Outros","Criança","Adolescente","Pai","Mãe","Responsável","Professor"];
-  const itens = tipoStr.split(",").map(t => t.trim())
-    .filter(t => t.length > 0 && !excluir.includes(t));
-  if (itens.length === 0) {
-    return '<span style="color:#999;font-size:12px;">Não informado</span>';
-  }
+  var itens = tipoStr.split(",").map(function(t){ return t.trim(); })
+    .filter(function(t){ return t.length > 0 && excluir.indexOf(t) === -1; });
+  if (itens.length === 0) return '<span style="color:#999;font-size:12px;">Não informado</span>';
   return '<div class="tagsTipo">' +
-    itens.map(t => {
-      const cat = MAPA_TIPO[t] || "moral";
-      const icone = ICONE_TIPO[cat] || "•";
-      return `<span class="tagTipo ${cat}">${icone} ${t}</span>`;
-    }).join("") +
-  '</div>';
+    itens.map(function(t) {
+      var cat = MAPA_TIPO[t] || "moral";
+      return '<span class="tagTipo ' + cat + '">' + (ICONE_TIPO[cat]||"•") + ' ' + t + '</span>';
+    }).join("") + '</div>';
 }
 
 function parseTipos(tipoStr) {
   if (!tipoStr || tipoStr.trim() === "") return [];
-  return tipoStr.split(",").map(t => t.trim()).filter(t => t.length > 0);
+  return tipoStr.split(",").map(function(t){ return t.trim(); }).filter(function(t){ return t.length > 0; });
 }
 
 // -------------------------------------------------------
 // SESSÃO
 // -------------------------------------------------------
-let usuarioLogado = null;
+var usuarioLogado = null;
 
 function salvarSessao(user) {
   usuarioLogado = user;
@@ -1173,8 +1204,8 @@ function salvarSessao(user) {
 }
 
 function carregarSessao() {
-  const s = sessionStorage.getItem("usuarioLogado");
-  if (s) usuarioLogado = JSON.parse(s);
+  var s = sessionStorage.getItem("usuarioLogado");
+  if (s) { try { usuarioLogado = JSON.parse(s); } catch(e) { usuarioLogado = null; } }
   return usuarioLogado;
 }
 
@@ -1199,9 +1230,11 @@ function abrirLogin() { document.getElementById("loginModal").style.display = "f
 function fecharLogin() { document.getElementById("loginModal").style.display = "none"; }
 
 async function entrar() {
-  const email = document.getElementById("usuario").value.trim();
-  const senha = document.getElementById("senha").value.trim();
-  const { data, error } = await db.from("usuarios").select("*").eq("email", email).eq("senha", senha).single();
+  var email = document.getElementById("usuario").value.trim();
+  var senha = document.getElementById("senha").value.trim();
+  var result = await db.from("usuarios").select("*").eq("email", email).eq("senha", senha).single();
+  var data = result.data;
+  var error = result.error;
   if (error || !data) { alert("Usuário ou senha inválidos!"); return; }
   if (data.status === "Inativo") { alert("Usuário inativo! Procure o administrador."); return; }
   salvarSessao(data);
@@ -1215,8 +1248,8 @@ function sair() { limparSessao(); location.reload(); }
 // PAINEL
 // -------------------------------------------------------
 function abrirPainel() {
-  const user = carregarSessao();
-  const modoPublico = document.getElementById("painel").classList.contains("modoPublicoRegistro");
+  var user = carregarSessao();
+  var modoPublico = document.getElementById("painel").classList.contains("modoPublicoRegistro");
   if (!modoPublico && !user) { alert("Acesso não autorizado!"); location.reload(); return; }
 
   document.getElementById("loginModal").style.display = "none";
@@ -1224,28 +1257,25 @@ function abrirPainel() {
   document.getElementById("painel").style.display = "block";
   document.getElementById("painel").classList.remove("modoPublicoRegistro");
 
-  const sidebar = document.querySelector(".sidebar");
+  var sidebar = document.querySelector(".sidebar");
   if (sidebar) sidebar.style.display = "";
-  const topo = document.querySelector(".topoAdmin");
+  var topo = document.querySelector(".topoAdmin");
   if (topo) topo.style.display = "";
-  const usuarioMenuEl = document.querySelector(".usuarioMenu");
+  var usuarioMenuEl = document.querySelector(".usuarioMenu");
   if (usuarioMenuEl) usuarioMenuEl.style.display = "flex";
 
-  const menuUsuarios = document.getElementById("menuUsuarios");
-  if (getTipo() !== "admin") {
-    if (menuUsuarios) menuUsuarios.style.display = "none";
-  } else {
-    if (menuUsuarios) menuUsuarios.style.display = "block";
-  }
+  var menuUsuarios = document.getElementById("menuUsuarios");
+  if (getTipo() !== "admin") { if (menuUsuarios) menuUsuarios.style.display = "none"; }
+  else { if (menuUsuarios) menuUsuarios.style.display = "block"; }
 
   if (user) {
     document.getElementById("nomeUsuario").innerText = user.nome;
     document.querySelector(".avatar").innerText = user.nome.charAt(0);
-    const sub = document.getElementById("perfilSubtitulo");
+    var sub = document.getElementById("perfilSubtitulo");
     if (sub) sub.innerText = (user.nivel || "") + " • " + (user.escola || "");
   }
 
-  setTimeout(() => abrirAba("dashboard"), 100);
+  setTimeout(function(){ abrirAba("dashboard"); }, 100);
   atualizarBadge();
   atualizarBotaoFlutuante();
 }
@@ -1254,142 +1284,389 @@ function abrirPainel() {
 // ABAS
 // -------------------------------------------------------
 function abrirAba(nome) {
-  if (nome === "usuarios" && getTipo() !== "admin") {
-    alert("Acesso permitido apenas para administrador"); return;
-  }
-  document.querySelectorAll(".aba").forEach(a => a.style.display = "none");
-  const ativa = document.getElementById(nome);
+  if (nome === "usuarios" && getTipo() !== "admin") { alert("Acesso permitido apenas para administrador"); return; }
+  document.querySelectorAll(".aba").forEach(function(a){ a.style.display = "none"; });
+  var ativa = document.getElementById(nome);
   if (!ativa) return;
   ativa.style.display = "block";
   ativa.style.animation = "none";
-  setTimeout(() => { ativa.style.animation = "fadeSlide 0.4s"; }, 10);
-
-  if (nome === "dashboard") setTimeout(() => carregarGraficos(), 100);
+  setTimeout(function(){ ativa.style.animation = "fadeSlide 0.4s"; }, 10);
+  if (nome === "dashboard") setTimeout(function(){ carregarGraficos(); }, 100);
   if (nome === "relatorios") carregarRelatorios();
   if (nome === "usuarios") { carregarUsuarios(); atualizarCardsUsuarios(); }
-
   atualizarBotaoFlutuante();
 }
 
 // -------------------------------------------------------
-// ETAPAS DO FORMULÁRIO
+// ETAPAS DO FORMULÁRIO (legado)
 // -------------------------------------------------------
-let etapaAtual = 0;
-
+var etapaAtual = 0;
 function mostrarEtapa() {
-  const etapas = document.querySelectorAll(".etapa");
-  const abas   = document.querySelectorAll(".abaItem");
-  etapas.forEach((e, i) => e.style.display = i === etapaAtual ? "block" : "none");
-  abas.forEach((a, i) => a.classList.toggle("ativa", i === etapaAtual));
+  var etapas = document.querySelectorAll(".etapa");
+  var abas = document.querySelectorAll(".abaItem");
+  etapas.forEach(function(e, i){ e.style.display = i === etapaAtual ? "block" : "none"; });
+  abas.forEach(function(a, i){ a.classList.toggle("ativa", i === etapaAtual); });
+}
+function proximo() { var etapas = document.querySelectorAll(".etapa"); if (etapaAtual < etapas.length - 1) { etapaAtual++; mostrarEtapa(); } }
+function voltar() { if (etapaAtual > 0) { etapaAtual--; mostrarEtapa(); } }
+
+// -------------------------------------------------------
+// NAVEGAÇÃO ENTRE ETAPAS (reg-etapa)
+// -------------------------------------------------------
+function regGoTo(i) {
+  var n = 8;
+  document.querySelectorAll('.reg-etapa').forEach(function(el, j){
+    el.classList.toggle('reg-active', j === i);
+  });
+  document.querySelectorAll('.rs-step').forEach(function(el, j){
+    el.classList.remove('rs-active', 'rs-done');
+    if (j === i) el.classList.add('rs-active');
+    else if (j < i) el.classList.add('rs-done');
+  });
+  for (var j = 0; j < 7; j++) {
+    var l = document.getElementById('rl' + j);
+    if (l) l.classList.toggle('rs-done', j < i);
+  }
+  var fill = document.getElementById('regProgressFill');
+  if (fill) fill.style.width = ((i + 1) / n * 100).toFixed(1) + '%';
+  var sc = document.getElementById('regStepCount');
+  if (sc) sc.textContent = '— etapa ' + (i + 1) + ' de ' + n;
+  var wrap = document.querySelector('.reg-wrap');
+  if (wrap) wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+// -------------------------------------------------------
+// VÍTIMAS — CARDS DINÂMICOS
+// -------------------------------------------------------
+var _vitimaCount = 0;
+
+function _htmlCardVitima(idx, uid) {
+  var podeRemover = idx > 1;
+  var btnRemover = podeRemover
+    ? '<button type="button" class="btn-remover-vitima" onclick="removerVitimaCard(\'' + uid + '\')">✕ Remover</button>'
+    : '';
+  return '<div class="vitima-card" id="vitimaCard_' + uid + '">' +
+    '<div class="vitima-card-header">' +
+      '<div class="vitima-card-titulo"><span>' + idx + '</span> Vítima ' + idx + '</div>' +
+      btnRemover +
+    '</div>' +
+    '<div class="reg-grid">' +
+      '<div class="reg-field reg-grid-full">' +
+        '<span class="reg-label">Nome</span>' +
+        '<input type="text" class="inputVitimaNome" data-uid="' + uid + '" placeholder="Nome da vítima"' +
+        ' style="width:100%;padding:9px 12px;border:1px solid #c8e6a0;border-radius:9px;font-size:13px;box-sizing:border-box;background:#fff;outline:none;"' +
+        ' onfocus="this.style.borderColor=\'#639922\'" onblur="this.style.borderColor=\'#c8e6a0\'">' +
+      '</div>' +
+      '<div class="reg-field">' +
+        '<span class="reg-label">Idade</span>' +
+        '<input type="number" class="inputVitimaIdade" data-uid="' + uid + '" placeholder="Ex: 12"' +
+        ' style="width:100%;padding:9px 12px;border:1px solid #c8e6a0;border-radius:9px;font-size:13px;box-sizing:border-box;background:#fff;outline:none;"' +
+        ' onfocus="this.style.borderColor=\'#639922\'" onblur="this.style.borderColor=\'#c8e6a0\'">' +
+      '</div>' +
+      '<div class="reg-field">' +
+        '<span class="reg-label">Escolaridade</span>' +
+        '<select class="inputVitimaEscolaridade" data-uid="' + uid + '"' +
+        ' style="width:100%;padding:9px 12px;border:1px solid #c8e6a0;border-radius:9px;font-size:13px;box-sizing:border-box;background:#fff;outline:none;">' +
+        '<option>Creche</option><option>Pré-Escola</option>' +
+        '<option>1º ano</option><option>2º ano</option><option>3º ano</option>' +
+        '<option>4º ano</option><option>5º ano</option><option>6º ano</option>' +
+        '<option>7º ano</option><option>8º ano</option><option>9º ano</option>' +
+        '<option>Ensino Médio</option>' +
+        '</select>' +
+      '</div>' +
+    '</div>' +
+    '<hr class="vitima-divider">' +
+    '<div class="vitima-group-label">Raça / cor</div>' +
+    '<div class="reg-pill-row" style="margin-bottom:.75rem">' +
+      '<label class="reg-pill"><input type="radio" name="raca_' + uid + '" value="Branca"><span class="reg-dot"></span>Branca</label>' +
+      '<label class="reg-pill"><input type="radio" name="raca_' + uid + '" value="Preta"><span class="reg-dot"></span>Preta</label>' +
+      '<label class="reg-pill"><input type="radio" name="raca_' + uid + '" value="Parda"><span class="reg-dot"></span>Parda</label>' +
+      '<label class="reg-pill"><input type="radio" name="raca_' + uid + '" value="Indígena"><span class="reg-dot"></span>Indígena</label>' +
+      '<label class="reg-pill"><input type="radio" name="raca_' + uid + '" value="Amarela"><span class="reg-dot"></span>Amarela</label>' +
+    '</div>' +
+    '<hr class="vitima-divider">' +
+    '<div class="vitima-group-label">Sexo</div>' +
+    '<div class="reg-pill-row" style="margin-bottom:.75rem">' +
+      '<label class="reg-pill"><input type="radio" name="sexo_' + uid + '" value="Feminino"><span class="reg-dot"></span>Feminino</label>' +
+      '<label class="reg-pill"><input type="radio" name="sexo_' + uid + '" value="Masculino"><span class="reg-dot"></span>Masculino</label>' +
+      '<label class="reg-pill"><input type="radio" name="sexo_' + uid + '" value="Não informou"><span class="reg-dot"></span>Não informou</label>' +
+    '</div>' +
+    '<hr class="vitima-divider">' +
+    '<div class="vitima-group-label">Identidade de gênero</div>' +
+    '<div class="reg-pill-row" style="margin-bottom:.75rem">' +
+      '<label class="reg-pill"><input type="radio" name="identGenero_' + uid + '" value="Homem Cisgênero"><span class="reg-dot"></span>Homem Cisgênero</label>' +
+      '<label class="reg-pill"><input type="radio" name="identGenero_' + uid + '" value="Mulher Cisgênero"><span class="reg-dot"></span>Mulher Cisgênero</label>' +
+      '<label class="reg-pill"><input type="radio" name="identGenero_' + uid + '" value="Homem Transexual"><span class="reg-dot"></span>Homem Transexual</label>' +
+      '<label class="reg-pill"><input type="radio" name="identGenero_' + uid + '" value="Mulher Transexual"><span class="reg-dot"></span>Mulher Transexual</label>' +
+      '<label class="reg-pill"><input type="radio" name="identGenero_' + uid + '" value="Travesti"><span class="reg-dot"></span>Travesti</label>' +
+      '<label class="reg-pill"><input type="radio" name="identGenero_' + uid + '" value="Ignorado"><span class="reg-dot"></span>Ignorado</label>' +
+      '<label class="reg-pill"><input type="radio" name="identGenero_' + uid + '" value="Não se aplica"><span class="reg-dot"></span>Não se aplica</label>' +
+    '</div>' +
+    '<hr class="vitima-divider">' +
+    '<div class="vitima-group-label">Orientação sexual</div>' +
+    '<div class="reg-pill-row">' +
+      '<label class="reg-pill"><input type="radio" name="orientacao_' + uid + '" value="Heterossexual"><span class="reg-dot"></span>Heterossexual</label>' +
+      '<label class="reg-pill"><input type="radio" name="orientacao_' + uid + '" value="Homossexual"><span class="reg-dot"></span>Homossexual</label>' +
+      '<label class="reg-pill"><input type="radio" name="orientacao_' + uid + '" value="Bissexual"><span class="reg-dot"></span>Bissexual</label>' +
+      '<label class="reg-pill"><input type="radio" name="orientacao_' + uid + '" value="Não se aplica"><span class="reg-dot"></span>Não se aplica</label>' +
+      '<label class="reg-pill"><input type="radio" name="orientacao_' + uid + '" value="Ignorado"><span class="reg-dot"></span>Ignorado</label>' +
+      '<label class="reg-pill" style="align-items:center;gap:6px">' +
+        '<input type="radio" name="orientacao_' + uid + '" value="Outro" id="orientacaoOutro_' + uid + '"' +
+        ' onchange="toggleOrientacaoOutroCard(\'' + uid + '\', this)">' +
+        '<span class="reg-dot"></span>Outro:' +
+        '<input type="text" id="orientacaoOutroTexto_' + uid + '" placeholder="Especifique..."' +
+        ' style="display:none;padding:4px 8px;border:1px solid #ce93d8;border-radius:8px;font-size:12px;outline:none;background:#fdf6ff;width:130px">' +
+      '</label>' +
+    '</div>' +
+  '</div>';
 }
 
-function proximo() {
-  const etapas = document.querySelectorAll(".etapa");
-  if (etapaAtual < etapas.length - 1) { etapaAtual++; mostrarEtapa(); }
+function _renumerarVitimas() {
+  var cards = document.querySelectorAll('#listaVitimas .vitima-card');
+  cards.forEach(function(card, i) {
+    var titulo = card.querySelector('.vitima-card-titulo');
+    if (titulo) titulo.innerHTML = '<span>' + (i+1) + '</span> Vítima ' + (i+1);
+  });
 }
 
-function voltar() {
-  if (etapaAtual > 0) { etapaAtual--; mostrarEtapa(); }
+function adicionarVitima() {
+  _vitimaCount++;
+  var uid = 'v' + _vitimaCount;
+  var lista = document.getElementById("listaVitimas");
+  if (!lista) return;
+  var quantidadeAtual = lista.querySelectorAll('.vitima-card').length;
+  var div = document.createElement("div");
+  div.innerHTML = _htmlCardVitima(quantidadeAtual + 1, uid);
+  var card = div.firstElementChild;
+  if (card) lista.appendChild(card);
+}
+
+function removerVitimaCard(uid) {
+  var card = document.getElementById('vitimaCard_' + uid);
+  var lista = document.getElementById('listaVitimas');
+  if (!lista || !card) return;
+  if (lista.querySelectorAll('.vitima-card').length > 1) {
+    card.remove();
+    _renumerarVitimas();
+  }
+}
+
+function toggleOrientacaoOutroCard(uid, radio) {
+  var input = document.getElementById('orientacaoOutroTexto_' + uid);
+  if (input) {
+    input.style.display = radio.checked ? 'inline-block' : 'none';
+    if (!radio.checked) input.value = '';
+  }
+}
+
+function coletarVitimas() {
+  var cards = document.querySelectorAll('#listaVitimas .vitima-card');
+  var resultado = [];
+  cards.forEach(function(card) {
+    var uid = card.id.replace('vitimaCard_', '');
+    var nomeEl = card.querySelector('.inputVitimaNome');
+    var idadeEl = card.querySelector('.inputVitimaIdade');
+    var escolaridadeEl = card.querySelector('.inputVitimaEscolaridade');
+    var racaEl = card.querySelector('input[name="raca_' + uid + '"]:checked');
+    var sexoEl = card.querySelector('input[name="sexo_' + uid + '"]:checked');
+    var identEl = card.querySelector('input[name="identGenero_' + uid + '"]:checked');
+    var oriEl = card.querySelector('input[name="orientacao_' + uid + '"]:checked');
+
+    var nome = nomeEl ? nomeEl.value.trim() : '';
+    var idade = idadeEl ? idadeEl.value.trim() : '';
+    var escolaridade = escolaridadeEl ? escolaridadeEl.value : '';
+    var raca = racaEl ? racaEl.value : '';
+    var sexo = sexoEl ? sexoEl.value : '';
+    var identGenero = identEl ? identEl.value : '';
+    var orientacao = oriEl ? oriEl.value : '';
+
+    if (orientacao === 'Outro') {
+      var txtEl = document.getElementById('orientacaoOutroTexto_' + uid);
+      var txt = txtEl ? txtEl.value.trim() : '';
+      orientacao = txt ? 'Outro: ' + txt : 'Outro';
+    }
+
+    resultado.push({ nome: nome, idade: idade, escolaridade: escolaridade, raca: raca, sexo: sexo, identGenero: identGenero, orientacao: orientacao });
+  });
+  return resultado;
 }
 
 // -------------------------------------------------------
-// SALVAR NOTIFICAÇÃO
+// SALVAR NOTIFICAÇÃO — CORRIGIDO
 // -------------------------------------------------------
 async function salvarNotificacao() {
-  const user = carregarSessao() || {};
-  const tipos = [];
+  var user = carregarSessao() || {};
+  var tipos = [];
 
-  document.querySelectorAll('#registros input[type="checkbox"]').forEach(c => {
-    if (c.checked) {
-      if (c.id === "checkOutros") {
-        const texto = document.getElementById("outrosTexto").value.trim();
-        tipos.push(texto ? "Outros: " + texto : "Outros");
-      } else if (c.id === "checkFisicaOutro") {
-        const texto = document.getElementById("fisicaOutroTexto").value.trim();
-        tipos.push(texto ? "Outro (física): " + texto : "Outro (física)");
-      } else if (c.id === "checkPsicoOutro") {
-        const texto = document.getElementById("psicoOutroTexto").value.trim();
-        tipos.push(texto ? "Outro (psicológica): " + texto : "Outro (psicológica)");
-      } else if (c.id === "checkSexualOutro") {
-        const texto = document.getElementById("sexualOutroTexto").value.trim();
-        tipos.push(texto ? "Outro (sexual): " + texto : "Outro (sexual)");
-      } else {
-        tipos.push(c.value);
-      }
+  // Coleta todos os checkboxes marcados dentro do formulário de registros
+  var checkboxes = document.querySelectorAll('#registros input[type="checkbox"]');
+  checkboxes.forEach(function(c) {
+    if (!c.checked) return;
+    if (c.id === "checkOutros") {
+      var textoOutros = document.getElementById("outrosTexto") ? document.getElementById("outrosTexto").value.trim() : "";
+      tipos.push(textoOutros ? "Outros: " + textoOutros : "Outros");
+    } else if (c.id === "checkFisicaOutro") {
+      var textoFisica = document.getElementById("fisicaOutroTexto") ? document.getElementById("fisicaOutroTexto").value.trim() : "";
+      tipos.push(textoFisica ? "Outro (física): " + textoFisica : "Outro (física)");
+    } else if (c.id === "checkPsicoOutro") {
+      var textoPsico = document.getElementById("psicoOutroTexto") ? document.getElementById("psicoOutroTexto").value.trim() : "";
+      tipos.push(textoPsico ? "Outro (psicológica): " + textoPsico : "Outro (psicológica)");
+    } else if (c.id === "checkSexualOutro") {
+      } else if (c.id === "checkMotivOutro") {
+  var textoMotiv = document.getElementById("motivOutroTexto") ? document.getElementById("motivOutroTexto").value.trim() : "";
+  tipos.push(textoMotiv ? "Outros (motivação): " + textoMotiv : "Outros (motivação)");
+  } else if (c.id === "checkAutoOutro") {
+    } else if (c.id === "checkViolacaoOutro") {
+  var textoViolacao = document.getElementById("violacaoOutroTexto") ? document.getElementById("violacaoOutroTexto").value.trim() : "";
+  tipos.push(textoViolacao ? "Outro (violação de direitos): " + textoViolacao : "Outro (violação de direitos)");
+  var textoAuto = document.getElementById("autoOutroTexto") ? document.getElementById("autoOutroTexto").value.trim() : "";
+  tipos.push(textoAuto ? "Outro (autoprovocada): " + textoAuto : "Outro (autoprovocada)");
+      var textoSexual = document.getElementById("sexualOutroTexto") ? document.getElementById("sexualOutroTexto").value.trim() : "";
+      tipos.push(textoSexual ? "Outro (sexual): " + textoSexual : "Outro (sexual)");
+    } else if (c.value) {
+      tipos.push(c.value);
     }
   });
 
-  // ✅ Coletando vítimas ANTES do objeto novo
-  const vitimas = [...document.querySelectorAll('#listaVitimas .inputVitima')]
-    .map(i => i.value.trim()).filter(Boolean);
+  // Coleta vítimas
+  var vitimasData = coletarVitimas();
 
-  // ✅ Coletando autores ANTES do objeto novo
-  const autoresRows = document.querySelectorAll('#listaAutores .autor-row');
-  const autoresData = [...autoresRows].map(row => ({
-    nome:    row.querySelector('.inputAutorNome')?.value.trim()    || "",
-    idade:   row.querySelector('.inputAutorIdade')?.value.trim()   || "",
-    relacao: row.querySelector('.inputAutorRelacao')?.value.trim() || ""
-  })).filter(a => a.nome || a.idade || a.relacao);
+  // Garante ao menos uma entrada vazia se nenhuma vítima foi preenchida
+  if (vitimasData.length === 0) {
+    vitimasData = [{ nome: "", idade: "", escolaridade: "", raca: "", sexo: "", identGenero: "", orientacao: "" }];
+  }
 
-  const todos = await dbSelect("relatorios");
-  const protocolo = gerarProtocolo(todos.length + 1);
+  var nomes  = vitimasData.map(function(v){ return v.nome; }).filter(Boolean).join(", ");
+  var idades = vitimasData.map(function(v){ return v.idade; }).filter(Boolean).join(", ");
+  var v0 = vitimasData[0] || {};
 
-  const novo = {
-    protocolo,
-    escola:            user.escola || "Pública",
-    data:              document.getElementById("dataPreenchimento").value || "",
-    local:             document.getElementById("localTipo").value || "",
-    local_detalhado:   document.getElementById("localDetalhado").value || "",
-    vitima:            vitimas.join(", "),                                          // 
-    idade:             document.getElementById("idadeVitima").value || "",
-    sexo:              document.querySelector('input[name="sexo"]:checked')?.value || "",
-    raca:              document.querySelector('input[name="raca"]:checked')?.value || "",
-    identidade_genero: document.querySelector('input[name="identGenero"]:checked')?.value || "",
-    orientacao: (() => {
-      const val = document.querySelector('input[name="orientacao"]:checked')?.value || "";
-      if (val === "Outro") {
-        const txt = document.getElementById("orientacaoOutroTexto")?.value.trim();
-        return txt ? "Outro: " + txt : "Outro";
-      }
-      return val;
-    })(),
-    escolaridade:      document.getElementById("escolaridade").value || "",
-    responsavel:       document.getElementById("responsavel").value || "",
-    telefone:          document.getElementById("telefoneResponsavel").value || "",
-    parentesco:        document.getElementById("parentesco").value || "",
-    endereco:          document.getElementById("enderecoResponsavel").value || "",
-    autor:             autoresData.map(a => a.nome).filter(Boolean).join(", "),     // 
-    idade_autor:       autoresData.map(a => a.idade).filter(Boolean).join(", "),   // 
-    relacao_autor:     autoresData.map(a => a.relacao).filter(Boolean).join(", "), // 
+  // Coleta autores
+  var autoresRows = document.querySelectorAll('#listaAutores .autor-row');
+  var autoresData = [];
+  autoresRows.forEach(function(row) {
+    var nomeEl    = row.querySelector('.inputAutorNome');
+    var idadeEl   = row.querySelector('.inputAutorIdade');
+    var relacaoEl = row.querySelector('.inputAutorRelacao');
+    var nomeVal    = nomeEl    ? nomeEl.value.trim()    : "";
+    var idadeVal   = idadeEl   ? idadeEl.value.trim()   : "";
+    var relacaoVal = relacaoEl ? relacaoEl.value.trim() : "";
+    if (nomeVal || idadeVal || relacaoVal) {
+      autoresData.push({ nome: nomeVal, idade: idadeVal, relacao: relacaoVal });
+    }
+  });
+
+  // Gera protocolo
+  var todos = await dbSelect("relatorios");
+  var protocolo = gerarProtocolo(todos.length + 1);
+
+  var dataPreenchEl  = document.getElementById("dataPreenchimento");
+  var localTipoEl    = document.getElementById("localTipo");
+  var localDetalEl   = document.getElementById("localDetalhado");
+  var responsavelEl  = document.getElementById("responsavel");
+  var telefoneEl     = document.getElementById("telefoneResponsavel");
+  var parentescoEl   = document.getElementById("parentesco");
+  var enderecoEl     = document.getElementById("enderecoResponsavel");
+  var resumoEl       = document.getElementById("resumo");
+  var encaminhaEl    = document.getElementById("encaminhamento");
+ var denunciaChegouItens = [];
+document.querySelectorAll('#re6 input[type="checkbox"]').forEach(function(c) {
+  if (!c.checked) return;
+  if (c.id === "checkDenunciaOutro") {
+    var txt = document.getElementById("denunciaOutroTexto") ? document.getElementById("denunciaOutroTexto").value.trim() : "";
+    denunciaChegouItens.push(txt ? "Outro: " + txt : "Outro");
+  } else if (c.value) {
+    denunciaChegouItens.push(c.value);
+  }
+});
+
+  var novo = {
+    protocolo:         protocolo,
+    escola:            user.escola || "Público",
+    data:              dataPreenchEl  ? dataPreenchEl.value  : "",
+    local:             localTipoEl   ? localTipoEl.value    : "",
+    local_detalhado:   localDetalEl  ? localDetalEl.value   : "",
+    vitima:            nomes,
+    idade:             idades,
+    sexo:              v0.sexo        || "",
+    raca:              v0.raca        || "",
+    identidade_genero: v0.identGenero || "",
+    orientacao:        v0.orientacao  || "",
+    escolaridade:      v0.escolaridade|| "",
+    vitimas_json:      JSON.stringify(vitimasData),
+    responsavel:       responsavelEl ? responsavelEl.value  : "",
+    telefone:          telefoneEl    ? telefoneEl.value     : "",
+    parentesco:        parentescoEl  ? parentescoEl.value   : "",
+    endereco:          enderecoEl    ? enderecoEl.value     : "",
+    autor:             autoresData.map(function(a){ return a.nome; }).filter(Boolean).join(", "),
+    idade_autor:       autoresData.map(function(a){ return a.idade; }).filter(Boolean).join(", "),
+    relacao_autor:     autoresData.map(function(a){ return a.relacao; }).filter(Boolean).join(", "),
     tipo:              tipos.join(", "),
-    resumo:            document.getElementById("resumo").value || "",
-    encaminhamento:    document.getElementById("encaminhamento").value || "",
-    status:            "Em andamento"
+    resumo:            resumoEl     ? resumoEl.value     : "",
+    denuncia_chegou: denunciaChegouItens.join(", "),
+    encaminhamento:    encaminhaEl  ? encaminhaEl.value  : "",
+    status_secretaria: "Em andamento",
+status_conselho:   "Em andamento",
   };
 
-  const res = await dbInsert("relatorios", novo);
-  if (!res) { alert("Erro ao salvar notificação!"); return; }
+  try {
+    var res = await dbInsert("relatorios", novo);
+    if (!res) {
+      alert("Erro ao salvar notificação! Verifique sua conexão e tente novamente.");
+      return;
+    }
+    await adicionarNotificacao("Nova notificação: " + (novo.vitima || "Sem nome"), novo.escola);
+    alert("Notificação registrada com sucesso!\nProtocolo: " + protocolo);
+    limparFormulario();
+    regGoTo(0);
+  } catch(err) {
+    console.error("Erro ao salvar:", err);
+    alert("Erro ao salvar notificação: " + (err.message || err));
+  }
+}
 
-  await adicionarNotificacao("Nova notificação: " + novo.vitima, novo.escola);
-  alert("Notificação registrada!\nProtocolo: " + protocolo);
-  limparFormulario();
-  regGoTo(0);
-} 
+// -------------------------------------------------------
+// LIMPAR FORMULÁRIO — CORRIGIDO
+// -------------------------------------------------------
+function limparFormulario() {
+  var campos = document.querySelectorAll("#registros input[type='text'], #registros input[type='number'], #registros input[type='date'], #registros textarea");
+  campos.forEach(function(el){ el.value = ""; });
 
+  document.querySelectorAll("#registros select").forEach(function(el){ el.selectedIndex = 0; });
+  document.querySelectorAll("#registros input[type='radio'], #registros input[type='checkbox']").forEach(function(el){ el.checked = false; });
+
+  var ids = ["outrosTexto","fisicaOutroTexto","psicoOutroTexto","sexualOutroTexto",
+             "motivOutroTexto","autoOutroTexto","violacaoOutroTexto","denunciaOutroTexto"];
+  ids.forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) { el.style.display = "none"; el.value = ""; }
+  });
+
+  _vitimaCount = 0;
+  var listaV = document.getElementById("listaVitimas");
+  if (listaV) {
+    listaV.innerHTML = '';
+    adicionarVitima();
+  }
+
+  var listaA = document.getElementById("listaAutores");
+  if (listaA) {
+    var rows = listaA.querySelectorAll(".autor-row");
+    rows.forEach(function(r, i){ if (i > 0) r.remove(); });
+    listaA.querySelectorAll("input").forEach(function(inp){ inp.value = ""; });
+    atualizarBotoesRemoverAutor();
+  }
+}
 // -------------------------------------------------------
 // USUÁRIOS
 // -------------------------------------------------------
-function gerarSenha() {
-  return "12345678";
-}
+function gerarSenha() { return "12345678"; }
 
 async function cadastrarUsuario() {
-  const nome   = document.getElementById("nome").value;
-  const email  = document.getElementById("email").value;
-  const nivel  = document.getElementById("nivelUsuario").value;
-  const escola = document.getElementById("escola").value;
-  const senha  = gerarSenha();
-  const res = await dbInsert("usuarios", { nome, email, senha, nivel, escola, status: "Ativo" });
+  var nome   = document.getElementById("nome").value;
+  var email  = document.getElementById("email").value;
+  var nivel  = document.getElementById("nivelUsuario").value;
+  var escola = document.getElementById("escola").value;
+  var senha  = gerarSenha();
+  var res = await dbInsert("usuarios", { nome: nome, email: email, senha: senha, nivel: nivel, escola: escola, status: "Ativo" });
   if (!res) { alert("Erro ao cadastrar (email duplicado?)"); return; }
   alert("Usuário cadastrado!\nSenha: " + senha);
   carregarUsuarios();
@@ -1397,34 +1674,30 @@ async function cadastrarUsuario() {
 }
 
 async function carregarUsuarios() {
-  const tbody = document.querySelector("#tabelaUsuarios tbody");
+  var tbody = document.querySelector("#tabelaUsuarios tbody");
   if (!tbody) return;
-  const lista = await dbSelect("usuarios");
+  var lista = await dbSelect("usuarios");
   tbody.innerHTML = "";
-  lista.forEach(u => {
-    const linha = tbody.insertRow();
+  lista.forEach(function(u) {
+    var linha = tbody.insertRow();
     linha.insertCell(0).innerText = u.nome   || "";
     linha.insertCell(1).innerText = u.escola || "";
     linha.insertCell(2).innerText = u.email  || "";
     linha.insertCell(3).innerText = u.senha  || "";
     linha.insertCell(4).innerText = u.nivel  || "";
-    linha.insertCell(5).innerHTML = `<span class="${u.status === "Ativo" ? "statusAtivo" : "statusInativo"}">${u.status || "Ativo"}</span>`;
-    linha.insertCell(6).innerHTML = `
-      <button class="botaoAcao botaoEditar"  onclick="editarUsuario(this)">Editar</button>
-      <button class="botaoAcao botaoStatus"  onclick="mudarStatus(this)">Status</button>
-      <button class="botaoAcao botaoExcluir" onclick="excluirUsuario('${u.email}')">Excluir</button>
-    `;
+    linha.insertCell(5).innerHTML = '<span class="' + (u.status === "Ativo" ? "statusAtivo" : "statusInativo") + '">' + (u.status || "Ativo") + '</span>';
+    linha.insertCell(6).innerHTML =
+      '<button class="botaoAcao botaoEditar"  onclick="editarUsuario(this)">Editar</button>' +
+      '<button class="botaoAcao botaoStatus"  onclick="mudarStatus(this)">Status</button>' +
+      '<button class="botaoAcao botaoExcluir" onclick="excluirUsuario(\'' + u.email + '\')">Excluir</button>';
   });
 }
 
 async function atualizarCardsUsuarios() {
-  const lista = await dbSelect("usuarios");
-  let total = lista.length, ativos = 0, inativos = 0, admins = 0;
-  lista.forEach(u => {
-    if (u.status === "Ativo") ativos++; else inativos++;
-    if (u.nivel === "admin") admins++;
-  });
-  const el = (id) => document.getElementById(id);
+  var lista = await dbSelect("usuarios");
+  var total = lista.length, ativos = 0, inativos = 0, admins = 0;
+  lista.forEach(function(u){ if (u.status === "Ativo") ativos++; else inativos++; if (u.nivel === "admin") admins++; });
+  function el(id){ return document.getElementById(id); }
   if (el("totalUsuarios"))    el("totalUsuarios").innerText    = total;
   if (el("usuariosAtivos"))   el("usuariosAtivos").innerText   = ativos;
   if (el("usuariosInativos")) el("usuariosInativos").innerText = inativos;
@@ -1433,30 +1706,30 @@ async function atualizarCardsUsuarios() {
 
 async function excluirUsuario(email) {
   if (!confirm("Deseja excluir este usuário?")) return;
-  await dbDelete("usuarios", { email });
+  await dbDelete("usuarios", { email: email });
   carregarUsuarios();
   atualizarCardsUsuarios();
 }
 
 async function mudarStatus(btn) {
-  const linha = btn.parentElement.parentElement;
-  const email = linha.children[2].innerText;
-  const statusAtual = linha.children[5].innerText.trim();
-  const novoStatus = statusAtual === "Ativo" ? "Inativo" : "Ativo";
-  await dbUpdate("usuarios", { email }, { status: novoStatus });
+  var linha = btn.parentElement.parentElement;
+  var email = linha.children[2].innerText;
+  var statusAtual = linha.children[5].innerText.trim();
+  var novoStatus = statusAtual === "Ativo" ? "Inativo" : "Ativo";
+  await dbUpdate("usuarios", { email: email }, { status: novoStatus });
   carregarUsuarios();
 }
 
 function editarUsuario(btn) {
-  const linha = btn.parentElement.parentElement;
+  var linha = btn.parentElement.parentElement;
   document.getElementById("nome").value  = linha.children[0].innerText;
   document.getElementById("email").value = linha.children[2].innerText;
   linha.remove();
 }
 
 function pesquisarUsuario() {
-  const termo = document.getElementById("pesquisaUsuario")?.value.toLowerCase().trim() || "";
-  document.querySelectorAll("#tabelaUsuarios tbody tr").forEach(l => {
+  var termo = document.getElementById("pesquisaUsuario") ? document.getElementById("pesquisaUsuario").value.toLowerCase().trim() : "";
+  document.querySelectorAll("#tabelaUsuarios tbody tr").forEach(function(l){
     l.style.display = l.innerText.toLowerCase().includes(termo) ? "" : "none";
   });
 }
@@ -1465,125 +1738,222 @@ function pesquisarUsuario() {
 // RELATÓRIOS
 // -------------------------------------------------------
 async function obterRelatoriosFiltrados() {
-  const user = carregarSessao() || {};
-  const lista = await dbSelect("relatorios");
+  var user = carregarSessao() || {};
+  var lista = await dbSelect("relatorios");
   if (temAcessoGlobal(user)) return lista;
-  return lista.filter(r => r.escola === user.escola);
+  return lista.filter(function(r){ return r.escola === user.escola; });
 }
 
 async function carregarRelatorios() {
-  const fw = document.getElementById("filtroEscolaWrap");
+  var fw = document.getElementById("filtroEscolaWrap");
   if (fw) fw.style.display = "none";
-  const user = carregarSessao() || {};
-  const lista = await obterRelatoriosFiltrados();
-  const tbody = document.querySelector("#tabelaRelatorios tbody");
+  var user = carregarSessao() || {};
+  var lista = await obterRelatoriosFiltrados();
+
+  // Ordena por protocolo (PREV-0001, PREV-0002...)
+  lista.sort(function(a, b) {
+    var na = parseInt((a.protocolo || "").replace(/\D/g, "")) || 0;
+    var nb = parseInt((b.protocolo || "").replace(/\D/g, "")) || 0;
+    return na - nb;
+  });
+
+  var tbody = document.querySelector("#tabelaRelatorios tbody");
   if (!tbody) return;
   tbody.innerHTML = "";
-  lista.forEach(r => renderLinhaRelatorio(tbody, r, user));
+  lista.forEach(function(r){ renderLinhaRelatorio(tbody, r, user); });
 }
 
 async function relatorioMensal() {
-  const user = carregarSessao() || {};
-  const lista = await obterRelatoriosFiltrados();
-  const mesAtual = new Date().getMonth() + 1;
-  const tbody = document.querySelector("#tabelaRelatorios tbody");
+  var user = carregarSessao() || {};
+  var lista = await obterRelatoriosFiltrados();
+  var mesAtual = new Date().getMonth() + 1;
+  var tbody = document.querySelector("#tabelaRelatorios tbody");
   tbody.innerHTML = "";
-  lista.filter(r => { const d = new Date(r.data); return (d.getMonth() + 1) === mesAtual; })
-       .forEach(r => renderLinhaRelatorio(tbody, r, user));
+  var filtrado = lista.filter(function(r){ var d = new Date(r.data); return (d.getMonth() + 1) === mesAtual; });
+  filtrado.sort(function(a, b) {
+    var na = parseInt((a.protocolo || "").replace(/\D/g, "")) || 0;
+    var nb = parseInt((b.protocolo || "").replace(/\D/g, "")) || 0;
+    return na - nb;
+  });
+  filtrado.forEach(function(r){ renderLinhaRelatorio(tbody, r, user); });
 }
 
 async function relatorioVitimas() {
-  const user = carregarSessao() || {};
-  const lista = await obterRelatoriosFiltrados();
-  const tbody = document.querySelector("#tabelaRelatorios tbody");
+  var user = carregarSessao() || {};
+  var lista = await obterRelatoriosFiltrados();
+  var tbody = document.querySelector("#tabelaRelatorios tbody");
   tbody.innerHTML = "";
-  lista.forEach(r => renderLinhaRelatorio(tbody, r, user));
+  lista.sort(function(a, b) {
+    var na = parseInt((a.protocolo || "").replace(/\D/g, "")) || 0;
+    var nb = parseInt((b.protocolo || "").replace(/\D/g, "")) || 0;
+    return na - nb;
+  });
+  lista.forEach(function(r){ renderLinhaRelatorio(tbody, r, user); });
 }
-
 async function relatorioEscola() {
-  const user = carregarSessao() || {};
-  const lista = await obterRelatoriosFiltrados();
-  const global = temAcessoGlobal(user);
-  const podeVerNomes = podeVerNomeEscola(user);
-
-  // Só exibe o filtro de escolas para quem pode ver os nomes
+  var user = carregarSessao() || {};
+  var lista = await obterRelatoriosFiltrados();
+  var podeVerNomes = podeVerNomeEscola(user);
   if (podeVerNomes) {
-    const escolas = [...new Set(lista.map(r => r.escola).filter(Boolean))].sort();
-    const wrap = document.getElementById("filtroEscolaWrap");
-    const sel  = document.getElementById("selectEscolaRelatorio");
+    var escolas = [];
+    lista.forEach(function(r){ if (r.escola && escolas.indexOf(r.escola) === -1) escolas.push(r.escola); });
+    escolas.sort();
+    var wrap = document.getElementById("filtroEscolaWrap");
+    var sel  = document.getElementById("selectEscolaRelatorio");
     if (wrap && sel) {
       sel.innerHTML = "";
-      if (global) sel.innerHTML += `<option value="">Todas as escolas</option>`;
-      escolas.forEach(e => {
-        const opt = document.createElement("option");
-        opt.value = e;
-        opt.textContent = e;
-        if (!global && e === user.escola) opt.selected = true;
+      if (temAcessoGlobal(user)) sel.innerHTML += '<option value="">Todas as escolas</option>';
+      escolas.forEach(function(e) {
+        var opt = document.createElement("option");
+        opt.value = e; opt.textContent = e;
+        if (!temAcessoGlobal(user) && e === user.escola) opt.selected = true;
         sel.appendChild(opt);
       });
       wrap.style.display = "block";
     }
     aplicarFiltroEscola();
   } else {
-    // Usuários sem permissão veem apenas os seus próprios registros, sem filtro de escola
-    const tbody = document.querySelector("#tabelaRelatorios tbody");
+    var tbody = document.querySelector("#tabelaRelatorios tbody");
     tbody.innerHTML = "";
-    lista.forEach(r => renderLinhaRelatorio(tbody, r, user));
+    lista.forEach(function(r){ renderLinhaRelatorio(tbody, r, user); });
   }
 }
 
 async function aplicarFiltroEscola() {
-  const user = carregarSessao() || {};
-  const lista = await obterRelatoriosFiltrados();
-  const sel = document.getElementById("selectEscolaRelatorio");
-  const escolhida = sel ? sel.value : "";
-  const tbody = document.querySelector("#tabelaRelatorios tbody");
+  var user = carregarSessao() || {};
+  var lista = await obterRelatoriosFiltrados();
+  var sel = document.getElementById("selectEscolaRelatorio");
+  var escolhida = sel ? sel.value : "";
+  var tbody = document.querySelector("#tabelaRelatorios tbody");
   if (!tbody) return;
   tbody.innerHTML = "";
-  const filtrado = escolhida ? lista.filter(r => r.escola === escolhida) : lista;
-  filtrado.forEach(r => renderLinhaRelatorio(tbody, r, user));
-
-  const res = document.getElementById("resultadoRelatorio");
+  var filtrado = escolhida ? lista.filter(function(r){ return r.escola === escolhida; }) : lista;
+  filtrado.forEach(function(r){ renderLinhaRelatorio(tbody, r, user); });
+filtrado.sort(function(a, b) {
+  var na = parseInt((a.protocolo || "").replace(/\D/g, "")) || 0;
+  var nb = parseInt((b.protocolo || "").replace(/\D/g, "")) || 0;
+  return na - nb;
+});
+  var res = document.getElementById("resultadoRelatorio");
   if (res) {
     res.innerHTML = filtrado.length > 0
-      ? `<p style="font-size:13px;color:#555;margin-bottom:8px;"><strong>${filtrado.length}</strong> registro${filtrado.length > 1 ? "s" : ""} encontrado${filtrado.length > 1 ? "s" : ""}${escolhida ? " para <em>" + escolhida + "</em>" : ""}</p>`
-      : `<p style="color:#c62828;font-size:13px;">Nenhum registro encontrado para esta escola.</p>`;
+      ? '<p style="font-size:13px;color:#555;margin-bottom:8px;"><strong>' + filtrado.length + '</strong> registro' + (filtrado.length > 1 ? "s" : "") + ' encontrado' + (filtrado.length > 1 ? "s" : "") + (escolhida ? ' para <em>' + escolhida + '</em>' : '') + '</p>'
+      : '<p style="color:#c62828;font-size:13px;">Nenhum registro encontrado para esta escola.</p>';
   }
 }
 
-function renderLinhaRelatorio(tabela, r, user) {
-  const linha = tabela.insertRow();
-  const proto = String(r.protocolo || "");
+// -------------------------------------------------------
+// RENDER LINHA RELATÓRIO — BUG CORRIGIDO (variável "proto" → r.protocolo)
+// -------------------------------------------------------
+function renderLinhaRelatorio(tbody, r, user) {
+  var protocolo = r.protocolo || "";
+  var tr = document.createElement("tr");
 
-  linha.insertCell(0).innerHTML = proto;
-  // ── ESCOLA: restrita para quem não é Secretaria ──────────
-  linha.insertCell(1).innerHTML = exibirEscola(r.escola, user, true);
-  linha.insertCell(2).innerHTML = r.data   || "";
-  linha.insertCell(3).innerHTML = r.vitima || "";
+  var tdProto = document.createElement("td");
+  tdProto.textContent = protocolo;
 
-  const celTipo = linha.insertCell(4);
-  celTipo.innerHTML = renderTagsSemMotiv(r.tipo);
+  var tdEscola = document.createElement("td");
+  tdEscola.innerHTML = exibirEscola(r.escola, user, true);
 
-  linha.insertCell(5).innerHTML = `<button onclick="alterarStatus('${proto}')">${r.status || "Em andamento"}</button>`;
-  linha.insertCell(6).innerHTML = `
-    <button onclick="relatorioIndividual('${proto}')">PDF</button>
-    <button onclick="deletarRegistro('${proto}')" style="background:#c62828;color:white;">Excluir</button>
-  `;
+  var tdData = document.createElement("td");
+  tdData.textContent = r.data || "";
+
+  var tdVitima = document.createElement("td");
+  tdVitima.textContent = r.vitima || "";
+
+  var tdTipo = document.createElement("td");
+  tdTipo.innerHTML = renderTagsSemMotiv(r.tipo);
+
+  // STATUS SECRETARIA
+  var stSec = r.status_secretaria || "Em andamento";
+  var tdStatusSec = document.createElement("td");
+  var podeSec = podeAlterarStatusSecretaria(user);
+  tdStatusSec.innerHTML =
+    '<div style="display:flex;flex-direction:column;gap:4px;align-items:flex-start">' +
+    '<span style="font-size:10px;font-weight:700;color:#185fa5;text-transform:uppercase;letter-spacing:.04em">Secretaria</span>' +
+    '<span class="' + (stSec === "Concluído" ? "statusAtivo" : "statusInativo") + '">' + stSec + '</span>' +
+    (podeSec ? '<button class="botaoAcao botaoEditar" style="font-size:11px;padding:2px 7px;margin-top:2px" onclick="alterarStatusSecretaria(\'' + protocolo + '\')">Alterar</button>' : '') +
+    '</div>';
+
+  // STATUS CONSELHO
+  var stCon = r.status_conselho || "Em andamento";
+  var tdStatusCon = document.createElement("td");
+  var podeCon = podeAlterarStatusConselho(user);
+  tdStatusCon.innerHTML =
+    '<div style="display:flex;flex-direction:column;gap:4px;align-items:flex-start">' +
+    '<span style="font-size:10px;font-weight:700;color:#639922;text-transform:uppercase;letter-spacing:.04em">Conselho Tutelar</span>' +
+    '<span class="' + (stCon === "Concluído" ? "statusAtivo" : "statusInativo") + '">' + stCon + '</span>' +
+    (podeCon ? '<button class="botaoAcao botaoEditar" style="font-size:11px;padding:2px 7px;margin-top:2px" onclick="alterarStatusConselho(\'' + protocolo + '\')">Alterar</button>' : '') +
+    '</div>';
+
+  var tdAcoes = document.createElement("td");
+  var btnPDF = document.createElement("button");
+  btnPDF.className = "botaoAcao botaoEditar";
+  btnPDF.textContent = "PDF";
+  btnPDF.onclick = function() { relatorioIndividual(protocolo); };
+
+  var btnExcluir = document.createElement("button");
+  btnExcluir.className = "botaoAcao botaoExcluir";
+  btnExcluir.textContent = "Excluir";
+  btnExcluir.onclick = function() { deletarRegistro(protocolo); };
+
+  tdAcoes.appendChild(btnPDF);
+  tdAcoes.appendChild(btnExcluir);
+
+  tr.appendChild(tdProto);
+  tr.appendChild(tdEscola);
+  tr.appendChild(tdData);
+  tr.appendChild(tdVitima);
+  tr.appendChild(tdTipo);
+  tr.appendChild(tdStatusSec);
+  tr.appendChild(tdStatusCon);
+  tr.appendChild(tdAcoes);
+
+  tbody.appendChild(tr);
 }
 
-async function alterarStatus(protocolo) {
-  const lista = await dbSelect("relatorios", { protocolo });
+async function alterarStatusSecretaria(protocolo) {
+  var user = carregarSessao() || {};
+  if (!podeAlterarStatusSecretaria(user)) {
+    alert("Apenas a Secretaria Municipal de Educação pode alterar este status.");
+    return;
+  }
+  var lista = await dbSelect("relatorios", { protocolo: protocolo });
   if (!lista.length) return;
-  const r = lista[0];
-  const novoStatus = r.status === "Concluído" ? "Em andamento" : "Concluído";
-  await dbUpdate("relatorios", { protocolo }, { status: novoStatus });
-  alert("Status agora é: " + novoStatus);
+  var r = lista[0];
+  var atual = r.status_secretaria || "Em andamento";
+  var novo = atual === "Concluído" ? "Em andamento" : "Concluído";
+  await dbUpdate("relatorios", { protocolo: protocolo }, { status_secretaria: novo });
+  alert("Status da Secretaria agora é: " + novo);
   carregarRelatorios();
 }
 
+async function alterarStatusConselho(protocolo) {
+  var user = carregarSessao() || {};
+  if (!podeAlterarStatusConselho(user)) {
+    alert("Apenas o Conselho Tutelar pode alterar este status.");
+    return;
+  }
+  var lista = await dbSelect("relatorios", { protocolo: protocolo });
+  if (!lista.length) return;
+  var r = lista[0];
+  var atual = r.status_conselho || "Em andamento";
+  var novo = atual === "Concluído" ? "Em andamento" : "Concluído";
+  await dbUpdate("relatorios", { protocolo: protocolo }, { status_conselho: novo });
+  alert("Status do Conselho Tutelar agora é: " + novo);
+  carregarRelatorios();
+}
+async function alterarStatus(protocolo) {
+  var lista = await dbSelect("relatorios", { protocolo: protocolo });
+  if (!lista.length) return;
+  var r = lista[0];
+  var atual = r.status || "Em andamento";
+  var novo = atual === "Concluído" ? "Em andamento" : "Concluído";
+  await dbUpdate("relatorios", { protocolo: protocolo }, { status: novo });
+}
 async function deletarRegistro(protocolo) {
   if (!confirm("Deseja realmente excluir este registro?")) return;
-  await dbDelete("relatorios", { protocolo });
+  await dbDelete("relatorios", { protocolo: protocolo });
   carregarRelatorios();
 }
 
@@ -1591,256 +1961,188 @@ async function deletarRegistro(protocolo) {
 // CONSULTA
 // -------------------------------------------------------
 async function buscarRegistro() {
-  const termo = document.getElementById("buscaProtocolo").value.trim().toLowerCase();
-  const div   = document.getElementById("resultadoConsulta");
-  const user  = carregarSessao() || {};
+  var termo = document.getElementById("buscaProtocolo").value.trim().toLowerCase();
+  var div   = document.getElementById("resultadoConsulta");
+  var user  = carregarSessao() || {};
 
   if (!termo) {
-    div.innerHTML = `
-      <div class="estado-vazio-novo">
-        <div class="estado-vazio-icone-novo">🔍</div>
-        <h3>Pronto para buscar</h3>
-        <p>Digite o protocolo ou nome da vítima para localizar um registro.</p>
-      </div>`;
+    div.innerHTML = '<div class="estado-vazio-novo"><div class="estado-vazio-icone-novo">🔍</div><h3>Pronto para buscar</h3><p>Digite o protocolo ou nome da vítima para localizar um registro.</p></div>';
     return;
   }
 
-  div.innerHTML = `
-    <div class="search-card-novo skeleton-novo">
-      <div class="skel-block-novo" style="width:40%;height:16px"></div>
-      <div class="skel-block-novo" style="width:100%;height:80px;margin-top:8px"></div>
-    </div>`;
+  div.innerHTML = '<div class="search-card-novo skeleton-novo"><div class="skel-block-novo" style="width:40%;height:16px"></div><div class="skel-block-novo" style="width:100%;height:80px;margin-top:8px"></div></div>';
 
-  const lista = await obterRelatoriosFiltrados();
-
-  const resultados = lista.filter(r =>
-    (r.protocolo || "").toLowerCase().includes(termo) ||
-    (r.vitima    || "").toLowerCase().includes(termo)
-  );
+  var lista = await obterRelatoriosFiltrados();
+  var resultados = lista.filter(function(r){
+    return (r.protocolo || "").toLowerCase().includes(termo) ||
+           (r.vitima    || "").toLowerCase().includes(termo);
+  });
 
   if (!resultados.length) {
-    div.innerHTML = `
-      <div class="estado-erro-novo">
-        <div class="estado-erro-icone-novo">❌</div>
-        <h3>Nenhum registro encontrado</h3>
-        <p>Verifique o protocolo ou tente outro nome.</p>
-      </div>`;
+    div.innerHTML = '<div class="estado-erro-novo"><div class="estado-erro-icone-novo">❌</div><h3>Nenhum registro encontrado</h3><p>Verifique o protocolo ou tente outro nome.</p></div>';
     return;
   }
 
-  let html = `<p class="resultados-count-novo"><strong>${resultados.length}</strong> registro${resultados.length > 1 ? "s" : ""} encontrado${resultados.length > 1 ? "s" : ""}</p>`;
+  var html = '<p class="resultados-count-novo"><strong>' + resultados.length + '</strong> registro' + (resultados.length > 1 ? "s" : "") + ' encontrado' + (resultados.length > 1 ? "s" : "") + '</p>';
 
-  resultados.forEach(r => {
-    const isOk = r.status === "Concluído";
-    const dataFmt = r.data ? r.data.split("-").reverse().join("/") : "—";
-    const idSafe = (r.protocolo || "").replace(/[^a-zA-Z0-9]/g, "_");
-    // ── ESCOLA restrita na consulta ──────────────────────────
-    const escolaExibida = exibirEscola(r.escola, user, false);
+  resultados.forEach(function(r) {
+    var isOk = r.status === "Concluído";
+    var dataFmt = r.data ? r.data.split("-").reverse().join("/") : "—";
+    var idSafe = (r.protocolo || "").replace(/[^a-zA-Z0-9]/g, "_");
+    var escolaExibida = exibirEscola(r.escola, user, false);
 
-    html += `
-    <div class="card-resultado-novo">
-      <div class="card-resultado-header">
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <span class="protocolo-badge-novo">${r.protocolo || ""}</span>
-          <span class="escola-info-novo">
-            <i class="fi fi-sr-school"></i> ${podeVerNomeEscola(user) ? (r.escola || "") : escolaExibida}
-          </span>
-        </div>
-        <span class="${isOk ? "status-badge-concluido" : "status-badge-andamento"}">
-          ${isOk ? "✓ Concluído" : "⏳ Em andamento"}
-        </span>
-      </div>
-      <div class="card-resultado-body">
-        <div class="card-secao">
-          <div class="card-secao-titulo">📍 Ocorrência</div>
-          <div class="campo-label-novo">Data</div>
-          <div class="campo-valor-novo destaque">${dataFmt}</div>
-          <div class="campo-label-novo">Local</div>
-          <div class="campo-valor-novo">${r.local || "—"}</div>
-        </div>
-        <div class="card-secao">
-          <div class="card-secao-titulo">👤 Vítima</div>
-          <div class="campo-label-novo">Nome</div>
-          <div class="campo-valor-novo destaque">${r.vitima || "—"}</div>
-          <div class="campo-label-novo">Idade / Sexo</div>
-          <div class="campo-valor-novo">${r.idade || "—"} anos • ${r.sexo || "—"}</div>
-          <div class="campo-label-novo">Raça / Cor</div>
-          <div class="campo-valor-novo">${r.raca || "—"}</div>
-        </div>
-        <div class="card-secao">
-          <div class="card-secao-titulo">⚠️ Tipificação</div>
-          <div id="tags_consulta_${idSafe}"></div>
-          <div style="margin-top:8px">
-            <div style="font-size:10px;font-weight:600;color:#bf360c;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Motivação</div>
-            <div id="tags_motiv_${idSafe}"></div>
-          </div>
-          <div style="margin-top:8px">
-            <div style="font-size:10px;font-weight:600;color:#6a1b9a;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Quem praticou</div>
-            <div id="tags_pratic_${idSafe}"></div>
-          </div>
-        </div>
-      </div>
-      <div class="card-resultado-footer">
-        <button class="btn-acao-novo btn-pdf-novo" onclick="relatorioIndividual('${r.protocolo}')">
-          <i class="fi fi-sr-document"></i> Ver PDF
-        </button>
-        <button class="btn-acao-novo ${isOk ? "btn-status-ok-novo" : "btn-status-and-novo"}"
-          onclick="alterarStatusConsulta('${r.protocolo}')">
-          <i class="fi fi-sr-refresh"></i> Mudar status
-        </button>
-        <button class="btn-acao-novo btn-excluir-novo"
-          onclick="if(confirm('Excluir ${r.protocolo}?')) deletarRegistro('${r.protocolo}').then(()=>buscarRegistro())">
-          <i class="fi fi-sr-trash"></i> Excluir
-        </button>
-      </div>
-    </div>`;
+    html += '<div class="card-resultado-novo">' +
+      '<div class="card-resultado-header">' +
+        '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">' +
+          '<span class="protocolo-badge-novo">' + (r.protocolo || "") + '</span>' +
+          '<span class="escola-info-novo"><i class="fi fi-sr-school"></i> ' + (podeVerNomeEscola(user) ? (r.escola || "") : escolaExibida) + '</span>' +
+        '</div>' +
+        '<span class="' + (isOk ? "status-badge-concluido" : "status-badge-andamento") + '">' + (isOk ? "✓ Concluído" : "⏳ Em andamento") + '</span>' +
+      '</div>' +
+      '<div class="card-resultado-body">' +
+        '<div class="card-secao">' +
+          '<div class="card-secao-titulo">📍 Ocorrência</div>' +
+          '<div class="campo-label-novo">Data</div><div class="campo-valor-novo destaque">' + dataFmt + '</div>' +
+          '<div class="campo-label-novo">Local</div><div class="campo-valor-novo">' + (r.local || "—") + '</div>' +
+        '</div>' +
+        '<div class="card-secao">' +
+          '<div class="card-secao-titulo">👤 Vítima</div>' +
+          '<div class="campo-label-novo">Nome</div><div class="campo-valor-novo destaque">' + (r.vitima || "—") + '</div>' +
+          '<div class="campo-label-novo">Idade / Sexo</div><div class="campo-valor-novo">' + (r.idade || "—") + ' anos • ' + (r.sexo || "—") + '</div>' +
+          '<div class="campo-label-novo">Raça / Cor</div><div class="campo-valor-novo">' + (r.raca || "—") + '</div>' +
+        '</div>' +
+        '<div class="card-secao">' +
+          '<div class="card-secao-titulo">⚠️ Tipificação</div>' +
+          '<div id="tags_consulta_' + idSafe + '"></div>' +
+          '<div style="margin-top:8px">' +
+            '<div style="font-size:10px;font-weight:600;color:#bf360c;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Motivação</div>' +
+            '<div id="tags_motiv_' + idSafe + '"></div>' +
+          '</div>' +
+          '<div style="margin-top:8px">' +
+            '<div style="font-size:10px;font-weight:600;color:#6a1b9a;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Quem praticou</div>' +
+            '<div id="tags_pratic_' + idSafe + '"></div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="card-resultado-footer">' +
+        '<button class="btn-acao-novo btn-pdf-novo" onclick="relatorioIndividual(\'' + r.protocolo + '\')"><i class="fi fi-sr-document"></i> Ver PDF</button>' +
+       (temAcessoGlobal(user) ? '<button class="btn-acao-novo ' + (isOk ? "btn-status-ok-novo" : "btn-status-and-novo") + '" onclick="alterarStatusConsulta(\'' + r.protocolo + '\')"><i class="fi fi-sr-refresh"></i> Mudar status</button>' : '') +
+        '<button class="btn-acao-novo btn-excluir-novo" onclick="if(confirm(\'Excluir ' + r.protocolo + '?\')) deletarRegistro(\'' + r.protocolo + '\').then(function(){ buscarRegistro(); })"><i class="fi fi-sr-trash"></i> Excluir</button>' +
+      '</div>' +
+    '</div>';
   });
 
   div.innerHTML = html;
 
-  const MOTIV_V  = ["Racismo","Intolerância Religiosa","Sexismo","Diversidade de gênero","Capacitismo","Outros"];
-  const PRATIC_V = ["Criança","Adolescente","Pai","Mãe","Responsável","Professor"];
+  var MOTIV_V  = ["Racismo","Intolerância Religiosa","Sexismo","Diversidade de gênero","Capacitismo","Outros"];
+  var PRATIC_V = ["Criança","Adolescente","Pai","Mãe","Responsável","Professor"];
 
-  resultados.forEach(r => {
-    const idSafe = (r.protocolo || "").replace(/[^a-zA-Z0-9]/g, "_");
-    const todos  = parseTipos(r.tipo);
-
-    const elTipo = document.getElementById("tags_consulta_" + idSafe);
+  resultados.forEach(function(r) {
+    var idSafe = (r.protocolo || "").replace(/[^a-zA-Z0-9]/g, "_");
+    var todos  = parseTipos(r.tipo);
+    var elTipo = document.getElementById("tags_consulta_" + idSafe);
     if (elTipo) elTipo.innerHTML = renderTagsSemMotiv(r.tipo);
-
-    const elMotiv = document.getElementById("tags_motiv_" + idSafe);
+    var elMotiv = document.getElementById("tags_motiv_" + idSafe);
     if (elMotiv) {
-      const itens = todos.filter(t => MOTIV_V.includes(t));
-      elMotiv.innerHTML = itens.length
-        ? '<div class="tagsTipo">' + itens.map(t => `<span class="tagTipo motiv">🎯 ${t}</span>`).join("") + '</div>'
+      var itensMotiv = todos.filter(function(t){ return MOTIV_V.indexOf(t) !== -1; });
+      elMotiv.innerHTML = itensMotiv.length
+        ? '<div class="tagsTipo">' + itensMotiv.map(function(t){ return '<span class="tagTipo motiv">🎯 ' + t + '</span>'; }).join("") + '</div>'
         : '<span style="color:#999;font-size:12px;">Não informado</span>';
     }
-
-    const elPratic = document.getElementById("tags_pratic_" + idSafe);
+    var elPratic = document.getElementById("tags_pratic_" + idSafe);
     if (elPratic) {
-      const itens = todos.filter(t => PRATIC_V.includes(t) || t.startsWith("Outros"));
-      elPratic.innerHTML = itens.length
-        ? '<div class="tagsTipo">' + itens.map(t => `<span class="tagTipo praticou">👤 ${t}</span>`).join("") + '</div>'
+      var itensPratic = todos.filter(function(t){ return PRATIC_V.indexOf(t) !== -1 || t.startsWith("Outros"); });
+      elPratic.innerHTML = itensPratic.length
+        ? '<div class="tagsTipo">' + itensPratic.map(function(t){ return '<span class="tagTipo praticou">👤 ' + t + '</span>'; }).join("") + '</div>'
         : '<span style="color:#999;font-size:12px;">Não informado</span>';
     }
   });
 }
 
-async function alterarStatusConsulta(protocolo) {
-  await alterarStatus(protocolo);
-  buscarRegistro();
-}
+async function alterarStatusConsulta(protocolo) { await alterarStatus(protocolo); buscarRegistro(); }
 
 // -------------------------------------------------------
-// CRIAR GRÁFICO (Chart.js)
+// GRÁFICOS
 // -------------------------------------------------------
-const _chartInstances = {};
+var _chartInstances = {};
 
 function criarGrafico(id, config) {
-  const canvas = document.getElementById(id);
+  var canvas = document.getElementById(id);
   if (!canvas) return;
   if (_chartInstances[id]) { _chartInstances[id].destroy(); }
   _chartInstances[id] = new Chart(canvas, config);
 }
 
-// -------------------------------------------------------
-// GRÁFICOS
-// -------------------------------------------------------
 async function carregarGraficos() {
-  const lista  = await obterRelatoriosFiltrados();
-  const user   = carregarSessao() || {};
-  const global = temAcessoGlobal(user);
+  var lista  = await obterRelatoriosFiltrados();
+  var user   = carregarSessao() || {};
+  var global = temAcessoGlobal(user);
 
-  let m=0,f=0,o=0,cr=0,ad=0,au=0,and=0,conc=0;
-  const meses=Array(12).fill(0), tipos={}, escolas={};
+  var m=0,f=0,o=0,cr=0,ad=0,au=0,and=0,conc=0;
+  var meses=Array(12).fill(0), tipos={}, escolas={};
 
-  lista.forEach(r => {
-    r.sexo==='Masculino'?m++:r.sexo==='Feminino'?f++:o++;
-    const id=parseInt(r.idade);id<=12?cr++:id<=17?ad++:au++;
-    if(r.data){const d=new Date(r.data);meses[d.getMonth()]++;}
-    r.status==='Concluído'?conc++:and++;
-    const EXCLUIR_TIPOS = [
-      "Racismo","Intolerância Religiosa","Sexismo","Diversidade de gênero","Capacitismo","Outros",
-      "Criança","Adolescente","Pai","Mãe","Responsável","Professor"
-    ];
-    if(r.tipo) r.tipo.split(',').map(t=>t.trim()).filter(Boolean)
-      .filter(t => !EXCLUIR_TIPOS.includes(t) && !t.startsWith("Outros:"))
-      .forEach(t=>{tipos[t]=(tipos[t]||0)+1;});
-    if(global&&r.escola) escolas[r.escola]=(escolas[r.escola]||0)+1;
+  lista.forEach(function(r) {
+    if (r.sexo==='Masculino') m++; else if (r.sexo==='Feminino') f++; else o++;
+    var id=parseInt(r.idade);
+    if (id<=12) cr++; else if (id<=17) ad++; else au++;
+    if (r.data){ var d=new Date(r.data); meses[d.getMonth()]++; }
+    if (r.status==='Concluído') conc++; else and++;
+    var EXCLUIR_TIPOS = ["Racismo","Intolerância Religiosa","Sexismo","Diversidade de gênero","Capacitismo","Outros","Criança","Adolescente","Pai","Mãe","Responsável","Professor"];
+    if (r.tipo) {
+      r.tipo.split(',').forEach(function(t){
+        t = t.trim();
+        if (t && EXCLUIR_TIPOS.indexOf(t) === -1 && t.indexOf("Outros:") !== 0) {
+          tipos[t] = (tipos[t]||0) + 1;
+        }
+      });
+    }
+    if (global && r.escola) escolas[r.escola] = (escolas[r.escola]||0)+1;
   });
 
-  const tot=lista.length, taxa=tot>0?Math.round(conc/tot*100):0;
+  var tot=lista.length, taxa=tot>0?Math.round(conc/tot*100):0;
   document.getElementById('totalRegistros').innerText  = tot;
   document.getElementById('casosAndamento').innerText  = and;
   document.getElementById('casosConcluidos').innerText = conc;
-  const txEl=document.getElementById('taxaConclusao');
-  if(txEl) txEl.innerText = taxa+'%';
+  var txEl=document.getElementById('taxaConclusao');
+  if (txEl) txEl.innerText = taxa+'%';
 
   function leg(id,labels,cores){
-    const el=document.getElementById(id); if(!el) return;
-    el.innerHTML=labels.map((l,i)=>
-      `<span><b style="background:${cores[i]}"></b>${l}</span>`
-    ).join('');
+    var el=document.getElementById(id); if(!el) return;
+    el.innerHTML=labels.map(function(l,i){ return '<span><b style="background:'+cores[i]+'"></b>'+l+'</span>'; }).join('');
   }
 
-  const tf={size:11}, gc='rgba(0,0,0,0.04)';
+  var tf={size:11}, gc='rgba(0,0,0,0.04)';
 
-  criarGrafico('graficoMes',{type:'line',data:{
-    labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
-    datasets:[{data:meses,borderColor:'#639922',backgroundColor:'rgba(99,153,34,.07)',
-      tension:.4,fill:true,pointBackgroundColor:'#639922',pointRadius:4,pointHoverRadius:6,borderWidth:2}]
-  },options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:false}},
-    scales:{x:{grid:{color:gc},ticks:{font:tf}},y:{beginAtZero:true,grid:{color:gc},ticks:{stepSize:1,font:tf}}}}});
+  criarGrafico('graficoMes',{type:'line',data:{labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],datasets:[{data:meses,borderColor:'#639922',backgroundColor:'rgba(99,153,34,.07)',tension:.4,fill:true,pointBackgroundColor:'#639922',pointRadius:4,pointHoverRadius:6,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:gc},ticks:{font:tf}},y:{beginAtZero:true,grid:{color:gc},ticks:{stepSize:1,font:tf}}}}});
 
-  const cSex=['#378ADD','#D4537E','#B4B2A9'];
-  leg('legSexo',[`Masculino — ${m}`,`Feminino — ${f}`,`Não informou — ${o}`],cSex);
-  criarGrafico('graficoSexo',{type:'doughnut',data:{
-    labels:['Masculino','Feminino','Não informou'],
-    datasets:[{data:[m,f,o],backgroundColor:cSex,borderWidth:3,borderColor:'#fff'}]
-  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'65%'}});
+  var cSex=['#378ADD','#D4537E','#B4B2A9'];
+  leg('legSexo',['Masculino — '+m,'Feminino — '+f,'Não informou — '+o],cSex);
+  criarGrafico('graficoSexo',{type:'doughnut',data:{labels:['Masculino','Feminino','Não informou'],datasets:[{data:[m,f,o],backgroundColor:cSex,borderWidth:3,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'65%'}});
 
-  const cId=['#639922','#EF9F27','#E24B4A'];
-  leg('legIdade',[`Crianças ≤12 — ${cr}`,`Adolescentes — ${ad}`,`Adultos — ${au}`],cId);
-  criarGrafico('graficoIdade',{type:'bar',data:{
-    labels:['Crianças','Adolescentes','Adultos'],
-    datasets:[{data:[cr,ad,au],backgroundColor:cId,borderRadius:6,borderWidth:0}]
-  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-    scales:{y:{beginAtZero:true,grid:{color:gc},ticks:{stepSize:1,font:tf}},x:{grid:{display:false},ticks:{font:tf}}}}});
+  var cId=['#639922','#EF9F27','#E24B4A'];
+  leg('legIdade',['Crianças ≤12 — '+cr,'Adolescentes — '+ad,'Adultos — '+au],cId);
+  criarGrafico('graficoIdade',{type:'bar',data:{labels:['Crianças','Adolescentes','Adultos'],datasets:[{data:[cr,ad,au],backgroundColor:cId,borderRadius:6,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:gc},ticks:{stepSize:1,font:tf}},x:{grid:{display:false},ticks:{font:tf}}}}});
 
-  const cSt=['#EF9F27','#639922'];
-  leg('legStatus',[`Em andamento — ${and}`,`Concluído — ${conc}`],cSt);
-  criarGrafico('graficoStatus',{type:'doughnut',data:{
-    labels:['Em andamento','Concluído'],
-    datasets:[{data:[and,conc],backgroundColor:cSt,borderWidth:3,borderColor:'#fff'}]
-  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'65%'}});
+  var cSt=['#EF9F27','#639922'];
+  leg('legStatus',['Em andamento — '+and,'Concluído — '+conc],cSt);
+  criarGrafico('graficoStatus',{type:'doughnut',data:{labels:['Em andamento','Concluído'],datasets:[{data:[and,conc],backgroundColor:cSt,borderWidth:3,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'65%'}});
 
-  const tOrd=Object.entries(tipos).sort((a,b)=>b[1]-a[1]).slice(0,7);
-  criarGrafico('graficoTipos',{type:'bar',data:{
-    labels:tOrd.map(([k])=>k.length>20?k.slice(0,18)+'…':k),
-    datasets:[{data:tOrd.map(([,v])=>v),backgroundColor:'#97C459',borderRadius:6,borderWidth:0}]
-  },options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-    scales:{x:{beginAtZero:true,grid:{color:gc},ticks:{stepSize:1,font:tf}},y:{grid:{display:false},ticks:{font:tf}}}}});
+  var tOrd=Object.entries(tipos).sort(function(a,b){ return b[1]-a[1]; }).slice(0,7);
+  criarGrafico('graficoTipos',{type:'bar',data:{labels:tOrd.map(function(x){ return x[0].length>20?x[0].slice(0,18)+'…':x[0]; }),datasets:[{data:tOrd.map(function(x){ return x[1]; }),backgroundColor:'#97C459',borderRadius:6,borderWidth:0}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:gc},ticks:{stepSize:1,font:tf}},y:{grid:{display:false},ticks:{font:tf}}}}});
 
-  const secEsc=document.getElementById('secaoEscolas');
-  const podeVerEscolas = podeVerNomeEscola(user);
-  if(podeVerEscolas && secEsc){
+  var secEsc=document.getElementById('secaoEscolas');
+  var podeVerEscolas = podeVerNomeEscola(user);
+  if (podeVerEscolas && secEsc) {
     secEsc.style.display='block';
-    const eOrd=Object.entries(escolas).sort((a,b)=>b[1]-a[1]).slice(0,15);
-    const eL=eOrd.map(([k])=>k.length>38?k.slice(0,36)+'…':k);
-    const eD=eOrd.map(([,v])=>v);
-    const w=document.getElementById('wrapEscolas');
-    if(w) w.style.height=Math.max(300,eOrd.length*44+60)+'px';
-    const cEsc=['#27500a','#3B6D11','#639922','#97C459','#C0DD97','#185FA5','#378ADD',
-      '#85B7EB','#993556','#D4537E','#854F0B','#EF9F27','#534AB7','#7F77DD','#888780'];
+    var eOrd=Object.entries(escolas).sort(function(a,b){ return b[1]-a[1]; }).slice(0,15);
+    var eL=eOrd.map(function(x){ return x[0].length>38?x[0].slice(0,36)+'…':x[0]; });
+    var eD=eOrd.map(function(x){ return x[1]; });
+    var w=document.getElementById('wrapEscolas');
+    if (w) w.style.height=Math.max(300,eOrd.length*44+60)+'px';
+    var cEsc=['#27500a','#3B6D11','#639922','#97C459','#C0DD97','#185FA5','#378ADD','#85B7EB','#993556','#D4537E','#854F0B','#EF9F27','#534AB7','#7F77DD','#888780'];
     leg('legEscolas',eL,cEsc.slice(0,eL.length));
-    criarGrafico('graficoEscolas',{type:'bar',data:{
-      labels:eL,
-      datasets:[{data:eD,backgroundColor:cEsc.slice(0,eD.length),borderRadius:6,borderWidth:0}]
-    },options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{x:{beginAtZero:true,grid:{color:gc},ticks:{stepSize:1,font:tf}},
-        y:{grid:{display:false},ticks:{font:{size:10}}}}}});
-  } else if(secEsc){
+    criarGrafico('graficoEscolas',{type:'bar',data:{labels:eL,datasets:[{data:eD,backgroundColor:cEsc.slice(0,eD.length),borderRadius:6,borderWidth:0}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:gc},ticks:{stepSize:1,font:tf}},y:{grid:{display:false},ticks:{font:{size:10}}}}}});
+  } else if (secEsc) {
     secEsc.style.display='none';
   }
 }
@@ -1849,141 +2151,116 @@ async function carregarGraficos() {
 // NOTIFICAÇÕES
 // -------------------------------------------------------
 async function adicionarNotificacao(texto, escola) {
-  await dbInsert("notificacoes", {
-    texto, escola: escola || "Não informada",
-    data: new Date().toLocaleString(),
-    lida: false
-  });
+  await dbInsert("notificacoes", { texto: texto, escola: escola || "Não informada", data: new Date().toLocaleString(), lida: false });
   atualizarBadge();
 }
 
 async function atualizarBadge() {
-  const user = carregarSessao() || {};
-  let lista = await dbSelect("notificacoes");
-  if (!temAcessoGlobal(user)) {
-    lista = lista.filter(n => n.escola === user.escola);
-  }
-  const naoLidas = lista.filter(n => !n.lida).length;
-  const badge = document.getElementById("badgeNotif");
+  var user = carregarSessao() || {};
+  var lista = await dbSelect("notificacoes");
+  if (!temAcessoGlobal(user)) lista = lista.filter(function(n){ return n.escola === user.escola; });
+  var naoLidas = lista.filter(function(n){ return !n.lida; }).length;
+  var badge = document.getElementById("badgeNotif");
+  if (!badge) return;
   badge.innerText = naoLidas;
   badge.style.display = naoLidas > 0 ? "flex" : "none";
 }
 
 async function verNotificacoes() {
-  const lista_el = document.getElementById("listaNotificacoes");
+  var lista_el = document.getElementById("listaNotificacoes");
+  if (!lista_el) return;
   if (lista_el.style.display === "block") { lista_el.style.display = "none"; return; }
-  const user = carregarSessao() || {};
-  let lista = await dbSelect("notificacoes");
-  if (!temAcessoGlobal(user)) {
-    lista = lista.filter(n => n.escola === user.escola);
-  }
+  var user = carregarSessao() || {};
+  var lista = await dbSelect("notificacoes");
+  if (!temAcessoGlobal(user)) lista = lista.filter(function(n){ return n.escola === user.escola; });
 
   lista_el.innerHTML = "";
   if (lista.length === 0) {
     lista_el.innerHTML = "<p style='padding:8px;color:#888;font-size:13px'>Nenhuma notificação</p>";
   } else {
-    const naoLidas = lista.filter(n => !n.lida).length;
-    lista_el.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px 6px;border-bottom:1px solid #eee;">
-        <strong style="font-size:13px">Notificações</strong>
-        ${naoLidas > 0 ? `<button onclick="marcarTodasLidas()" style="font-size:11px;padding:3px 8px;border:1px solid #ccc;border-radius:6px;background:#f5f5f5;cursor:pointer;color:#555">Marcar todas como lidas</button>` : ''}
-      </div>`;
-    lista.forEach(n => {
-      const escolaNotif = podeVerNomeEscola(user) ? n.escola : "🔒 Restrito";
-      lista_el.innerHTML += `
-        <div style="border-bottom:1px solid #eee;padding:10px;background:${n.lida ? '#fff' : '#f0f7e6'};display:flex;flex-direction:column;gap:4px;">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
-            <strong style="font-size:13px;flex:1">${n.texto}</strong>
-            ${!n.lida ? `<button onclick="marcarLida(${n.id})" title="Marcar como lida"
-              style="flex-shrink:0;padding:2px 7px;border:1px solid #639922;border-radius:6px;background:transparent;color:#639922;font-size:11px;cursor:pointer;white-space:nowrap">✓ Lida</button>` : '<span style="font-size:11px;color:#aaa">✓ Lida</span>'}
-          </div>
-          <small style="color:#888">🏫 ${escolaNotif}</small>
-          <small style="color:#aaa">🕒 ${n.data}</small>
-        </div>`;
+    var naoLidas = lista.filter(function(n){ return !n.lida; }).length;
+    lista_el.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px 6px;border-bottom:1px solid #eee;"><strong style="font-size:13px">Notificações</strong>' + (naoLidas > 0 ? '<button onclick="marcarTodasLidas()" style="font-size:11px;padding:3px 8px;border:1px solid #ccc;border-radius:6px;background:#f5f5f5;cursor:pointer;color:#555">Marcar todas como lidas</button>' : '') + '</div>';
+    lista.forEach(function(n) {
+      var escolaNotif = podeVerNomeEscola(user) ? n.escola : "🔒 Restrito";
+      lista_el.innerHTML += '<div style="border-bottom:1px solid #eee;padding:10px;background:' + (n.lida ? '#fff' : '#f0f7e6') + ';display:flex;flex-direction:column;gap:4px;"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;"><strong style="font-size:13px;flex:1">' + n.texto + '</strong>' + (!n.lida ? '<button onclick="marcarLida(' + n.id + ')" title="Marcar como lida" style="flex-shrink:0;padding:2px 7px;border:1px solid #639922;border-radius:6px;background:transparent;color:#639922;font-size:11px;cursor:pointer;white-space:nowrap">✓ Lida</button>' : '<span style="font-size:11px;color:#aaa">✓ Lida</span>') + '</div><small style="color:#888">🏫 ' + escolaNotif + '</small><small style="color:#aaa">🕒 ' + n.data + '</small></div>';
     });
   }
   lista_el.style.display = "block";
-} 
+}
+
 async function marcarLida(id) {
-  await dbUpdate("notificacoes", { id }, { lida: true });
+  await dbUpdate("notificacoes", { id: id }, { lida: true });
   atualizarBadge();
+  document.getElementById("listaNotificacoes").style.display = "none";
   verNotificacoes();
-  verNotificacoes(); // fecha e reabre para atualizar
 }
 
 async function marcarTodasLidas() {
-  const user = carregarSessao() || {};
-  let lista = await dbSelect("notificacoes");
-  if (!temAcessoGlobal(user)) {
-    lista = lista.filter(n => n.escola === user.escola);
-  }
-  for (const n of lista.filter(n => !n.lida)) {
-    await dbUpdate("notificacoes", { id: n.id }, { lida: true });
+  var user = carregarSessao() || {};
+  var lista = await dbSelect("notificacoes");
+  if (!temAcessoGlobal(user)) lista = lista.filter(function(n){ return n.escola === user.escola; });
+  for (var i = 0; i < lista.length; i++) {
+    if (!lista[i].lida) await dbUpdate("notificacoes", { id: lista[i].id }, { lida: true });
   }
   atualizarBadge();
-  verNotificacoes();
+  document.getElementById("listaNotificacoes").style.display = "none";
   verNotificacoes();
 }
+
 // -------------------------------------------------------
 // PERFIL / SENHA
 // -------------------------------------------------------
 function toggleMenuUsuario() {
-  const menu = document.getElementById("dropdownUsuario");
-  menu.style.display = menu.style.display === "block" ? "none" : "block";
+  var menu = document.getElementById("dropdownUsuario");
+  if (menu) menu.style.display = menu.style.display === "block" ? "none" : "block";
 }
 
 window.addEventListener("click", function(e) {
-  const menu = document.getElementById("dropdownUsuario");
-  const usuario = document.querySelector(".usuarioMenu");
-  if (usuario && !usuario.contains(e.target)) menu.style.display = "none";
+  var menu = document.getElementById("dropdownUsuario");
+  var usuario = document.querySelector(".usuarioMenu");
+  if (usuario && !usuario.contains(e.target) && menu) menu.style.display = "none";
 });
 
 function abrirPerfil() {
-  const user = carregarSessao();
-  if (!user) return;
+  var user = carregarSessao(); if (!user) return;
   document.getElementById("perfilNome").value = user.nome;
   document.getElementById("emailUsuario").value = user.email;
-  const nivelSelect = document.getElementById("nivel");
+  var nivelSelect = document.getElementById("nivel");
   if (nivelSelect) nivelSelect.value = user.nivel || "usuario";
-  const campoNivel = document.getElementById("campoNivel");
-  if (campoNivel) { campoNivel.style.display = user.nivel === "admin" ? "" : "none"; }
+  var campoNivel = document.getElementById("campoNivel");
+  if (campoNivel) campoNivel.style.display = user.nivel === "admin" ? "" : "none";
   document.getElementById("perfilModal").style.display = "flex";
 }
 function fecharPerfil() { document.getElementById("perfilModal").style.display = "none"; }
 
 async function salvarPerfil() {
-  const user = carregarSessao();
-  const novoNome = document.getElementById("perfilNome").value;
+  var user = carregarSessao();
+  var novoNome = document.getElementById("perfilNome").value;
   await dbUpdate("usuarios", { email: user.email }, { nome: novoNome });
-  user.nome = novoNome;
-  salvarSessao(user);
+  user.nome = novoNome; salvarSessao(user);
   document.getElementById("nomeUsuario").innerText = novoNome;
-  alert("Perfil atualizado!");
-  fecharPerfil();
+  alert("Perfil atualizado!"); fecharPerfil();
 }
 
 function alterarSenha() { document.getElementById("senhaModal").style.display = "flex"; }
 function fecharSenha()   { document.getElementById("senhaModal").style.display = "none"; }
 
 async function salvarSenha() {
-  const atual     = document.getElementById("senhaAtual").value;
-  const nova      = document.getElementById("novaSenha").value;
-  const confirmar = document.getElementById("confirmarSenha").value;
-  const user      = carregarSessao();
-  if (atual !== user.senha)  { alert("Senha atual incorreta!"); return; }
-  if (nova !== confirmar)    { alert("As senhas não coincidem!"); return; }
+  var atual = document.getElementById("senhaAtual").value;
+  var nova = document.getElementById("novaSenha").value;
+  var confirmar = document.getElementById("confirmarSenha").value;
+  var user = carregarSessao();
+  if (atual !== user.senha) { alert("Senha atual incorreta!"); return; }
+  if (nova !== confirmar)   { alert("As senhas não coincidem!"); return; }
   await dbUpdate("usuarios", { email: user.email }, { senha: nova });
-  user.senha = nova;
-  salvarSessao(user);
-  alert("Senha alterada com sucesso!");
-  fecharSenha();
+  user.senha = nova; salvarSessao(user);
+  alert("Senha alterada com sucesso!"); fecharSenha();
 }
 
 // -------------------------------------------------------
 // RECUPERAR SENHA
 // -------------------------------------------------------
 function abrirRecuperacao() { document.getElementById("modalRecuperar").style.display = "flex"; }
-
 function fecharRecuperacao() {
   document.getElementById("modalRecuperar").style.display = "none";
   document.getElementById("resultadoRecuperacao").innerHTML = "";
@@ -1991,60 +2268,72 @@ function fecharRecuperacao() {
 }
 
 async function recuperarSenha() {
-  const email     = document.getElementById("emailRecuperar").value.trim();
-  const resultado = document.getElementById("resultadoRecuperacao");
-  const lista     = await dbSelect("usuarios", { email });
-  if (!lista.length) {
-    resultado.style.color = "#c62828";
-    resultado.innerHTML = "❌ E-mail não encontrado";
-    return;
-  }
-  const novaSenha = gerarSenha(8);
-  await dbUpdate("usuarios", { email }, { senha: novaSenha });
+  var email = document.getElementById("emailRecuperar").value.trim();
+  var resultado = document.getElementById("resultadoRecuperacao");
+  var lista = await dbSelect("usuarios", { email: email });
+  if (!lista.length) { resultado.style.color = "#c62828"; resultado.innerHTML = "❌ E-mail não encontrado"; return; }
+  var novaSenha = gerarSenha();
+  await dbUpdate("usuarios", { email: email }, { senha: novaSenha });
   resultado.style.color = "#2e7d32";
-  resultado.innerHTML = `✅ Nova senha gerada:<br><br><strong>${novaSenha}</strong>`;
+  resultado.innerHTML = '✅ Nova senha gerada:<br><br><strong>' + novaSenha + '</strong>';
 }
 
 // -------------------------------------------------------
 // PDF INDIVIDUAL
 // -------------------------------------------------------
 async function relatorioIndividual(protocolo) {
-  const lista = await dbSelect("relatorios", { protocolo });
+  var lista = await dbSelect("relatorios", { protocolo: protocolo });
   if (!lista.length) { alert("Registro não encontrado"); return; }
-  const r = lista[0];
-  const user = carregarSessao() || {};
+  var r = lista[0];
 
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  let y = 0;
+  var vitimas = [];
+  if (r.vitimas_json) {
+    try { vitimas = JSON.parse(r.vitimas_json); } catch(e) {}
+  }
+  if (!vitimas.length) {
+    var nomes  = (r.vitima || "").split(",").map(function(s){ return s.trim(); }).filter(Boolean);
+    var idades = (r.idade  || "").split(",").map(function(s){ return s.trim(); });
+    vitimas = nomes.map(function(nome, i) {
+      return {
+        nome: nome,
+        idade:        idades[i] || "",
+        sexo:         i === 0 ? (r.sexo              || "") : "",
+        raca:         i === 0 ? (r.raca              || "") : "",
+        identGenero:  i === 0 ? (r.identidade_genero || "") : "",
+        orientacao:   i === 0 ? (r.orientacao        || "") : "",
+        escolaridade: i === 0 ? (r.escolaridade      || "") : ""
+      };
+    });
+  }
 
-  const logo = new Image();
+  var jsPDF = window.jspdf.jsPDF;
+  var doc = new jsPDF();
+  var y = 0;
+
+  var logo = new Image();
   logo.src = "prefeitura.png";
 
-  const gerarPDF = function() {
+  var gerarPDF = function() {
     try { doc.addImage(logo, "PNG", 10, 5, 59, 38); } catch(e) {}
-
     doc.setFont("helvetica","bold"); doc.setFontSize(16);
     doc.text("PREFEITURA MUNICIPAL", 105, 18, null, null, "center");
-    doc.setFontSize(11);
-    doc.text("SISTEMA DE NOTIFICAÇÃO PREVINE", 105, 26, null, null, "center");
+    doc.setFontSize(11); doc.text("SISTEMA DE NOTIFICAÇÃO PREVINE", 105, 26, null, null, "center");
     doc.setFont("helvetica","normal"); doc.setFontSize(9);
     doc.text("RELATÓRIO INDIVIDUAL DE OCORRÊNCIA", 105, 33, null, null, "center");
-    doc.setDrawColor(0); doc.setLineWidth(0.3);
-    doc.line(10, 50, 200, 50);
+    doc.setDrawColor(0); doc.setLineWidth(0.3); doc.line(10, 50, 200, 50);
     y = 60;
 
     function secao(titulo) {
       y += 6;
-      doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(0,0,0);
+      doc.setFont("helvetica","bold"); doc.setFontSize(10);
+      doc.setTextColor(0,0,0);
       doc.text(titulo, 105, y, null, null, "center");
       y += 6;
     }
 
     function campo(label, valor, x, w, h) {
       h = h || 10;
-      doc.setDrawColor(180,180,180); doc.setLineWidth(0.2);
-      doc.rect(x, y, w, h);
+      doc.setDrawColor(180,180,180); doc.setLineWidth(0.2); doc.rect(x, y, w, h);
       doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(0,0,0);
       doc.text((label ? label + ": " : "") + (valor || ""), x + 2, y + 6);
     }
@@ -2055,16 +2344,15 @@ async function relatorioIndividual(protocolo) {
     }
 
     function campoDuplo(label1, val1, label2, val2) {
-      campo(label1, val1, 10,  95, 10);
+      campo(label1, val1, 10, 95, 10);
       campo(label2, val2, 105, 95, 10);
       y += 12;
     }
 
     function campoTexto(label, valor) {
-      const linhas = doc.splitTextToSize(valor || "Não informado.", 183);
-      const alt = Math.max(18, linhas.length * 5.5 + 6);
-      doc.setDrawColor(180,180,180); doc.setLineWidth(0.2);
-      doc.rect(10, y, 190, alt);
+      var linhas = doc.splitTextToSize(valor || "Não informado.", 183);
+      var alt = Math.max(18, linhas.length * 5.5 + 6);
+      doc.setDrawColor(180,180,180); doc.setLineWidth(0.2); doc.rect(10, y, 190, alt);
       doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(0,0,0);
       doc.text(linhas, 12, y + 6);
       y += alt + 3;
@@ -2074,63 +2362,54 @@ async function relatorioIndividual(protocolo) {
       if (y + space > 275) { doc.addPage(); y = 20; }
     }
 
-    // ── ESCOLA: usa restrição no PDF individual ──────────────
-    const escolaPDF = podeVerNomeEscola(user) ? (r.escola || "") : "Restrito";
-
     secao("DADOS DA OCORRÊNCIA");
     campoFull("Protocolo", r.protocolo);
     campoFull("Data", r.data);
     campoFull("Local", r.local);
     campoFull("Especificação do local", r.local_detalhado);
 
-    checkPage(60);
-    secao("DADOS DA VÍTIMA");
-    campoFull("Nome", r.vitima);
-    campoDuplo("Idade", r.idade, "Sexo", r.sexo);
-    campoDuplo("Raça / Cor", r.raca, "Orientação sexual", r.orientacao);
-    campoDuplo("Identidade de gênero", r.identidade_genero, "Escolaridade", r.escolaridade);
+    vitimas.forEach(function(v, idx) {
+      checkPage(80);
+      secao(vitimas.length > 1 ? "DADOS DA VÍTIMA " + (idx + 1) : "DADOS DA VÍTIMA");
+      campoFull("Nome", v.nome);
+      campoDuplo("Idade", v.idade, "Sexo", v.sexo);
+      campoDuplo("Raça / Cor", v.raca, "Orientação sexual", v.orientacao);
+      campoDuplo("Identidade de gênero", v.identGenero, "Escolaridade", v.escolaridade);
+    });
 
-    checkPage(55);
-    secao("RESPONSÁVEL");
+    checkPage(55); secao("RESPONSÁVEL");
     campoFull("Nome", r.responsavel);
     campoDuplo("Parentesco", r.parentesco, "Telefone", r.telefone);
     campoFull("Endereço", r.endereco);
 
-    checkPage(20);
-    secao("AUTOR DA VIOLÊNCIA");
+    checkPage(30); secao("AUTOR DA VIOLÊNCIA");
     campoDuplo("Nome", r.autor, "Idade", r.idade_autor);
     campoFull("Relação com a vítima", r.relacao_autor);
 
-    const todosItens = parseTipos(r.tipo);
-    const MOTIV_VALS  = ["Racismo","Intolerância Religiosa","Sexismo","Diversidade de gênero","Capacitismo","Outros"];
-    const PRATIC_VALS = ["Criança","Adolescente","Pai","Mãe","Responsável","Professor"];
-    const itensTipo   = todosItens.filter(t => !MOTIV_VALS.includes(t) && !PRATIC_VALS.includes(t) && !t.startsWith("Outros:"));
-    const itensMotiv  = todosItens.filter(t => MOTIV_VALS.includes(t) && !t.startsWith("Outros:"));
-    const itensPratic = todosItens.filter(t => PRATIC_VALS.includes(t) || t.startsWith("Outros"));
+    var todosItens  = parseTipos(r.tipo);
+    var MOTIV_VALS  = ["Racismo","Intolerância Religiosa","Sexismo","Diversidade de gênero","Capacitismo","Outros"];
+    var PRATIC_VALS = ["Criança","Adolescente","Pai","Mãe","Responsável","Professor"];
+    var itensTipo   = todosItens.filter(function(t){ return MOTIV_VALS.indexOf(t) === -1 && PRATIC_VALS.indexOf(t) === -1 && t.indexOf("Outros:") !== 0; });
+    var itensMotiv  = todosItens.filter(function(t){ return MOTIV_VALS.indexOf(t) !== -1 && t.indexOf("Outros:") !== 0; });
+    var itensPratic = todosItens.filter(function(t){ return PRATIC_VALS.indexOf(t) !== -1 || t.startsWith("Outros"); });
 
     campoFull("Quem praticou", itensPratic.length ? itensPratic.join(", ") : "Não informado");
-
-    checkPage(30);
-    secao("TIPIFICAÇÃO DA VIOLÊNCIA");
+    checkPage(30); secao("TIPIFICAÇÃO DA VIOLÊNCIA");
     campoFull("Tipos", itensTipo.length ? itensTipo.join(", ") : "Não informado");
-
-    checkPage(20);
-    secao("MOTIVAÇÃO DA VIOLÊNCIA");
+    checkPage(20); secao("MOTIVAÇÃO DA VIOLÊNCIA");
     campoFull("Motivação", itensMotiv.length ? itensMotiv.join(", ") : "Não informado");
 
-    checkPage(40);
-    secao("RESUMO DA OCORRÊNCIA");
+    checkPage(40); secao("RESUMO DA OCORRÊNCIA");
     campoTexto("", r.resumo);
-
-    checkPage(40);
-    secao("ENCAMINHAMENTO");
+    
+    checkPage(40); secao("ENCAMINHAMENTO");
     campoTexto("", r.encaminhamento);
 
     doc.setFontSize(7); doc.setTextColor(150,150,150);
     doc.text("Sistema PREVINE • Documento oficial gerado automaticamente", 105, 290, null, null, "center");
 
-    const nomeArquivo = (r.vitima || "Vitima").replace(/[^a-zA-Z0-9À-ÿ _-]/g, "").trim();
-    doc.save("PREVINE_" + r.protocolo + "_" + nomeArquivo + ".pdf");
+    var nomeArq = (vitimas[0] && vitimas[0].nome ? vitimas[0].nome : "Vitima").replace(/[^a-zA-Z0-9À-ÿ _-]/g, "").trim();
+    doc.save("PREVINE_" + r.protocolo + "_" + nomeArq + ".pdf");
   };
 
   logo.onload  = gerarPDF;
@@ -2141,106 +2420,67 @@ async function relatorioIndividual(protocolo) {
 // PDF GERAL
 // -------------------------------------------------------
 async function exportarTodosPDF() {
-  const user = carregarSessao() || {};
-  const lista = await obterRelatoriosFiltrados();
+  var user = carregarSessao() || {};
+  var lista = await obterRelatoriosFiltrados();
   if (lista.length === 0) { alert("Nenhum registro encontrado!"); return; }
 
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ orientation: "landscape" });
-
-  const logo = new Image();
+  var jsPDF = window.jspdf.jsPDF;
+  var doc = new jsPDF({ orientation: "landscape" });
+  var logo = new Image();
   logo.src = "prefeitura.png";
 
-  const gerarPDF = function () {
-    try { doc.addImage(logo, "PNG", 10, 3, 59, 38); } catch (e) {}
-    doc.setFont("helvetica", "bold"); doc.setFontSize(14);
-    doc.text("PREFEITURA MUNICIPAL", 148, 15, null, null, "center");
-    doc.setFontSize(10);
-    doc.text("SISTEMA DE NOTIFICAÇÃO PREVINE", 148, 23, null, null, "center");
-    doc.setFont("helvetica", "normal"); doc.setFontSize(8);
-    doc.text("RELATÓRIO GERAL DE OCORRÊNCIAS", 148, 29, null, null, "center");
-    doc.setDrawColor(0); doc.setLineWidth(0.3);
-    doc.line(10, 38, 287, 38);
+  var gerarPDF = function() {
+    try { doc.addImage(logo, "PNG", 10, 3, 59, 38); } catch(e) {}
+    doc.setFont("helvetica","bold"); doc.setFontSize(14); doc.text("PREFEITURA MUNICIPAL", 148, 15, null, null, "center");
+    doc.setFontSize(10); doc.text("SISTEMA DE NOTIFICAÇÃO PREVINE", 148, 23, null, null, "center");
+    doc.setFont("helvetica","normal"); doc.setFontSize(8); doc.text("RELATÓRIO GERAL DE OCORRÊNCIAS", 148, 29, null, null, "center");
+    doc.setDrawColor(0); doc.setLineWidth(0.3); doc.line(10, 38, 287, 38);
+    doc.setFont("helvetica","normal"); doc.setFontSize(8); doc.setTextColor(100,100,100);
+    doc.text("Data de geração: " + new Date().toLocaleDateString("pt-BR") + "   •   Total de registros: " + lista.length, 148, 44, null, null, "center");
+    doc.setTextColor(0,0,0);
 
-    doc.setFont("helvetica", "normal"); doc.setFontSize(8); doc.setTextColor(100,100,100);
-    doc.text(
-      "Data de geração: " + new Date().toLocaleDateString("pt-BR") +
-      "   •   Total de registros: " + lista.length,
-      148, 44, null, null, "center"
-    );
-    doc.setTextColor(0, 0, 0);
+    var y = 52;
+    var cols = [{label:"Protocolo",x:10,w:32},{label:"Data",x:44,w:28},{label:"Vítima",x:74,w:70},{label:"Tipo",x:146,w:100},{label:"Status",x:248,w:29}];
 
-    let y = 52;
+    doc.setFillColor(60,60,60); doc.rect(10, y, 277, 9, "F");
+    doc.setFont("helvetica","bold"); doc.setFontSize(8); doc.setTextColor(255,255,255);
+    cols.forEach(function(c){ doc.text(c.label, c.x + 2, y + 6); });
+    doc.setTextColor(0,0,0); y += 11;
 
-    const cols = [
-  { label: "Protocolo", x: 10,  w: 32  },
-  { label: "Data",      x: 44,  w: 28  },
-  { label: "Vítima",   x: 74,  w: 70  },
-  { label: "Tipo",      x: 146, w: 100 },
-  { label: "Status",   x: 248, w: 29  },
-];
-
-    doc.setFillColor(60, 60, 60);
-    doc.rect(10, y, 277, 9, "F");
-    doc.setFont("helvetica", "bold"); doc.setFontSize(8); doc.setTextColor(255,255,255);
-    cols.forEach(c => doc.text(c.label, c.x + 2, y + 6));
-    doc.setTextColor(0, 0, 0);
-    y += 11;
-
-    lista.forEach((r, idx) => {
-      const EXCLUIR = [
-        "Racismo","Intolerância Religiosa","Sexismo","Diversidade de gênero",
-        "Capacitismo","Outros","Criança","Adolescente","Pai","Mãe","Responsável","Professor"
-      ];
-      const tipos = parseTipos(r.tipo)
-        .filter(t => !EXCLUIR.includes(t) && !t.startsWith("Outros:"))
-        .join(", ");
-
-      // ── ESCOLA restrita no PDF geral ─────────────────────────
-      const escolaPDF = podeVerNomeEscola(user) ? (r.escola || "") : "Restrito";
-
-      const tipoLinhas   = doc.splitTextToSize(tipos || "Não informado", 53);
-      const vitimaLinhas = doc.splitTextToSize(r.vitima || "", 48);
-      const linhaMax = Math.max(tipoLinhas.length, vitimaLinhas.length);
-      const altLinha = Math.max(9, linhaMax * 4.8 + 4);
+    lista.forEach(function(r, idx) {
+      var EXCLUIR = ["Racismo","Intolerância Religiosa","Sexismo","Diversidade de gênero","Capacitismo","Outros","Criança","Adolescente","Pai","Mãe","Responsável","Professor"];
+      var tipos = parseTipos(r.tipo).filter(function(t){ return EXCLUIR.indexOf(t) === -1 && t.indexOf("Outros:") !== 0; }).join(", ");
+      var tipoLinhas   = doc.splitTextToSize(tipos || "Não informado", 53);
+      var vitimaLinhas = doc.splitTextToSize(r.vitima || "", 48);
+      var linhaMax = Math.max(tipoLinhas.length, vitimaLinhas.length);
+      var altLinha = Math.max(9, linhaMax * 4.8 + 4);
 
       if (y + altLinha > 195) {
-        doc.addPage();
-        y = 15;
-        doc.setFillColor(99, 153, 34);
-        doc.rect(10, y, 277, 9, "F");
-        doc.setFont("helvetica", "bold"); doc.setFontSize(8); doc.setTextColor(255,255,255);
-        cols.forEach(c => doc.text(c.label, c.x + 2, y + 6));
-        doc.setTextColor(0, 0, 0);
-        y += 11;
+        doc.addPage(); y = 15;
+        doc.setFillColor(99,153,34); doc.rect(10, y, 277, 9, "F");
+        doc.setFont("helvetica","bold"); doc.setFontSize(8); doc.setTextColor(255,255,255);
+        cols.forEach(function(c){ doc.text(c.label, c.x + 2, y + 6); });
+        doc.setTextColor(0,0,0); y += 11;
       }
 
-      if (idx % 2 === 0) {
-        doc.setFillColor(245, 248, 240);
-        doc.rect(10, y, 277, altLinha, "F");
-      }
+      if (idx % 2 === 0) { doc.setFillColor(245,248,240); doc.rect(10, y, 277, altLinha, "F"); }
+      doc.setDrawColor(210,210,210); doc.setLineWidth(0.1); doc.rect(10, y, 277, altLinha);
+      doc.setFont("helvetica","normal"); doc.setFontSize(7.5); doc.setTextColor(0,0,0);
 
-      doc.setDrawColor(210, 210, 210); doc.setLineWidth(0.1);
-      doc.rect(10, y, 277, altLinha);
-
-      doc.setFont("helvetica", "normal"); doc.setFontSize(7.5); doc.setTextColor(0,0,0);
-
-      const ty = y + 5;
+      var ty = y + 5;
       doc.text(String(r.protocolo || ""), cols[0].x + 2, ty);
-      doc.text(String(r.data    || ""),   cols[1].x + 2, ty);
-      doc.text(vitimaLinhas,              cols[2].x + 2, ty);
-      doc.text(tipoLinhas,                cols[3].x + 2, ty);
+      doc.text(String(r.data || ""), cols[1].x + 2, ty);
+      doc.text(vitimaLinhas, cols[2].x + 2, ty);
+      doc.text(tipoLinhas, cols[3].x + 2, ty);
 
-      const isOk = r.status === "Concluído";
+      var isOk = r.status === "Concluído";
       doc.setTextColor(isOk ? 39 : 133, isOk ? 80 : 79, isOk ? 10 : 11);
-      doc.setFont("helvetica", "bold"); doc.setFontSize(7);
+      doc.setFont("helvetica","bold"); doc.setFontSize(7);
       doc.text(r.status || "Em andamento", cols[4].x + 2, ty);
-      doc.setTextColor(0, 0, 0);
-
-      y += altLinha;
+      doc.setTextColor(0,0,0); y += altLinha;
     });
 
-    doc.setFontSize(7); doc.setTextColor(150, 150, 150);
+    doc.setFontSize(7); doc.setTextColor(150,150,150);
     doc.text("Sistema PREVINE • Documento oficial gerado automaticamente", 148, 202, null, null, "center");
     doc.save("Relatorio_Geral_PREVINE.pdf");
   };
@@ -2252,40 +2492,15 @@ async function exportarTodosPDF() {
 // -------------------------------------------------------
 // UTILITÁRIOS
 // -------------------------------------------------------
-async function limparFormulario() {
-  document.querySelectorAll("#registros input, #registros textarea, #registros select")
-    .forEach(el => { if (el.type !== "radio" && el.type !== "checkbox") el.value = ""; });
-  document.querySelectorAll("#registros input[type='radio'], #registros input[type='checkbox']")
-    .forEach(el => el.checked = false);
-
-  // Reset vítimas — mantém só o primeiro row
-  const listaV = document.getElementById("listaVitimas");
-  if (listaV) {
-    const rows = listaV.querySelectorAll(".vitima-row");
-    rows.forEach((r, i) => { if (i > 0) r.remove(); });
-    const primeiro = listaV.querySelector(".inputVitima");
-    if (primeiro) primeiro.value = "";
-  }
-
-  // Reset autores — mantém só o primeiro row
-  const listaA = document.getElementById("listaAutores");
-  if (listaA) {
-    const rows = listaA.querySelectorAll(".autor-row");
-    rows.forEach((r, i) => { if (i > 0) r.remove(); });
-    listaA.querySelectorAll("input").forEach(i => i.value = "");
-    atualizarBotoesRemoverAutor();
-  }
-}
-
-async function atualizarBotaoFlutuante() {
-  const botao = document.querySelector(".botaoFlutuante");
+function atualizarBotaoFlutuante() {
+  var botao = document.querySelector(".botaoFlutuante");
   if (!botao) return;
-  const painelVisivel = document.getElementById("painel")?.style.display === "block";
-  const logado = !!carregarSessao();
-  botao.style.display = painelVisivel && logado ? "flex" : "none";
+  var painelVisivel = document.getElementById("painel") && document.getElementById("painel").style.display === "block";
+  var logado = !!carregarSessao();
+  botao.style.display = (painelVisivel && logado) ? "flex" : "none";
 }
 
-async function abrirNovoRegistroAtalho() {
+function abrirNovoRegistroAtalho() {
   abrirAba("registros");
   etapaAtual = 0;
   mostrarEtapa();
@@ -2293,24 +2508,26 @@ async function abrirNovoRegistroAtalho() {
   atualizarBotaoFlutuante();
 }
 
-async function abrirRegistroPublico() {
+function abrirRegistroPublico() {
   document.getElementById("inicio").style.display = "none";
   document.getElementById("painel").style.display = "block";
   document.getElementById("painel").classList.add("modoPublicoRegistro");
 
-  const sidebar = document.querySelector(".sidebar");
+  var sidebar = document.querySelector(".sidebar");
   if (sidebar) sidebar.style.display = "none";
-  const topo = document.querySelector(".topoAdmin");
+  var topo = document.querySelector(".topoAdmin");
   if (topo) topo.style.display = "none";
-  const usuarioMenuEl = document.querySelector(".usuarioMenu");
+  var usuarioMenuEl = document.querySelector(".usuarioMenu");
   if (usuarioMenuEl) usuarioMenuEl.style.display = "none";
-  const dropdown = document.getElementById("dropdownUsuario");
+  var dropdown = document.getElementById("dropdownUsuario");
   if (dropdown) dropdown.style.display = "none";
 
   abrirAba("registros");
   atualizarBotaoFlutuante();
-  if (window.innerWidth > 768)
-    document.getElementById("registros").scrollIntoView({ behavior: "smooth" });
+  if (window.innerWidth > 768) {
+    var regEl = document.getElementById("registros");
+    if (regEl) regEl.scrollIntoView({ behavior: "smooth" });
+  }
 
   limparFormulario();
   etapaAtual = 0;
@@ -2318,141 +2535,26 @@ async function abrirRegistroPublico() {
 }
 
 // -------------------------------------------------------
-// INIT
+// AUTORES
 // -------------------------------------------------------
-limparFormulario();
-etapaAtual = 0;
-mostrarEtapa();
-atualizarBotaoFlutuante();
-
-window.addEventListener("resize", atualizarBotaoFlutuante);
-window.addEventListener("load",   atualizarBotaoFlutuante);
-
-async function regGoTo(i) {
-  const n = 7;
-  document.querySelectorAll('.reg-etapa').forEach((el, j) => {
-    el.classList.toggle('reg-active', j === i);
-  });
-  document.querySelectorAll('.rs-step').forEach((el, j) => {
-    el.classList.remove('rs-active', 'rs-done');
-    if (j === i) el.classList.add('rs-active');
-    else if (j < i) el.classList.add('rs-done');
-  });
-  for (let j = 0; j < 6; j++) {
-    const l = document.getElementById('rl' + j);
-    if (l) l.classList.toggle('rs-done', j < i);
-  }
-  document.getElementById('regProgressFill').style.width = ((i + 1) / n * 100).toFixed(1) + '%';
-  document.getElementById('regStepCount').textContent = '— etapa ' + (i + 1) + ' de ' + n;
-  const wrap = document.querySelector('.reg-wrap');
-  if (wrap) wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-async function toggleOutros(checkbox) {
-  const input = document.getElementById("outrosTexto");
-  input.style.display = checkbox.checked ? "block" : "none";
-  if (!checkbox.checked) input.value = "";
-}
-
-async function toggleSidebar() {
-  document.querySelector('.sidebar').classList.toggle('aberta');
-  document.querySelector('.sidebar-backdrop').classList.toggle('aberto');
-}
-async function fecharSidebar() {
-  document.querySelector('.sidebar').classList.remove('aberta');
-  document.querySelector('.sidebar-backdrop').classList.remove('aberto');
-}
-document.querySelectorAll('.sidebar button').forEach(btn => {
-  btn.addEventListener('click', fecharSidebar);
-});
-
-async function toggleOrientacaoOutro(radio) {
-  const input = document.getElementById("orientacaoOutroTexto");
-  input.style.display = radio.checked ? "inline-block" : "none";
-  if (!radio.checked) input.value = "";
-}
-document.querySelectorAll('input[name="orientacao"]').forEach(r => {
-  r.addEventListener('change', () => {
-    if (r.value !== "Outro") {
-      const input = document.getElementById("orientacaoOutroTexto");
-      if (input) { input.style.display = "none"; input.value = ""; }
-    }
-  });
-});
-
-function toggleFisicaOutro(cb) {
-  const input = document.getElementById("fisicaOutroTexto");
-  input.style.display = cb.checked ? "inline-block" : "none";
-  if (!cb.checked) input.value = "";
-}
-
-function togglePsicoOutro(cb) {
-  const input = document.getElementById("psicoOutroTexto");
-  input.style.display = cb.checked ? "inline-block" : "none";
-  if (!cb.checked) input.value = "";
-}
-
-function toggleSexualOutro(cb) {
-  const input = document.getElementById("sexualOutroTexto");
-  input.style.display = cb.checked ? "inline-block" : "none";
-  if (!cb.checked) input.value = "";
-}
-function adicionarVitima() {
-  const lista = document.getElementById("listaVitimas");
-  const div = document.createElement("div");
-  div.className = "vitima-row";
-  div.style.cssText = "display:flex;gap:8px;margin-bottom:6px;align-items:center";
-  div.innerHTML = `
-    <input type="text" class="inputVitima" placeholder="Nome da vítima" style="flex:1">
-    <button type="button" onclick="removerVitima(this)"
-      style="padding:4px 10px;border:1px solid #e57373;background:transparent;color:#c62828;border-radius:8px;cursor:pointer;font-size:13px;flex-shrink:0">
-      ✕
-    </button>
-  `;
-  lista.appendChild(div);
-}
-
-function removerVitima(btn) {
-  const lista = document.getElementById("listaVitimas");
-  if (lista.querySelectorAll(".vitima-row").length > 1) {
-    btn.parentElement.remove();
-  }
-}
 function adicionarAutor() {
-  const lista = document.getElementById("listaAutores");
-  const div = document.createElement("div");
+  var lista = document.getElementById("listaAutores");
+  if (!lista) return;
+  var div = document.createElement("div");
   div.className = "autor-row";
   div.style.cssText = "display:grid;grid-template-columns:1fr 80px 1fr auto;gap:8px;margin-bottom:8px;align-items:end";
-  div.innerHTML = `
-    <div>
-      <span style="font-size:11px;color:#888;display:block;margin-bottom:3px">Nome</span>
-      <input type="text" class="inputAutorNome" placeholder="Nome (se conhecido)"
-        style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;box-sizing:border-box">
-    </div>
-    <div>
-      <span style="font-size:11px;color:#888;display:block;margin-bottom:3px">Idade</span>
-      <input type="number" class="inputAutorIdade" placeholder="—"
-        style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;box-sizing:border-box">
-    </div>
-    <div>
-      <span style="font-size:11px;color:#888;display:block;margin-bottom:3px">Relação com a vítima</span>
-      <input type="text" class="inputAutorRelacao" placeholder="Ex: colega, familiar..."
-        style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;box-sizing:border-box">
-    </div>
-    <div style="padding-bottom:2px">
-      <button type="button" onclick="removerAutor(this)"
-        style="padding:8px 10px;border:1px solid #e57373;background:transparent;color:#c62828;border-radius:8px;cursor:pointer;font-size:13px">
-        ✕
-      </button>
-    </div>
-  `;
+  div.innerHTML =
+    '<div><span style="font-size:11px;color:#888;display:block;margin-bottom:3px">Nome</span><input type="text" class="inputAutorNome" placeholder="Nome (se conhecido)" style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;box-sizing:border-box"></div>' +
+    '<div><span style="font-size:11px;color:#888;display:block;margin-bottom:3px">Idade</span><input type="number" class="inputAutorIdade" placeholder="—" style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;box-sizing:border-box"></div>' +
+    '<div><span style="font-size:11px;color:#888;display:block;margin-bottom:3px">Relação com a vítima</span><input type="text" class="inputAutorRelacao" placeholder="Ex: colega, familiar..." style="width:100%;padding:8px 10px;border:1px solid #ddd;border-radius:8px;font-size:13px;box-sizing:border-box"></div>' +
+    '<div style="padding-bottom:2px"><button type="button" onclick="removerAutor(this)" style="padding:8px 10px;border:1px solid #e57373;background:transparent;color:#c62828;border-radius:8px;cursor:pointer;font-size:13px">✕</button></div>';
   lista.appendChild(div);
-  // Garante que o primeiro row tenha botão de remover quando há 2+
   atualizarBotoesRemoverAutor();
 }
 
 function removerAutor(btn) {
-  const lista = document.getElementById("listaAutores");
+  var lista = document.getElementById("listaAutores");
+  if (!lista) return;
   if (lista.querySelectorAll(".autor-row").length > 1) {
     btn.closest(".autor-row").remove();
     atualizarBotoesRemoverAutor();
@@ -2460,24 +2562,102 @@ function removerAutor(btn) {
 }
 
 function atualizarBotoesRemoverAutor() {
-  const lista = document.getElementById("listaAutores");
-  const rows = lista.querySelectorAll(".autor-row");
-  rows.forEach((row, i) => {
-    const lastCell = row.querySelector("div:last-child");
+  var lista = document.getElementById("listaAutores");
+  if (!lista) return;
+  var rows = lista.querySelectorAll(".autor-row");
+  rows.forEach(function(row, i) {
+    var lastCell = row.querySelector("div:last-child");
     if (!lastCell) return;
     if (rows.length > 1) {
       if (!lastCell.querySelector("button")) {
-        lastCell.innerHTML = `
-          <button type="button" onclick="removerAutor(this)"
-            style="padding:8px 10px;border:1px solid #e57373;background:transparent;color:#c62828;border-radius:8px;cursor:pointer;font-size:13px">
-            ✕
-          </button>`;
+        lastCell.innerHTML = '<button type="button" onclick="removerAutor(this)" style="padding:8px 10px;border:1px solid #e57373;background:transparent;color:#c62828;border-radius:8px;cursor:pointer;font-size:13px">✕</button>';
       }
     } else {
-      // Volta à célula vazia no único row restante
       if (i === 0) lastCell.innerHTML = "";
     }
   });
+}
+
+function toggleOutros(checkbox) {
+  var input = document.getElementById("outrosTexto");
+  if (input) {
+    input.style.display = checkbox.checked ? "block" : "none";
+    if (!checkbox.checked) input.value = "";
+  }
+}
+
+function toggleFisicaOutro(cb) {
+  var input = document.getElementById("fisicaOutroTexto");
+  if (input) { input.style.display = cb.checked ? "inline-block" : "none"; if (!cb.checked) input.value = ""; }
+}
+function togglePsicoOutro(cb) {
+  var input = document.getElementById("psicoOutroTexto");
+  if (input) { input.style.display = cb.checked ? "inline-block" : "none"; if (!cb.checked) input.value = ""; }
+}
+function toggleSexualOutro(cb) {
+  var input = document.getElementById("sexualOutroTexto");
+  if (input) { input.style.display = cb.checked ? "inline-block" : "none"; if (!cb.checked) input.value = ""; }
+}
+
+function toggleSidebar() {
+  document.querySelector('.sidebar').classList.toggle('aberta');
+  document.querySelector('.sidebar-backdrop').classList.toggle('aberto');
+}
+function fecharSidebar() {
+  document.querySelector('.sidebar').classList.remove('aberta');
+  document.querySelector('.sidebar-backdrop').classList.remove('aberto');
+}
+function toggleMotivOutro(cb) {
+  var input = document.getElementById("motivOutroTexto");
+  if (input) { input.style.display = cb.checked ? "inline-block" : "none"; if (!cb.checked) input.value = ""; }
+}
+function toggleAutoOutro(cb) {
+  var input = document.getElementById("autoOutroTexto");
+  if (input) { input.style.display = cb.checked ? "inline-block" : "none"; if (!cb.checked) input.value = ""; }
+}
+function toggleViolacaoOutro(cb) {
+  var input = document.getElementById("violacaoOutroTexto");
+  if (input) { input.style.display = cb.checked ? "inline-block" : "none"; if (!cb.checked) input.value = ""; }
+}
+function toggleDenunciaOutro(cb) {
+  var input = document.getElementById("denunciaOutroTexto");
+  if (input) { input.style.display = cb.checked ? "inline-block" : "none"; if (!cb.checked) input.value = ""; }
+}
+// -------------------------------------------------------
+// INIT — DOM pronto
+// -------------------------------------------------------
+window.addEventListener('DOMContentLoaded', function() {
+  // Inicializa o formulário (cria primeiro card de vítima)
+  limparFormulario();
+  etapaAtual = 0;
+  mostrarEtapa();
+  atualizarBotaoFlutuante();
+
+  // Fecha sidebar ao clicar em botão da sidebar
+  document.querySelectorAll('.sidebar button').forEach(function(btn){
+    btn.addEventListener('click', fecharSidebar);
+  });
+});
+
+window.addEventListener("resize", atualizarBotaoFlutuante);
+window.addEventListener("load",   atualizarBotaoFlutuante);
+function podeAlterarStatusSecretaria(user) {
+  if (!user) return false;
+  if (user.nivel === "admin") return true;
+  var escola = (user.escola || "").trim();
+  return escola === "SECRETARA MUNICIPAL DE EDUCAÇÃO DE HORIZONTE";
+}
+
+function podeAlterarStatusSecretaria(user) {
+  if (!user) return false;
+  return user.email === "admin@previne.com" || 
+         (user.escola || "").trim() === "SECRETARA MUNICIPAL DE EDUCAÇÃO DE HORIZONTE";
+}
+
+function podeAlterarStatusConselho(user) {
+  if (!user) return false;
+  return user.email === "admin@previne.com" || 
+         (user.escola || "").trim() === "CONSELHO TUTELAR DE HORIZONTE";
 }
 </script>
 
