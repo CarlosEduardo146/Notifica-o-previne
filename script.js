@@ -1233,30 +1233,6 @@
                 atualizarBotaoFlutuante();
             }
 
-            function abrirRegistroPublico() {
-                document.getElementById("inicio").style.display = "none";
-                document.getElementById("painel").style.display = "block";
-                document.getElementById("painel").classList.add("modoPublicoRegistro");
-
-                const sidebar = document.querySelector(".sidebar");
-                const topo    = document.querySelector(".topoAdmin");
-                const uMenu   = document.querySelector(".usuarioMenu");
-                const dropdown = document.getElementById("dropdownUsuario");
-                if (sidebar)  sidebar.style.display  = "none";
-                if (topo)     topo.style.display     = "none";
-                if (uMenu)    uMenu.style.display    = "none";
-                if (dropdown) dropdown.style.display = "none";
-
-                abrirAba("registros");
-                atualizarBotaoFlutuante();
-                if (window.innerWidth > 768) {
-                const el = document.getElementById("registros");
-                if (el) el.scrollIntoView({ behavior:"smooth" });
-                }
-                limparFormulario();
-                etapaAtual = 0; mostrarEtapa();
-            }
-
             function adicionarAutor() {
                 const lista = document.getElementById("listaAutores");
                 if (!lista) return;
