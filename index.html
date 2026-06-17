@@ -83,7 +83,13 @@
     <span class="fechar" onclick="fecharLogin()">✖</span>
     <h2>ENTRAR COM E-MAIL E SENHA</h2>
     <input id="usuario" type="email" placeholder="E-mail" class="input">
-    <input id="senha" type="password" placeholder="Senha" class="input">
+    <div style="position:relative;width:100%">
+      <input id="senha" type="password" placeholder="Senha" class="input" style="padding-right:42px;width:100%;box-sizing:border-box">
+      <button type="button" onclick="toggleSenha('senha','iconeSenhaLogin')"
+        style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#888;font-size:16px;padding:0;line-height:1">
+        <i id="iconeSenhaLogin" class="fi fi-rr-eye"></i>
+      </button>
+    </div>
     <button class="btn" onclick="entrar()">Entrar</button>
     <div class="link">
       <p>Não lembra sua senha? <a href="#" onclick="abrirRecuperacao()">Recuperar senha</a></p>
@@ -155,9 +161,36 @@
             <span class="fechar" onclick="fecharSenha()">✖</span>
             <h2>Alterar Senha</h2>
             <div class="formUsuario">
-              <div class="campo"><label>Senha Atual</label><input type="password" id="senhaAtual"></div>
-              <div class="campo"><label>Nova Senha</label><input type="password" id="novaSenha"></div>
-              <div class="campo"><label>Confirmar Nova Senha</label><input type="password" id="confirmarSenha"></div>
+              <div class="campo">
+                <label>Senha Atual</label>
+                <div style="position:relative">
+                  <input type="password" id="senhaAtual" style="padding-right:38px;width:100%;box-sizing:border-box">
+                  <button type="button" onclick="toggleSenha('senhaAtual','iconeAtual')"
+                    style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#888;font-size:15px;padding:0">
+                    <i id="iconeAtual" class="fi fi-rr-eye"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="campo">
+                <label>Nova Senha</label>
+                <div style="position:relative">
+                  <input type="password" id="novaSenha" style="padding-right:38px;width:100%;box-sizing:border-box">
+                  <button type="button" onclick="toggleSenha('novaSenha','iconeNova')"
+                    style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#888;font-size:15px;padding:0">
+                    <i id="iconeNova" class="fi fi-rr-eye"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="campo">
+                <label>Confirmar Nova Senha</label>
+                <div style="position:relative">
+                  <input type="password" id="confirmarSenha" style="padding-right:38px;width:100%;box-sizing:border-box">
+                  <button type="button" onclick="toggleSenha('confirmarSenha','iconeConfirmar')"
+                    style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#888;font-size:15px;padding:0">
+                    <i id="iconeConfirmar" class="fi fi-rr-eye"></i>
+                  </button>
+                </div>
+              </div>
               <button class="botaoSalvar" onclick="salvarSenha()">Salvar Nova Senha</button>
             </div>
           </div>

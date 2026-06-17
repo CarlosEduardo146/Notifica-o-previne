@@ -1126,9 +1126,9 @@
 
                 campoFull("Quem praticou",itensPratic.length?itensPratic.join(", "):"Não informado");
                 checkPage(30); secao("TIPIFICAÇÃO DA VIOLÊNCIA");
-                campoFull("Tipos",itensTipo.length?itensTipo.join(", "):"Não informado");
+                campoTexto("", itensTipo.length ? "Tipos: " + itensTipo.join(", ") : "Tipos: Não informado");
                 checkPage(20); secao("MOTIVAÇÃO DA VIOLÊNCIA");
-                campoFull("Motivação",itensMotiv.length?itensMotiv.join(", "):"Não informado");
+                campoTexto("", itensMotiv.length ? "Motivação: " + itensMotiv.join(", ") : "Motivação: Não informado");
 
                 checkPage(40); secao("RESUMO DA OCORRÊNCIA");
                 campoTexto("",r.resumo);
@@ -1292,6 +1292,15 @@
 
             function toggleSidebar()  { document.querySelector(".sidebar").classList.toggle("aberta"); document.querySelector(".sidebar-backdrop").classList.toggle("aberto"); }
             function fecharSidebar()  { document.querySelector(".sidebar").classList.remove("aberta"); document.querySelector(".sidebar-backdrop").classList.remove("aberto"); }
+            
+            function toggleSenha(inputId, iconeId) {
+                const input  = document.getElementById(inputId);
+                const icone  = document.getElementById(iconeId);
+                if (!input || !icone) return;
+                const visivel = input.type === "text";
+                input.type = visivel ? "password" : "text";
+                icone.className = visivel ? "fi fi-rr-eye" : "fi fi-rr-eye-crossed";
+            }
 
             function podeAlterarStatusSecretaria(user) {
                 if (!user) return false;
