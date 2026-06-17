@@ -202,6 +202,7 @@
                 setTimeout(() => ativa.style.animation = "fadeSlide 0.4s", 10);
                 if (nome === "dashboard") setTimeout(carregarGraficos, 100);
                 if (nome === "relatorios") carregarRelatorios();
+                if (nome === "consulta") buscarRegistro();
                 if (nome === "usuarios")  { carregarUsuarios(); atualizarCardsUsuarios(); }
                 atualizarBotaoFlutuante();
             }
@@ -730,99 +731,184 @@
                 const termo = document.getElementById("buscaProtocolo").value.trim().toLowerCase();
                 const div   = document.getElementById("resultadoConsulta");
                 const user  = carregarSessao() || {};
-
-                if (!termo) {
-                div.innerHTML = '<div class="estado-vazio-novo"><div class="estado-vazio-icone-novo">🔍</div><h3>Pronto para buscar</h3><p>Digite o protocolo ou nome da vítima para localizar um registro.</p></div>';
-                return;
-                }
-
+            
                 div.innerHTML = '<div class="search-card-novo skeleton-novo"><div class="skel-block-novo" style="width:40%;height:16px"></div><div class="skel-block-novo" style="width:100%;height:80px;margin-top:8px"></div></div>';
-
+            
                 const lista = await obterRelatoriosFiltrados();
-                const resultados = lista.filter(r =>
-                (r.protocolo||"").toLowerCase().includes(termo) || (r.vitima||"").toLowerCase().includes(termo)
-                );
-
+                const resultados = termo
+                    ? lista.filter(r =>
+                        (r.protocolo||"").toLowerCase().includes(termo) ||
+                        (r.vitima||"").toLowerCase().includes(termo)
+                      )
+                    : [...lista].sort((a,b) => {
+                        const na = parseInt((a.protocolo||"").replace(/\D/g,""))||0;
+                        const nb = parseInt((b.protocolo||"").replace(/\D/g,""))||0;
+                        return na - nb;
+                      });
+            
                 if (!resultados.length) {
-                div.innerHTML = '<div class="estado-erro-novo"><div class="estado-erro-icone-novo">❌</div><h3>Nenhum registro encontrado</h3><p>Verifique o protocolo ou tente outro nome.</p></div>';
-                return;
+                    div.innerHTML = '<div class="estado-erro-novo"><div class="estado-erro-icone-novo">❌</div><h3>Nenhum registro encontrado</h3><p>Verifique o protocolo ou tente outro nome.</p></div>';
+                    return;
                 }
-
+            
                 let html = `<p class="resultados-count-novo"><strong>${resultados.length}</strong> registro${resultados.length>1?"s":""} encontrado${resultados.length>1?"s":""}</p>`;
-
+            
                 resultados.forEach(r => {
-                const isOk    = r.status === "Concluído";
-                const dataFmt = r.data ? r.data.split("-").reverse().join("/") : "—";
-                const idSafe  = (r.protocolo||"").replace(/[^a-zA-Z0-9]/g,"_");
-
-                html += `<div class="card-resultado-novo">
-                    <div class="card-resultado-header">
-                    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-                        <span class="protocolo-badge-novo">${r.protocolo||""}</span>
-                        <span class="escola-info-novo"><i class="fi fi-sr-school"></i> ${podeVerNomeEscola(user) ? (r.escola||"") : exibirEscola(r.escola,user,false)}</span>
-                    </div>
-                    <span class="${isOk?"status-badge-concluido":"status-badge-andamento"}">${isOk?"✓ Concluído":"⏳ Em andamento"}</span>
-                    </div>
-                    <div class="card-resultado-body">
-                    <div class="card-secao">
-                        <div class="card-secao-titulo">📍 Ocorrência</div>
-                        <div class="campo-label-novo">Data</div><div class="campo-valor-novo destaque">${dataFmt}</div>
-                        <div class="campo-label-novo">Local</div><div class="campo-valor-novo">${r.local||"—"}</div>
-                    </div>
-                    <div class="card-secao">
-                        <div class="card-secao-titulo">👤 Vítima</div>
-                        <div class="campo-label-novo">Nome</div><div class="campo-valor-novo destaque">${r.vitima||"—"}</div>
-                        <div class="campo-label-novo">Idade / Sexo</div><div class="campo-valor-novo">${r.idade||"—"} anos • ${r.sexo||"—"}</div>
-                        <div class="campo-label-novo">Raça / Cor</div><div class="campo-valor-novo">${r.raca||"—"}</div>
-                    </div>
-                    <div class="card-secao">
-                        <div class="card-secao-titulo">⚠️ Tipificação</div>
-                        <div id="tags_consulta_${idSafe}"></div>
-                        <div style="margin-top:8px">
-                        <div style="font-size:10px;font-weight:600;color:#bf360c;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Motivação</div>
-                        <div id="tags_motiv_${idSafe}"></div>
+                    const isOk    = r.status === "Concluído";
+                    const dataFmt = r.data ? r.data.split("-").reverse().join("/") : "—";
+                    const idSafe  = (r.protocolo||"").replace(/[^a-zA-Z0-9]/g,"_");
+            
+                    let vitimasArr = [];
+                    if (r.vitimas_json) { try { vitimasArr = JSON.parse(r.vitimas_json); } catch(e){} }
+                    if (!vitimasArr.length) {
+                        const nomes  = (r.vitima||"").split(",").map(s=>s.trim()).filter(Boolean);
+                        const idades = (r.idade||"").split(",").map(s=>s.trim());
+                        vitimasArr = nomes.map((nome,i) => ({
+                            nome, idade: idades[i]||"",
+                            sexo:        i===0?(r.sexo||""):"",
+                            raca:        i===0?(r.raca||""):"",
+                            identGenero: i===0?(r.identidade_genero||""):"",
+                            orientacao:  i===0?(r.orientacao||""):"",
+                            escolaridade:i===0?(r.escolaridade||""):""
+                        }));
+                    }
+            
+                    const vitimasHtml = vitimasArr.map((v, idx) => `
+                        <div style="background:var(--color-background-secondary);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
+                            ${vitimasArr.length > 1 ? `<div style="font-size:11px;font-weight:700;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Vítima ${idx+1}</div>` : ""}
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;">
+                                <div><span class="campo-label-novo">Nome</span><div class="campo-valor-novo destaque">${v.nome||"—"}</div></div>
+                                <div><span class="campo-label-novo">Idade</span><div class="campo-valor-novo">${v.idade||"—"}</div></div>
+                                <div><span class="campo-label-novo">Sexo</span><div class="campo-valor-novo">${v.sexo||"—"}</div></div>
+                                <div><span class="campo-label-novo">Raça / Cor</span><div class="campo-valor-novo">${v.raca||"—"}</div></div>
+                                <div><span class="campo-label-novo">Identidade de gênero</span><div class="campo-valor-novo">${v.identGenero||"—"}</div></div>
+                                <div><span class="campo-label-novo">Orientação sexual</span><div class="campo-valor-novo">${v.orientacao||"—"}</div></div>
+                                <div><span class="campo-label-novo">Escolaridade</span><div class="campo-valor-novo">${v.escolaridade||"—"}</div></div>
+                            </div>
                         </div>
-                        <div style="margin-top:8px">
-                        <div style="font-size:10px;font-weight:600;color:#6a1b9a;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Quem praticou</div>
-                        <div id="tags_pratic_${idSafe}"></div>
+                    `).join("");
+            
+                    const MOTIV_LIST  = ["Racismo","Intolerância Religiosa","Sexismo","Diversidade de gênero","Capacitismo","Outros","Etarismo","Gordofobia","Xenofobia","Sexismo","Violências às diversidades sexuais e de gênero"];
+                    const PRATIC_LIST = ["Criança","Adolescente","Pai","Mãe","Responsável","Professor"];
+                    const todos       = parseTipos(r.tipo);
+                    const itensTipo   = todos.filter(t => !MOTIV_LIST.includes(t) && !PRATIC_LIST.includes(t) && !t.startsWith("Outros:") && !t.startsWith("Outros ("));
+                    const itensMotiv  = todos.filter(t => MOTIV_LIST.includes(t));
+                    const itensPratic = todos.filter(t => PRATIC_LIST.includes(t) || t.startsWith("Outros"));
+            
+                    const stSec = r.status_secretaria || "Em andamento";
+                    const stCon = r.status_conselho   || "Em andamento";
+            
+                    html += `<div class="card-resultado-novo">
+                        <div class="card-resultado-header">
+                            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                                <span class="protocolo-badge-novo">${r.protocolo||""}</span>
+                                <span class="escola-info-novo">🏫 ${podeVerNomeEscola(user) ? (r.escola||"") : exibirEscola(r.escola,user,false)}</span>
+                            </div>
+                            <span class="${isOk?"status-badge-concluido":"status-badge-andamento"}">${isOk?"✓ Concluído":"⏳ Em andamento"}</span>
                         </div>
-                    </div>
-                    </div>
-                    <div class="card-resultado-footer">
-                    <button class="btn-acao-novo btn-pdf-novo" onclick="relatorioIndividual('${r.protocolo}')"><i class="fi fi-sr-document"></i> Ver PDF</button>
-                    ${temAcessoGlobal(user) ? `<button class="btn-acao-novo ${isOk?"btn-status-ok-novo":"btn-status-and-novo"}" onclick="alterarStatusConsulta('${r.protocolo}')"><i class="fi fi-sr-refresh"></i> Mudar status</button>` : ""}
-                    <button class="btn-acao-novo btn-excluir-novo" onclick="if(confirm('Excluir ${r.protocolo}?')) deletarRegistro('${r.protocolo}').then(()=>buscarRegistro())"><i class="fi fi-sr-trash"></i> Excluir</button>
-                    </div>
-                </div>`;
+            
+                        <div class="card-resultado-body" style="display:flex;flex-direction:column;gap:0;">
+            
+                            <!-- OCORRÊNCIA -->
+                            <div class="card-secao" style="grid-column:1/-1">
+                                <div class="card-secao-titulo">📍 Ocorrência</div>
+                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;">
+                                    <div><span class="campo-label-novo">Data</span><div class="campo-valor-novo destaque">${dataFmt}</div></div>
+                                    <div><span class="campo-label-novo">Local</span><div class="campo-valor-novo">${r.local||"—"}</div></div>
+                                    <div style="grid-column:1/-1"><span class="campo-label-novo">Especificação do local</span><div class="campo-valor-novo">${r.local_detalhado||"—"}</div></div>
+                                </div>
+                            </div>
+            
+                            <!-- VÍTIMA(S) -->
+                            <div class="card-secao" style="grid-column:1/-1">
+                                <div class="card-secao-titulo">👤 ${vitimasArr.length > 1 ? "Vítimas" : "Vítima"}</div>
+                                ${vitimasHtml}
+                            </div>
+            
+                            <!-- RESPONSÁVEL -->
+                            <div class="card-secao" style="grid-column:1/-1">
+                                <div class="card-secao-titulo">👨‍👩‍👧 Responsável</div>
+                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;">
+                                    <div><span class="campo-label-novo">Nome</span><div class="campo-valor-novo destaque">${r.responsavel||"—"}</div></div>
+                                    <div><span class="campo-label-novo">Parentesco</span><div class="campo-valor-novo">${r.parentesco||"—"}</div></div>
+                                    <div><span class="campo-label-novo">Telefone</span><div class="campo-valor-novo">${r.telefone||"—"}</div></div>
+                                    <div><span class="campo-label-novo">Endereço</span><div class="campo-valor-novo">${r.endereco||"—"}</div></div>
+                                </div>
+                            </div>
+            
+                            <!-- AUTOR -->
+                            <div class="card-secao" style="grid-column:1/-1">
+                                <div class="card-secao-titulo">⚠️ Autor da violência</div>
+                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;">
+                                    <div><span class="campo-label-novo">Nome</span><div class="campo-valor-novo destaque">${r.autor||"—"}</div></div>
+                                    <div><span class="campo-label-novo">Idade</span><div class="campo-valor-novo">${r.idade_autor||"—"}</div></div>
+                                    <div style="grid-column:1/-1"><span class="campo-label-novo">Relação com a vítima</span><div class="campo-valor-novo">${r.relacao_autor||"—"}</div></div>
+                                    <div style="grid-column:1/-1"><span class="campo-label-novo">Quem praticou</span><div class="campo-valor-novo">${itensPratic.length ? itensPratic.join(", ") : "—"}</div></div>
+                                </div>
+                            </div>
+            
+                            <!-- TIPIFICAÇÃO -->
+                            <div class="card-secao" style="grid-column:1/-1">
+                                <div class="card-secao-titulo">🗂️ Tipificação da violência</div>
+                                <div style="margin-bottom:8px;">
+                                    <div style="font-size:10px;font-weight:700;color:#185fa5;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Tipos</div>
+                                    <div id="tags_consulta_${idSafe}">${renderTagsSemMotiv(r.tipo)}</div>
+                                </div>
+                                <div style="margin-bottom:8px;">
+                                    <div style="font-size:10px;font-weight:700;color:#bf360c;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Motivação</div>
+                                    <div id="tags_motiv_${idSafe}">
+                                        ${itensMotiv.length
+                                            ? '<div class="tagsTipo">' + itensMotiv.map(t=>`<span class="tagTipo motiv">🎯 ${t}</span>`).join("") + "</div>"
+                                            : '<span style="color:#999;font-size:12px;">Não informado</span>'}
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- RESUMO -->
+                            <div class="card-secao" style="grid-column:1/-1">
+                                <div class="card-secao-titulo">📝 Resumo da ocorrência</div>
+                                <div class="campo-valor-novo" style="white-space:pre-line;line-height:1.6;">${r.resumo||"—"}</div>
+                            </div>
+            
+                            <!-- COMO CHEGOU -->
+                            <div class="card-secao" style="grid-column:1/-1">
+                                <div class="card-secao-titulo">📣 Como a denúncia chegou</div>
+                                <div class="campo-valor-novo">${r.denuncia_chegou||"—"}</div>
+                            </div>
+            
+                            <!-- ENCAMINHAMENTO -->
+                            <div class="card-secao" style="grid-column:1/-1">
+                                <div class="card-secao-titulo">📤 Encaminhamento</div>
+                                <div class="campo-valor-novo" style="white-space:pre-line;line-height:1.6;">${r.encaminhamento||"—"}</div>
+                            </div>
+            
+                            <!-- STATUS -->
+                            <div class="card-secao" style="grid-column:1/-1">
+                                <div class="card-secao-titulo">📊 Status</div>
+                                <div style="display:flex;gap:24px;flex-wrap:wrap;">
+                                    <div>
+                                        <div style="font-size:10px;font-weight:700;color:#185fa5;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;">Secretaria</div>
+                                        <span class="${stSec==="Concluído"?"statusAtivo":"statusInativo"}">${stSec}</span>
+                                    </div>
+                                    <div>
+                                        <div style="font-size:10px;font-weight:700;color:#639922;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;">Conselho Tutelar</div>
+                                        <span class="${stCon==="Concluído"?"statusAtivo":"statusInativo"}">${stCon}</span>
+                                    </div>
+                                </div>
+                            </div>
+            
+                        </div>
+            
+                        <div class="card-resultado-footer">
+                            <button class="btn-acao-novo btn-pdf-novo" onclick="relatorioIndividual('${r.protocolo}')">📄 Ver PDF</button>
+                            ${temAcessoGlobal(user) ? `<button class="btn-acao-novo ${isOk?"btn-status-ok-novo":"btn-status-and-novo"}" onclick="alterarStatusConsulta('${r.protocolo}')">🔄 Mudar status</button>` : ""}
+                            <button class="btn-acao-novo btn-excluir-novo" onclick="if(confirm('Excluir ${r.protocolo}?')) deletarRegistro('${r.protocolo}').then(()=>buscarRegistro())">🗑️ Excluir</button>
+                        </div>
+                    </div>`;
                 });
-
+            
                 div.innerHTML = html;
-
-                const MOTIV_LIST  = ["Racismo","Intolerância Religiosa","Sexismo","Diversidade de gênero","Capacitismo","Outros"];
-                const PRATIC_LIST = ["Criança","Adolescente","Pai","Mãe","Responsável","Professor"];
-
-                resultados.forEach(r => {
-                const idSafe  = (r.protocolo||"").replace(/[^a-zA-Z0-9]/g,"_");
-                const todos   = parseTipos(r.tipo);
-                const elTipo  = document.getElementById("tags_consulta_" + idSafe);
-                if (elTipo) elTipo.innerHTML = renderTagsSemMotiv(r.tipo);
-                const elMotiv = document.getElementById("tags_motiv_" + idSafe);
-                if (elMotiv) {
-                    const itens = todos.filter(t => MOTIV_LIST.includes(t));
-                    elMotiv.innerHTML = itens.length
-                    ? '<div class="tagsTipo">' + itens.map(t => `<span class="tagTipo motiv">🎯 ${t}</span>`).join("") + "</div>"
-                    : '<span style="color:#999;font-size:12px;">Não informado</span>';
-                }
-                const elPratic = document.getElementById("tags_pratic_" + idSafe);
-                if (elPratic) {
-                    const itens = todos.filter(t => PRATIC_LIST.includes(t) || t.startsWith("Outros"));
-                    elPratic.innerHTML = itens.length
-                    ? '<div class="tagsTipo">' + itens.map(t => `<span class="tagTipo praticou">👤 ${t}</span>`).join("") + "</div>"
-                    : '<span style="color:#999;font-size:12px;">Não informado</span>';
-                }
-                });
             }
-
             async function alterarStatusConsulta(protocolo) { await alterarStatus(protocolo); buscarRegistro(); }
 
             const charts = {};
@@ -1292,7 +1378,7 @@
 
             function toggleSidebar()  { document.querySelector(".sidebar").classList.toggle("aberta"); document.querySelector(".sidebar-backdrop").classList.toggle("aberto"); }
             function fecharSidebar()  { document.querySelector(".sidebar").classList.remove("aberta"); document.querySelector(".sidebar-backdrop").classList.remove("aberto"); }
-            
+
             function toggleSenha(inputId, iconeId) {
                 const input  = document.getElementById(inputId);
                 const icone  = document.getElementById(iconeId);
