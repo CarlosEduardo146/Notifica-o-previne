@@ -1,6 +1,6 @@
             
-            const SB_URL  = "https://xuhnxajszpttrnmzysgr.supabase.co";
-            const SB_KEY  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1aG54YWpzenB0dHJubXp5c2dyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MjA4NzksImV4cCI6MjA5NTI5Njg3OX0.JlgJ2VyocEZhZoyPoA_544u-O68t_rYi6SI0WiqNUOU";
+            const SB_URL  = "https://hsxdurbtzslirrxhrrrm.supabase.co";
+            const SB_KEY  = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzeGR1cmJ0enNsaXJyeGhycnJtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4NjA4NDAsImV4cCI6MjEwMTQzNjg0MH0.3MBPrL-QkMa1A406QqS3USOv0TxUGOQX6uF4EH80b2k";
 
             const { createClient } = supabase;
             const db = createClient(SB_URL, SB_KEY);
@@ -362,91 +362,92 @@
                 });
             }
 
-            async function salvarNotificacao() {
-                const user = carregarSessao() || {};
-                const tipos = [];
+    async function salvarNotificacao() {
+        const user = carregarSessao() || {};
+        const tipos = [];
 
-                document.querySelectorAll("#registros input[type='checkbox']").forEach(c => {
-                if (!c.checked) return;
-                const val = (id) => (document.getElementById(id) || {}).value?.trim() || "";
-                if      (c.id === "checkOutros")       tipos.push(val("outrosTexto") ? "Outros: " + val("outrosTexto") : "Outros");
-                else if (c.id === "checkFisicaOutro")  tipos.push(val("fisicaOutroTexto") ? "Outro (física): " + val("fisicaOutroTexto") : "Outro (física)");
-                else if (c.id === "checkPsicoOutro")   tipos.push(val("psicoOutroTexto") ? "Outro (psicológica): " + val("psicoOutroTexto") : "Outro (psicológica)");
-                else if (c.id === "checkSexualOutro")  tipos.push(val("sexualOutroTexto") ? "Outro (sexual): " + val("sexualOutroTexto") : "Outro (sexual)");
-                else if (c.id === "checkMotivOutro")   tipos.push(val("motivOutroTexto") ? "Outros (motivação): " + val("motivOutroTexto") : "Outros (motivação)");
-                else if (c.id === "checkAutoOutro")    tipos.push(val("autoOutroTexto") ? "Outro (autoprovocada): " + val("autoOutroTexto") : "Outro (autoprovocada)");
-                else if (c.id === "checkViolacaoOutro")tipos.push(val("violacaoOutroTexto") ? "Outro (violação de direitos): " + val("violacaoOutroTexto") : "Outro (violação de direitos)");
-                else if (c.value) tipos.push(c.value);
-                });
+        document.querySelectorAll("#registros input[type='checkbox']").forEach(c => {
+        if (!c.checked) return;
+        const val = (id) => (document.getElementById(id) || {}).value?.trim() || "";
+        if      (c.id === "checkOutros")       tipos.push(val("outrosTexto") ? "Outros: " + val("outrosTexto") : "Outros");
+        else if (c.id === "checkFisicaOutro")  tipos.push(val("fisicaOutroTexto") ? "Outro (física): " + val("fisicaOutroTexto") : "Outro (física)");
+        else if (c.id === "checkPsicoOutro")   tipos.push(val("psicoOutroTexto") ? "Outro (psicológica): " + val("psicoOutroTexto") : "Outro (psicológica)");
+        else if (c.id === "checkSexualOutro")  tipos.push(val("sexualOutroTexto") ? "Outro (sexual): " + val("sexualOutroTexto") : "Outro (sexual)");
+        else if (c.id === "checkMotivOutro")   tipos.push(val("motivOutroTexto") ? "Outros (motivação): " + val("motivOutroTexto") : "Outros (motivação)");
+        else if (c.id === "checkAutoOutro")    tipos.push(val("autoOutroTexto") ? "Outro (autoprovocada): " + val("autoOutroTexto") : "Outro (autoprovocada)");
+        else if (c.id === "checkViolacaoOutro")tipos.push(val("violacaoOutroTexto") ? "Outro (violação de direitos): " + val("violacaoOutroTexto") : "Outro (violação de direitos)");
+        else if (c.value) tipos.push(c.value);
+        });
 
-                let vitimas = coletarVitimas();
-                if (!vitimas.length) vitimas = [{ nome:"",idade:"",escolaridade:"",raca:"",sexo:"",identGenero:"",orientacao:"" }];
+        let vitimas = coletarVitimas();
+        if (!vitimas.length) vitimas = [{ nome:"",idade:"",escolaridade:"",raca:"",sexo:"",identGenero:"",orientacao:"" }];
 
-                const nomes  = vitimas.map(v => v.nome).filter(Boolean).join(", ");
-                const idades = vitimas.map(v => v.idade).filter(Boolean).join(", ");
-                const v0     = vitimas[0] || {};
+        const nomes  = vitimas.map(v => v.nome).filter(Boolean).join(", ");
+        const idades = vitimas.map(v => v.idade).filter(Boolean).join(", ");
+        const v0     = vitimas[0] || {};
 
-                const autoresData = [...document.querySelectorAll("#listaAutores .autor-row")].map(row => ({
-                nome:    (row.querySelector(".inputAutorNome")    || {}).value?.trim() || "",
-                idade:   (row.querySelector(".inputAutorIdade")   || {}).value?.trim() || "",
-                relacao: (row.querySelector(".inputAutorRelacao") || {}).value?.trim() || ""
-                })).filter(a => a.nome || a.idade || a.relacao);
+        const autoresData = [...document.querySelectorAll("#listaAutores .autor-row")].map(row => ({
+        nome:    (row.querySelector(".inputAutorNome")    || {}).value?.trim() || "",
+        idade:   (row.querySelector(".inputAutorIdade")   || {}).value?.trim() || "",
+        relacao: (row.querySelector(".inputAutorRelacao") || {}).value?.trim() || ""
+        })).filter(a => a.nome || a.idade || a.relacao);
 
-                const todos = await dbSelect("relatorios");
-                const protocolo = gerarProtocolo(todos.length + 1);
+        const todos = await dbSelect("relatorios");
+        const protocolo = gerarProtocolo(todos.length + 1);
 
-                const g = id => (document.getElementById(id) || {}).value || "";
+        const g = id => (document.getElementById(id) || {}).value || "";
 
-                const denunciaItens = [];
-                document.querySelectorAll("#re6 input[type='checkbox']").forEach(c => {
-                if (!c.checked) return;
-                if (c.id === "checkDenunciaOutro") {
-                    const txt = g("denunciaOutroTexto").trim();
-                    denunciaItens.push(txt ? "Outro: " + txt : "Outro");
-                } else if (c.value) denunciaItens.push(c.value);
-                });
+        const denunciaItens = [];
+        document.querySelectorAll("#re6 input[type='checkbox']").forEach(c => {
+        if (!c.checked) return;
+        if (c.id === "checkDenunciaOutro") {
+            const txt = g("denunciaOutroTexto").trim();
+            denunciaItens.push(txt ? "Outro: " + txt : "Outro");
+        } else if (c.value) denunciaItens.push(c.value);
+        });
 
-                const novo = {
-                protocolo,
-                escola:            user.escola || "Público",
-                data:              g("dataPreenchimento"),
-                local:             g("localTipo"),
-                local_detalhado:   g("localDetalhado"),
-                vitima:            nomes,
-                idade:             idades,
-                sexo:              v0.sexo         || "",
-                raca:              v0.raca         || "",
-                identidade_genero: v0.identGenero  || "",
-                orientacao:        v0.orientacao   || "",
-                escolaridade:      v0.escolaridade || "",
-                vitimas_json:      JSON.stringify(vitimas),
-                responsavel:       g("responsavel"),
-                telefone:          g("telefoneResponsavel"),
-                parentesco:        g("parentesco"),
-                endereco:          g("enderecoResponsavel"),
-                autor:             autoresData.map(a => a.nome).filter(Boolean).join(", "),
-                idade_autor:       autoresData.map(a => a.idade).filter(Boolean).join(", "),
-                relacao_autor:     autoresData.map(a => a.relacao).filter(Boolean).join(", "),
-                tipo:              tipos.join(", "),
-                resumo:            g("resumo"),
-                denuncia_chegou:   denunciaItens.join(", "),
-                encaminhamento:    g("encaminhamento"),
-                status_secretaria: "Em andamento",
-                status_conselho:   "Em andamento"
-                };
+        const novo = {
+        protocolo,
+        escola:            user.escola || "Público",
+        data:              g("dataPreenchimento") || null,
+        local:             g("localTipo"),
+        local_detalhado:   g("localDetalhado"),
+        vitima:            nomes,
+        idade:             idades,
+        sexo:              v0.sexo         || "",
+        raca:              v0.raca         || "",
+        identidade_genero: v0.identGenero  || "",
+        orientacao:        v0.orientacao   || "",
+        escolaridade:      v0.escolaridade || "",
+        vitimas_json:      JSON.stringify(vitimas),
+        responsavel:       g("responsavel"),
+        telefone:          g("telefoneResponsavel"),
+        parentesco:        g("parentesco"),
+        endereco:          g("enderecoResponsavel"),
+        autor:             autoresData.map(a => a.nome).filter(Boolean).join(", "),
+        idade_autor:       autoresData.map(a => a.idade).filter(Boolean).join(", "),
+        relacao_autor:     autoresData.map(a => a.relacao).filter(Boolean).join(", "),
+        tipo:              tipos.join(", "),
+        resumo:            g("resumo"),
+        denuncia_chegou:   denunciaItens.join(", "),
+        encaminhamento:    g("encaminhamento"),
+        status_secretaria: "Em andamento",
+        status_conselho:   "Em andamento"
+        };
 
-                try {
-                const res = await dbInsert("relatorios", novo);
-                if (!res) { alert("Erro ao salvar notificação! Verifique sua conexão e tente novamente."); return; }
-                await adicionarNotificacao("Nova notificação: " + (novo.vitima || "Sem nome"), novo.escola);
-                alert("Notificação registrada com sucesso!\nProtocolo: " + protocolo);
-                limparFormulario();
-                regGoTo(0);
-                } catch(err) {
-                console.error(err);
-                alert("Erro ao salvar notificação: " + (err.message || err));
-                }
-            }
+        try {
+        const res = await dbInsert("relatorios", novo);
+        if (!res) { alert("Erro ao salvar notificação! Verifique sua conexão e tente novamente."); return; }
+        await adicionarNotificacao("Nova notificação: " + (novo.vitima || "Sem nome"), novo.escola);
+        enviarRelatorioPorEmail(protocolo);
+        alert("Notificação registrada com sucesso!\nProtocolo: " + protocolo);
+        limparFormulario();
+        regGoTo(0);
+        } catch(err) {
+        console.error(err);
+        alert("Erro ao salvar notificação: " + (err.message || err));
+        }
+    }
 
             function limparFormulario() {
                 document.querySelectorAll("#registros input[type='text'],#registros input[type='number'],#registros input[type='date'],#registros textarea")
@@ -1119,118 +1120,122 @@
                 output.innerHTML   = `✅ Nova senha gerada:<br><br><strong>${novaSenha}</strong>`;
             }
 
-            async function relatorioIndividual(protocolo) {
-                const lista = await dbSelect("relatorios", { protocolo });
-                if (!lista.length) { alert("Registro não encontrado"); return; }
-                const r = lista[0];
+           function _carregarImagem(src) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload  = () => resolve(img);
+        img.onerror = () => resolve(img);
+        img.src = src;
+    });
+}
 
-                let vitimas = [];
-                if (r.vitimas_json) { try { vitimas = JSON.parse(r.vitimas_json); } catch(e) {} }
-                if (!vitimas.length) {
-                const nomes  = (r.vitima||"").split(",").map(s=>s.trim()).filter(Boolean);
-                const idades = (r.idade ||"").split(",").map(s=>s.trim());
-                vitimas = nomes.map((nome, i) => ({
-                    nome, idade: idades[i]||"",
-                    sexo:         i===0?(r.sexo||""):"",
-                    raca:         i===0?(r.raca||""):"",
-                    identGenero:  i===0?(r.identidade_genero||""):"",
-                    orientacao:   i===0?(r.orientacao||""):"",
-                    escolaridade: i===0?(r.escolaridade||""):""
-                }));
-                }
+async function construirPDFRelatorio(r) {
+    let vitimas = [];
+    if (r.vitimas_json) { try { vitimas = JSON.parse(r.vitimas_json); } catch(e) {} }
+    if (!vitimas.length) {
+        const nomes  = (r.vitima||"").split(",").map(s=>s.trim()).filter(Boolean);
+        const idades = (r.idade ||"").split(",").map(s=>s.trim());
+        vitimas = nomes.map((nome, i) => ({
+            nome, idade: idades[i]||"",
+            sexo:         i===0?(r.sexo||""):"",
+            raca:         i===0?(r.raca||""):"",
+            identGenero:  i===0?(r.identidade_genero||""):"",
+            orientacao:   i===0?(r.orientacao||""):"",
+            escolaridade: i===0?(r.escolaridade||""):""
+        }));
+    }
 
-                const jsPDF  = window.jspdf.jsPDF;
-                const doc    = new jsPDF();
-                const logo   = new Image();
-                logo.src     = "prefeitura.png";
-                let y        = 0;
+    const jsPDF = window.jspdf.jsPDF;
+    const doc   = new jsPDF();
+    const logo  = await _carregarImagem("prefeitura.png");
+    let y = 0;
 
-                const gerarPDF = () => {
-                try { doc.addImage(logo,"PNG",10,5,59,38); } catch(e) {}
-                doc.setFont("helvetica","bold"); doc.setFontSize(16);
-                doc.text("PREFEITURA MUNICIPAL",105,18,null,null,"center");
-                doc.setFontSize(11); doc.text("SISTEMA DE NOTIFICAÇÃO PREVINE",105,26,null,null,"center");
-                doc.setFont("helvetica","normal"); doc.setFontSize(9);
-                doc.text("RELATÓRIO INDIVIDUAL DE OCORRÊNCIA",105,33,null,null,"center");
-                doc.setDrawColor(0); doc.setLineWidth(0.3); doc.line(10,50,200,50);
-                y = 60;
+    try { doc.addImage(logo,"PNG",10,5,59,38); } catch(e) {}
+    doc.setFont("helvetica","bold"); doc.setFontSize(16);
+    doc.text("PREFEITURA MUNICIPAL",105,18,null,null,"center");
+    doc.setFontSize(11); doc.text("SISTEMA DE NOTIFICAÇÃO PREVINE",105,26,null,null,"center");
+    doc.setFont("helvetica","normal"); doc.setFontSize(9);
+    doc.text("RELATÓRIO INDIVIDUAL DE OCORRÊNCIA",105,33,null,null,"center");
+    doc.setDrawColor(0); doc.setLineWidth(0.3); doc.line(10,50,200,50);
+    y = 60;
 
-                const checkPage = h => { if (y + h > 275) { doc.addPage(); y = 20; } };
+    const checkPage = h => { if (y + h > 275) { doc.addPage(); y = 20; } };
+    const secao = titulo => {
+        y += 6;
+        doc.setFont("helvetica","bold"); doc.setFontSize(10); doc.setTextColor(0,0,0);
+        doc.text(titulo,105,y,null,null,"center"); y += 6;
+    };
+    const campo = (label, valor, x, w, h=10) => {
+        doc.setDrawColor(180,180,180); doc.setLineWidth(0.2); doc.rect(x,y,w,h);
+        doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(0,0,0);
+        doc.text((label?label+": ":"")+(valor||""),x+2,y+6);
+    };
+    const campoFull  = (l, v, h=10) => { campo(l,v,10,190,h); y += h+2; };
+    const campoDuplo = (l1,v1,l2,v2) => { campo(l1,v1,10,95,10); campo(l2,v2,105,95,10); y += 12; };
+    const campoTexto = (_, valor) => {
+        const linhas = doc.splitTextToSize(valor||"Não informado.", 183);
+        const alt    = Math.max(18, linhas.length*5.5+6);
+        doc.setDrawColor(180,180,180); doc.setLineWidth(0.2); doc.rect(10,y,190,alt);
+        doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(0,0,0);
+        doc.text(linhas,12,y+6); y += alt+3;
+    };
 
-                const secao = titulo => {
-                    y += 6;
-                    doc.setFont("helvetica","bold"); doc.setFontSize(10); doc.setTextColor(0,0,0);
-                    doc.text(titulo,105,y,null,null,"center"); y += 6;
-                };
+    secao("DADOS DA OCORRÊNCIA");
+    campoFull("Protocolo",r.protocolo);
+    campoFull("Data",r.data);
+    campoFull("Local",r.local);
+    campoFull("Especificação do local",r.local_detalhado);
 
-                const campo = (label, valor, x, w, h=10) => {
-                    doc.setDrawColor(180,180,180); doc.setLineWidth(0.2); doc.rect(x,y,w,h);
-                    doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(0,0,0);
-                    doc.text((label?label+": ":"")+(valor||""),x+2,y+6);
-                };
+    vitimas.forEach((v, idx) => {
+        checkPage(80);
+        secao(vitimas.length > 1 ? `DADOS DA VÍTIMA ${idx+1}` : "DADOS DA VÍTIMA");
+        campoFull("Nome",v.nome);
+        campoDuplo("Idade",v.idade,"Sexo",v.sexo);
+        campoDuplo("Raça / Cor",v.raca,"Orientação sexual",v.orientacao);
+        campoDuplo("Identidade de gênero",v.identGenero,"Escolaridade",v.escolaridade);
+    });
 
-                const campoFull = (l, v, h=10) => { campo(l,v,10,190,h); y += h+2; };
-                const campoDuplo = (l1,v1,l2,v2) => { campo(l1,v1,10,95,10); campo(l2,v2,105,95,10); y += 12; };
-                const campoTexto = (_, valor) => {
-                    const linhas = doc.splitTextToSize(valor||"Não informado.", 183);
-                    const alt    = Math.max(18, linhas.length*5.5+6);
-                    doc.setDrawColor(180,180,180); doc.setLineWidth(0.2); doc.rect(10,y,190,alt);
-                    doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(0,0,0);
-                    doc.text(linhas,12,y+6); y += alt+3;
-                };
+    checkPage(55); secao("RESPONSÁVEL");
+    campoFull("Nome",r.responsavel);
+    campoDuplo("Parentesco",r.parentesco,"Telefone",r.telefone);
+    campoFull("Endereço",r.endereco);
 
-                secao("DADOS DA OCORRÊNCIA");
-                campoFull("Protocolo",r.protocolo);
-                campoFull("Data",r.data);
-                campoFull("Local",r.local);
-                campoFull("Especificação do local",r.local_detalhado);
+    checkPage(30); secao("AUTOR DA VIOLÊNCIA");
+    campoDuplo("Nome",r.autor,"Idade",r.idade_autor);
+    campoFull("Relação com a vítima",r.relacao_autor);
 
-                vitimas.forEach((v, idx) => {
-                    checkPage(80);
-                    secao(vitimas.length > 1 ? `DADOS DA VÍTIMA ${idx+1}` : "DADOS DA VÍTIMA");
-                    campoFull("Nome",v.nome);
-                    campoDuplo("Idade",v.idade,"Sexo",v.sexo);
-                    campoDuplo("Raça / Cor",v.raca,"Orientação sexual",v.orientacao);
-                    campoDuplo("Identidade de gênero",v.identGenero,"Escolaridade",v.escolaridade);
-                });
+    const todos       = parseTipos(r.tipo);
+    const motivList   = ["Racismo","Intolerância Religiosa","Sexismo","Diversidade de gênero","Capacitismo","Outros"];
+    const praticList  = ["Criança","Adolescente","Pai","Mãe","Responsável","Professor"];
+    const itensTipo   = todos.filter(t => !motivList.includes(t) && !praticList.includes(t) && !t.startsWith("Outros:"));
+    const itensMotiv  = todos.filter(t => motivList.includes(t));
+    const itensPratic = todos.filter(t => praticList.includes(t) || t.startsWith("Outros"));
 
-                checkPage(55); secao("RESPONSÁVEL");
-                campoFull("Nome",r.responsavel);
-                campoDuplo("Parentesco",r.parentesco,"Telefone",r.telefone);
-                campoFull("Endereço",r.endereco);
+    campoFull("Quem praticou",itensPratic.length?itensPratic.join(", "):"Não informado");
+    checkPage(30); secao("TIPIFICAÇÃO DA VIOLÊNCIA");
+    campoTexto("", itensTipo.length ? "Tipos: " + itensTipo.join(", ") : "Tipos: Não informado");
+    checkPage(20); secao("MOTIVAÇÃO DA VIOLÊNCIA");
+    campoTexto("", itensMotiv.length ? "Motivação: " + itensMotiv.join(", ") : "Motivação: Não informado");
 
-                checkPage(30); secao("AUTOR DA VIOLÊNCIA");
-                campoDuplo("Nome",r.autor,"Idade",r.idade_autor);
-                campoFull("Relação com a vítima",r.relacao_autor);
+    checkPage(40); secao("RESUMO DA OCORRÊNCIA");
+    campoTexto("",r.resumo);
+    checkPage(40); secao("ENCAMINHAMENTO");
+    campoTexto("",r.encaminhamento);
 
-                const todos       = parseTipos(r.tipo);
-                const motivList   = ["Racismo","Intolerância Religiosa","Sexismo","Diversidade de gênero","Capacitismo","Outros"];
-                const praticList  = ["Criança","Adolescente","Pai","Mãe","Responsável","Professor"];
-                const itensTipo   = todos.filter(t => !motivList.includes(t) && !praticList.includes(t) && !t.startsWith("Outros:"));
-                const itensMotiv  = todos.filter(t => motivList.includes(t));
-                const itensPratic = todos.filter(t => praticList.includes(t) || t.startsWith("Outros"));
+    doc.setFontSize(7); doc.setTextColor(150,150,150);
+    doc.text("Sistema PREVINE • Documento oficial gerado automaticamente",105,290,null,null,"center");
 
-                campoFull("Quem praticou",itensPratic.length?itensPratic.join(", "):"Não informado");
-                checkPage(30); secao("TIPIFICAÇÃO DA VIOLÊNCIA");
-                campoTexto("", itensTipo.length ? "Tipos: " + itensTipo.join(", ") : "Tipos: Não informado");
-                checkPage(20); secao("MOTIVAÇÃO DA VIOLÊNCIA");
-                campoTexto("", itensMotiv.length ? "Motivação: " + itensMotiv.join(", ") : "Motivação: Não informado");
+    return { doc, vitimas };
+}
 
-                checkPage(40); secao("RESUMO DA OCORRÊNCIA");
-                campoTexto("",r.resumo);
-                checkPage(40); secao("ENCAMINHAMENTO");
-                campoTexto("",r.encaminhamento);
-
-                doc.setFontSize(7); doc.setTextColor(150,150,150);
-                doc.text("Sistema PREVINE • Documento oficial gerado automaticamente",105,290,null,null,"center");
-
-                const nomeArq = (vitimas[0]&&vitimas[0].nome?vitimas[0].nome:"Vitima").replace(/[^a-zA-Z0-9À-ÿ _-]/g,"").trim();
-                doc.save(`PREVINE_${r.protocolo}_${nomeArq}.pdf`);
-                };
-
-                logo.onload  = gerarPDF;
-                logo.onerror = gerarPDF;
-            }
+async function relatorioIndividual(protocolo) {
+    const lista = await dbSelect("relatorios", { protocolo });
+    if (!lista.length) { alert("Registro não encontrado"); return; }
+    const r = lista[0];
+    const { doc, vitimas } = await construirPDFRelatorio(r);
+    const nomeArq = (vitimas[0]&&vitimas[0].nome?vitimas[0].nome:"Vitima").replace(/[^a-zA-Z0-9À-ÿ _-]/g,"").trim();
+    doc.save(`PREVINE_${r.protocolo}_${nomeArq}.pdf`);
+}
 
             async function exportarTodosPDF() {
                 const user  = carregarSessao() || {};
@@ -1409,3 +1414,34 @@
 
             window.addEventListener("resize", atualizarBotaoFlutuante);
             window.addEventListener("load",   atualizarBotaoFlutuante);
+            const EMAIL_FUNCTION_URL   = "https://hsxdurbtzslirrxhrrrm.supabase.co/functions/v1/send-email";
+const EMAIL_NOTIFICACAO_DESTINO = "previnehorizonte@gmail.com";
+
+async function enviarRelatorioPorEmail(protocolo) {
+    try {
+        const lista = await dbSelect("relatorios", { protocolo });
+        if (!lista.length) return;
+        const r = lista[0];
+        const { doc } = await construirPDFRelatorio(r);
+        const pdfBase64 = doc.output("datauristring").split(",")[1];
+
+        const resp = await fetch(EMAIL_FUNCTION_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + SB_KEY
+            },
+            body: JSON.stringify({
+                to: EMAIL_NOTIFICACAO_DESTINO,
+                subject: `Nova notificação PREVINE — Protocolo ${protocolo}`,
+                text: `Uma nova notificação foi registrada no sistema PREVINE.\n\nProtocolo: ${protocolo}\nEscola: ${r.escola||"—"}\nData: ${r.data||"—"}\n\nO relatório completo em PDF está anexado.`,
+                filename: `PREVINE_${protocolo}.pdf`,
+                pdfBase64
+            })
+        });
+
+        if (!resp.ok) console.error("Falha ao enviar e-mail:", await resp.text());
+    } catch (err) {
+        console.error("Erro ao enviar relatório por e-mail:", err);
+    }
+}
